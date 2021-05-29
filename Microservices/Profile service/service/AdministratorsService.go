@@ -6,20 +6,28 @@ import (
 )
 
 type AdministratorsService struct {
-	AdministratorRepo *repository.AdministratorRepository
+	AdministratorRepo *repository.AdministratorsRepository
 	SystemUserRepo *repository.SystemUsersRepository
 }
 
-func (service AdministratorsService) Update(m *model.Administrator) error {
-	err := service.SystemUserRepo.Update(&m.SystemUser)
+func (service AdministratorsService) Update(admin *model.Administrator) error {
+	err := service.SystemUserRepo.Update(&admin.SystemUser)
 	if err != nil {
 		return err
 	}
-	err = service.AdministratorRepo.Update(m)
+	err = service.AdministratorRepo.Update(admin)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+func (service *AdministratorsService) Create(admin *model.Administrator) error {
+	service.AdministratorRepo.Create(admin)
+	return nil
+}
+
+func (service *AdministratorsService) GetAll() []model.Administrator {
+	return  service.AdministratorRepo.GetAll()
 }
 
 

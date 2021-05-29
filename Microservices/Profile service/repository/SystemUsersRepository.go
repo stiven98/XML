@@ -26,3 +26,5 @@ func (repo *SystemUsersRepository) Update(user *model.SystemUser) error {
 	fmt.Println(result.RowsAffected)
 	return nil
 }
+
+

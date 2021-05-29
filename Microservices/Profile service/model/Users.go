@@ -51,8 +51,6 @@ type Agent struct {
 }
 
 
-
-
 func (sysUser *SystemUser) BeforeCreate(scope *gorm.DB) error {
 	sysUser.ID = uuid.New()
 	return nil
