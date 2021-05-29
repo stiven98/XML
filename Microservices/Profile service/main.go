@@ -14,19 +14,16 @@ import (
 	"profileservice/service"
 	"time"
 )
-
 func initDB() *gorm.DB {
 	host := "localhost"
 	user := "postgres"
 	password := "root"
 	dbname := "users_service"
 	dbport := "5432"
-
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", host, user, password, dbname, dbport)
-
 	var database *gorm.DB
-
 	log.Println("Connecting to database...")
+
 	for 1 == 1 {
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err != nil {
@@ -34,12 +31,10 @@ func initDB() *gorm.DB {
 			log.Println("Reconnecting to database...")
 			continue
 		}
-
 		database = db
 		log.Println("Connected to database")
 		break
 	}
-
 	if database != nil {
 		database.Migrator().DropTable(&model.SystemUser{})
 		database.Migrator().DropTable(&model.Administrator{})
@@ -50,7 +45,6 @@ func initDB() *gorm.DB {
 		database.AutoMigrate(&model.Administrator{})
 		database.AutoMigrate(&model.User{})
 		database.AutoMigrate(&model.Agent{})
-
 
 		systemUsers := [] model.SystemUser {
 			{
@@ -96,7 +90,6 @@ func initDB() *gorm.DB {
 			},
 		}
 
-
 		administrators := []model.Administrator {
 			{
 				UserID: systemUsers[0].ID,
@@ -106,7 +99,7 @@ func initDB() *gorm.DB {
 				SystemUser: systemUsers[1],
 			},
 		}
-		
+
 		users := [] model.User {
 			{
 				UserID:      systemUsers[2].ID,
@@ -132,44 +125,79 @@ func initDB() *gorm.DB {
 		for i := range administrators {
 			database.Create(&administrators[i])
 		}
-
 		for i := range users {
 			database.Create(&users[i])
 		}
 	}
-
 	return database
-
 }
 
-func initRepo(database *gorm.DB) (*repository.SystemUsersRepository, *repository.AdministratorRepository) {
-	return &repository.SystemUsersRepository{Database: database}, &repository.AdministratorRepository{Database: database}
+func initRepo(database *gorm.DB) (*repository.SystemUsersRepository,
+								  *repository.AdministratorsRepository,
+								  *repository.UsersRepository,
+								  *repository.AgentsRepository) {
+
+	return &repository.SystemUsersRepository{Database: database}, &repository.AdministratorsRepository{Database: database},
+																  &repository.UsersRepository{Database: database},
+																  &repository.AgentsRepository{Database: database}
 }
 
-func initServices(systemUsersRepo *repository.SystemUsersRepository, administratorsRepo *repository.AdministratorRepository) (*service.SystemUsersService, *service.AdministratorsService){
-	return &service.SystemUsersService{Repo: systemUsersRepo}, &service.AdministratorsService{AdministratorRepo: administratorsRepo, SystemUserRepo: systemUsersRepo}
+
+
+func initServices(systemUsersRepo *repository.SystemUsersRepository, administratorsRepo *repository.AdministratorsRepository,
+																	 usersRepo *repository.UsersRepository,
+																	 agentsRepo *repository.AgentsRepository) (*service.SystemUsersService,
+																	                                           *service.AdministratorsService,
+																	                                           *service.UsersService,
+																	                                           *service.AgentsService){
+
+	return &service.SystemUsersService{Repo: systemUsersRepo}, &service.AdministratorsService{AdministratorRepo: administratorsRepo, SystemUserRepo: systemUsersRepo},
+	                                                           &service.UsersService{UsersRepo: usersRepo, SystemUserRepo: systemUsersRepo},
+	                                                           &service.AgentsService{SystemUserRepo: systemUsersRepo, AgentsRepo: agentsRepo}
 }
 
-func initHandler(SystemUsersService *service.SystemUsersService, administratorsService *service.AdministratorsService) (*handler.SystemUsersHandler, *handler.AdministratorsHandler) {
-	return &handler.SystemUsersHandler{Service: SystemUsersService}, &handler.AdministratorsHandler{Service: administratorsService}
+
+
+func initHandler(SystemUsersService *service.SystemUsersService, administratorsService *service.AdministratorsService,
+															     usersService *service.UsersService,
+															     agentsService *service.AgentsService) (*handler.SystemUsersHandler,
+															     										*handler.AdministratorsHandler,
+															     										*handler.UsersHandler,
+															     										*handler.AgentsHandler) {
+	return &handler.SystemUsersHandler{Service: SystemUsersService}, &handler.AdministratorsHandler{Service: administratorsService},
+		&handler.UsersHandler{Service: usersService}, &handler.AgentsHandler{Service: agentsService}
 }
 
-func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHandler *handler.AdministratorsHandler) {
+
+
+func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHandler *handler.AdministratorsHandler,
+	usersHandler *handler.UsersHandler,agentsHandler *handler.AgentsHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/users/create", SystemUsersHandler.Create).Methods("POST")
-	router.HandleFunc("/users/update", SystemUsersHandler.Update).Methods("PUT")
-	router.HandleFunc("/users/getAll",SystemUsersHandler.GetAll).Methods("GET")
+	router.HandleFunc("/sysusers/create", SystemUsersHandler.Create).Methods("POST")
+	router.HandleFunc("/sysusers/update", SystemUsersHandler.Update).Methods("PUT")
+	router.HandleFunc("/sysusers/getAll",SystemUsersHandler.GetAll).Methods("GET")
 	router.HandleFunc("/administrators/update",  administratorsHandler.Update).Methods("PUT")
+	router.HandleFunc("/administrators/create",  administratorsHandler.Create).Methods("POST")
+	router.HandleFunc("/administrators/getAll",  administratorsHandler.GetAll).Methods("GET")
+	router.HandleFunc("/users/update",  usersHandler.Update).Methods("PUT")
+	router.HandleFunc("/users/create",  usersHandler.Create).Methods("POST")
+	router.HandleFunc("/users/getAll",  usersHandler.GetAll).Methods("GET")
+	router.HandleFunc("/users/changeWhetherIsPublic", usersHandler.ChangeWhetherIsPublic).Methods("POST")
+	router.HandleFunc("/users/changeAllowedTags", usersHandler.ChangeAllowedTags).Methods("POST")
+	router.HandleFunc("/agents/update",  agentsHandler.Update).Methods("PUT")
+	router.HandleFunc("/agents/create",  agentsHandler.Create).Methods("POST")
+	router.HandleFunc("/agents/getAll",  agentsHandler.GetAll).Methods("GET")
+
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), router))
 }
 
 func main() {
 	database := initDB()
-	usersRepo, administratorsRepo := initRepo(database)
-	SystemUsersService, administratorsService := initServices(usersRepo, administratorsRepo)
-	SystemUsersHandler, administratorsHandler := initHandler(SystemUsersService, administratorsService)
-	handleFunc(SystemUsersHandler, administratorsHandler)
+	sysusersRepo, administratorsRepo, usersRepo, agentsRepo := initRepo(database)
+	systemUsersService, administratorsService, usersService, agentsService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo)
+	systemUsersHandler, administratorsHandler, usersHandler, agentsHandler := initHandler(systemUsersService, administratorsService, usersService, agentsService)
+	handleFunc(systemUsersHandler, administratorsHandler, usersHandler, agentsHandler)
 }
 
