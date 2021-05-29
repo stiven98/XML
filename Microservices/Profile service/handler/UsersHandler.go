@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"profileservice/model"
+	"profileservice/model/Dto"
 	"profileservice/service"
 )
 
@@ -48,4 +49,19 @@ func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 func (handler *UsersHandler) GetAll(w http.ResponseWriter, r *http.Request){
 	users:=handler.Service.GetAll()
 	renderJSON(w, &users)
+}
+func (handler *UsersHandler) ChangeWhetherIsPublic(w http.ResponseWriter, r *http.Request) {
+	var dto Dto.ChangeWhetherIsPublicDto
+	err := json.NewDecoder(r.Body).Decode(&dto)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.ChangeWhetherIsPublic(dto)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
 }

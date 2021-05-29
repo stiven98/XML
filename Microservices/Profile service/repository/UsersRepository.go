@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"profileservice/model"
+	"profileservice/model/Dto"
 )
 
 type UsersRepository struct {
@@ -24,4 +25,8 @@ func (repo *UsersRepository) Create(user *model.User) error {
 	result := repo.Database.Create(user)
 	fmt.Println(result.RowsAffected)
 	return nil
+}
+func (repo *UsersRepository) ChangeWhetherIsPublic(dto *Dto.ChangeWhetherIsPublicDto) error {
+	result := repo.Database.Model(model.User{}).Where("user_id = ?", dto.USERID).UpdateColumn("is_public", dto.FLAG)
+	return result.Error
 }

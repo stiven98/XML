@@ -2,6 +2,7 @@ package service
 
 import (
 	"profileservice/model"
+	"profileservice/model/Dto"
 	"profileservice/repository"
 )
 
@@ -29,4 +30,9 @@ func (service *UsersService) Create(user *model.User) error {
 func (service *UsersService) GetAll() []model.User {
 	return  service.UsersRepo.GetAll()
 }
+
+func (service *UsersService) ChangeWhetherIsPublic(dto Dto.ChangeWhetherIsPublicDto) error {
+	return  service.UsersRepo.ChangeWhetherIsPublic(&dto)
+}
+
 
