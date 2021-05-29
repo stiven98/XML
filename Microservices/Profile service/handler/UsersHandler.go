@@ -65,3 +65,19 @@ func (handler *UsersHandler) ChangeWhetherIsPublic(w http.ResponseWriter, r *htt
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 }
+
+func (handler *UsersHandler) ChangeAllowedTags(w http.ResponseWriter, r *http.Request) {
+	var dto Dto.ChangeAllowedTagsDto
+	err := json.NewDecoder(r.Body).Decode(&dto)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.ChangeAllowedTags(dto)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}

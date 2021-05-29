@@ -30,3 +30,8 @@ func (repo *UsersRepository) ChangeWhetherIsPublic(dto *Dto.ChangeWhetherIsPubli
 	result := repo.Database.Model(model.User{}).Where("user_id = ?", dto.USERID).UpdateColumn("is_public", dto.FLAG)
 	return result.Error
 }
+
+func (repo *UsersRepository) ChangeAllowedTags(dto *Dto.ChangeAllowedTagsDto) error {
+	result := repo.Database.Model(model.User{}).Where("user_id = ?", dto.USERID).UpdateColumn("allowed_tags", dto.FLAG)
+	return result.Error
+}

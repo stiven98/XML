@@ -34,5 +34,10 @@ func (service *UsersService) GetAll() []model.User {
 func (service *UsersService) ChangeWhetherIsPublic(dto Dto.ChangeWhetherIsPublicDto) error {
 	return  service.UsersRepo.ChangeWhetherIsPublic(&dto)
 }
+func (service *UsersService) ChangeAllowedTags(dto Dto.ChangeAllowedTagsDto) error {
+	return  service.UsersRepo.ChangeAllowedTags(&dto)
+}
+
+
 
 

@@ -184,6 +184,7 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/users/create",  usersHandler.Create).Methods("POST")
 	router.HandleFunc("/users/getAll",  usersHandler.GetAll).Methods("GET")
 	router.HandleFunc("/users/changeWhetherIsPublic", usersHandler.ChangeWhetherIsPublic).Methods("POST")
+	router.HandleFunc("/users/changeAllowedTags", usersHandler.ChangeAllowedTags).Methods("POST")
 	router.HandleFunc("/agents/update",  agentsHandler.Update).Methods("PUT")
 	router.HandleFunc("/agents/create",  agentsHandler.Create).Methods("POST")
 	router.HandleFunc("/agents/getAll",  agentsHandler.GetAll).Methods("GET")
