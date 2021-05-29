@@ -6,7 +6,7 @@ import (
 )
 
 type AdministratorRepository struct {
-	Database *gorm.DB
+		Database *gorm.DB
 }
 
 func (repo *AdministratorRepository) Update(administrator *model.Administrator) error {
