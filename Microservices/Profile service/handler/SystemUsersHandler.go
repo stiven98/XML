@@ -8,11 +8,11 @@ import (
 	"profileservice/service"
 )
 
-type UsersHandler struct {
-	Service *service.UsersService
+type SystemUsersHandler struct {
+	Service *service.SystemUsersService
 }
 
-func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (handler *SystemUsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var user model.SystemUser
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
@@ -28,7 +28,7 @@ func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func (handler *UsersHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (handler *SystemUsersHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var user model.SystemUser
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
@@ -44,7 +44,7 @@ func (handler *UsersHandler) Update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func (handler *UsersHandler) GetAll(w http.ResponseWriter, r *http.Request){
+func (handler *SystemUsersHandler) GetAll(w http.ResponseWriter, r *http.Request){
 	users:=handler.Service.GetAll()
 	renderJSON(w, &users)
 }
