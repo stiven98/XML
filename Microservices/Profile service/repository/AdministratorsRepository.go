@@ -6,6 +6,7 @@ import (
 	"profileservice/model"
 )
 
+
 type AdministratorsRepository struct {
 	Database *gorm.DB
 }
