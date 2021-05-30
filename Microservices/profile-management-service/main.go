@@ -17,7 +17,7 @@ import (
 
 
 func initDB() *gorm.DB {
-	host := "localhost"
+	host := "db-profile-management"
 	user := "postgres"
 	password := "root"
 	dbname := "management_profile_service"

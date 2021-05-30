@@ -33,7 +33,7 @@ func handleFunc(storiesHandler *handler.StoriesHandler) {
 func main() {
 	fmt.Println("Aca")
 	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: "db-story:6379",
 		Password: "",
 		DB: 0,
 	})

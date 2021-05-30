@@ -15,7 +15,7 @@ import (
 	"time"
 )
 func initDB() *gorm.DB {
-	host := "localhost"
+	host := "db"
 	user := "postgres"
 	password := "root"
 	dbname := "users_service"

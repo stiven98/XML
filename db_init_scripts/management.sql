@@ -1,0 +1,2 @@
+create database management_profile_service
+with owner postgres;
