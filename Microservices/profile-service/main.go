@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"os"
 	"profileservice/handler"
 	"profileservice/model"
 	"profileservice/repository"
@@ -15,7 +16,11 @@ import (
 	"time"
 )
 func initDB() *gorm.DB {
-	host := "db"
+	hostName := os.Getenv("HOST_NAME")
+	host := "localhost"
+	if len(hostName) != 0 {
+		host = hostName
+	}
 	user := "postgres"
 	password := "root"
 	dbname := "users_service"

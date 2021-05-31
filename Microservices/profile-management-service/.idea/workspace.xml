@@ -2,24 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74d772c2-335d-403a-917b-9ff276ce8fe5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/profile-management-service.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/handler/BlockedUsersHandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/handler/CloseFriendsHandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/handler/MutedUsersHandler.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/Model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/BlockedUsersRepository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/CloseFriendsRepository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/MutedUsersRepository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/BlockedUsersService.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/CloseFriendsService.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/MutedUsersService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Profile service/repository/AdministratorsRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Profile service/repository/AdministratorsRepository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../messages-service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../messages-service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../profile-service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +20,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file:///snap/go/7360" />
+  <component name="GOROOT" url="file://$USER_HOME$/sdk/go1.16.4" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
@@ -52,6 +39,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
   </component>
   <component name="RunManager">
@@ -59,9 +47,9 @@
       <module name="profile-management-service" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/main.go" />
       <package value="profile-management-service" />
       <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/main.go" />
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -84,6 +72,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
