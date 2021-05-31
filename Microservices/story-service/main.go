@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"os"
 	"storyservice/handler"
 	"storyservice/repository"
 	"storyservice/service"
@@ -31,9 +32,13 @@ func handleFunc(storiesHandler *handler.StoriesHandler) {
 }
 
 func main() {
-	fmt.Println("Aca")
+	hostName := os.Getenv("HOST_NAME")
+	host := "localhost"
+	if len(hostName) != 0 {
+		host = hostName
+	}
 	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: host + ":6379",
 		Password: "",
 		DB: 0,
 	})

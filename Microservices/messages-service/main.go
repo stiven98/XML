@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"net/http"
+	"os"
 	"profileservice/handler"
 	"profileservice/repository"
 	"profileservice/service"
@@ -18,7 +19,12 @@ var client *mongo.Client
 
 func initDB() *mongo.Database{
 	log.Println("Connecting to database...")
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	hostName := os.Getenv("HOST_NAME")
+	host := "localhost"
+	if len(hostName) != 0 {
+		host = hostName
+	}
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://"+ host + ":27017"))
 	if err != nil {
 		fmt.Println(err)
 	}

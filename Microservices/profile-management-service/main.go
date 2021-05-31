@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"os"
 	"profile-management-service/handler"
 	"profile-management-service/model"
 	"profile-management-service/repository"
@@ -17,7 +18,11 @@ import (
 
 
 func initDB() *gorm.DB {
+	hostName := os.Getenv("HOST_NAME")
 	host := "localhost"
+	if len(hostName) != 0 {
+		host = hostName
+	}
 	user := "postgres"
 	password := "root"
 	dbname := "management_profile_service"
