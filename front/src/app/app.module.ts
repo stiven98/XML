@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
 
 const appRoutes: Routes = [
   {path: '', component: RegisterComponent },
   {path: 'login', component: LoginComponent },
+  {path: 'profile', component: ProfilePageComponent },
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -19,6 +21,7 @@ const appRoutes: Routes = [
     HeaderComponent,
     RegisterComponent,
     LoginComponent,
+    ProfilePageComponent,
   ],
   imports: [
     BrowserModule,
