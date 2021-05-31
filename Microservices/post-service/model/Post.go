@@ -18,17 +18,29 @@ const (
 	STORY PostType = "story"
 	ALBUM PostType = "album"
 )
+type Like struct {
+	UserID uuid.UUID `json:"userid"`
+}
+
+type Dislike struct {
+	UserID uuid.UUID `json:"userid"`
+}
+
 
 type Post struct {
 	ID uuid.UUID 	`json:"id"`
 	USERID uuid.UUID `json:"userid"`
 	TIMESTAMP time.Time `json:"timestamp"`
 	ITEMS []PostItem `json:"items"`
+	DESCRIPTION string `json:"description"`
 	LOCATION string `json:"location"`
 	HASHTAG string `json:"hashtag"`
 	COMMENTS []Comment `json:"comments"`
 	TYPE string `json:"type"`
+	LIKES []Like `json:"likes"`
+	DISLIKES []Dislike `json:"dislikes"`
 }
+
 
 func (post *Post) BeforeCreate() error {
 	post.ID = uuid.New()

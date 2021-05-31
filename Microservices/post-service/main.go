@@ -11,21 +11,22 @@ import (
 	"post_service/service"
 )
 
-func initRepo (database *redis.Client) *repository.CommentsRepository {
-	return &repository.CommentsRepository{Database: database}
+func initRepo (database *redis.Client) (*repository.CommentsRepository, *repository.PostsRepository) {
+	return &repository.CommentsRepository{Database: database}, &repository.PostsRepository{Database: database}
 }
-func initService (commentRepo *repository.CommentsRepository) *service.CommentsService {
-	return &service.CommentsService{CommentsRepo: commentRepo}
+func initService (commentRepo *repository.CommentsRepository, postRepo *repository.PostsRepository) (*service.CommentsService, *service.PostsService) {
+	return &service.CommentsService{CommentsRepo: commentRepo}, &service.PostsService{PostsRepo: postRepo}
 }
-func initHandler (commentService *service.CommentsService) *handler.CommentsHandler {
-	return &handler.CommentsHandler{Service: commentService}
+func initHandler (commentService *service.CommentsService, postService *service.PostsService) (*handler.CommentsHandler, *handler.PostsHandler) {
+	return &handler.CommentsHandler{Service: commentService}, &handler.PostsHandler{Service: postService}
 }
-func handleFunc(commentsHandler *handler.CommentsHandler) {
+func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.PostsHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/comments/create", commentsHandler.Create).Methods("POST")
 	router.HandleFunc("/comments/getByKey/{key}", commentsHandler.GetByKey).Methods("GET")
-
+	router.HandleFunc("/posts/create", postsHandler.Create).Methods("POST")
+	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8087"), router))
 
 }
@@ -40,8 +41,8 @@ func main() {
 	pong, err := client.Ping().Result()
 	fmt.Println(pong, err)
 
-	commentRepo := initRepo(client)
-	commentService := initService(commentRepo)
-	commentHandler := initHandler(commentService)
-	handleFunc(commentHandler)
+	commentRepo, postRepo := initRepo(client)
+	commentService, postService := initService(commentRepo,postRepo)
+	commentHandler, postHandler := initHandler(commentService, postService)
+	handleFunc(commentHandler, postHandler)
 }

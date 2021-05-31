@@ -11,3 +11,8 @@ type Comment struct {
 	TIMESTAMP time.Time `json:"timestamp"`
 	VALUE string 	`json:"value"`
 }
+
+func (comment *Comment) BeforeCreate() error {
+	comment.ID = uuid.New()
+	return nil
+}
