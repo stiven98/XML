@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"os"
 	"post_service/handler"
 	"post_service/repository"
 	"post_service/service"
@@ -27,14 +28,18 @@ func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.
 	router.HandleFunc("/comments/getByKey/{key}", commentsHandler.GetByKey).Methods("GET")
 	router.HandleFunc("/posts/create", postsHandler.Create).Methods("POST")
 	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8087"), router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8086"), router))
 
 }
 
 func main() {
-	fmt.Println("Aca")
+	hostName := os.Getenv("HOST_NAME")
+	host := "localhost"
+	if len(hostName) != 0 {
+		host = hostName
+	}
 	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: host + ":6379",
 		Password: "",
 		DB: 1,
 	})
