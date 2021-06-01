@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 const appRoutes: Routes = [
   {path: '', component: RegisterComponent },
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
   {path: 'profile', component: ProfilePageComponent },
   {path: 'editProfile', component: EditProfileComponent },
   {path: 'directMessages', component: DirectMessagesComponent },
+  {path: 'notifications', component: NotificationsComponent },
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -28,6 +30,7 @@ const appRoutes: Routes = [
     ProfilePageComponent,
     EditProfileComponent,
     DirectMessagesComponent,
+    NotificationsComponent,
   ],
   imports: [
     BrowserModule,
