@@ -53,6 +53,18 @@ services:
     networks:
       - backend
 
+  db-post:
+    image: "redis:alpine"
+    container_name: db-post
+    command: redis-server
+    ports:
+      - "6399:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - backend
+
   profile-service:
     image: profile-service
     build:
@@ -108,6 +120,20 @@ services:
       - '8083'
     ports: 
       - '8083:8083'
+
+  post-service:
+    image: post-service
+    build:
+      context: ./Microservices/post-service
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    environment:
+      - HOST_NAME=db-post
+    expose: 
+      - '8086'
+    ports: 
+      - '8086:8086'
 
 networks:
   backend:
