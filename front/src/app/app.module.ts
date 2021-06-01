@@ -7,11 +7,13 @@ import { HeaderComponent } from './header/header.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 const appRoutes: Routes = [
   {path: '', component: RegisterComponent },
   {path: 'login', component: LoginComponent },
   {path: 'profile', component: ProfilePageComponent },
+  {path: 'editProfile', component: EditProfileComponent },
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -22,6 +24,7 @@ const appRoutes: Routes = [
     RegisterComponent,
     LoginComponent,
     ProfilePageComponent,
+    EditProfileComponent,
   ],
   imports: [
     BrowserModule,
