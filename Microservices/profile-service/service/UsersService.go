@@ -23,8 +23,7 @@ func (service UsersService) Update(user *model.User) error {
 	return nil
 }
 func (service *UsersService) Create(user *model.User) error {
-	service.UsersRepo.Create(user)
-	return nil
+	return service.UsersRepo.Create(user)
 }
 
 func (service *UsersService) GetAll() []model.User {

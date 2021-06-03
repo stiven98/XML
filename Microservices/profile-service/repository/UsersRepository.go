@@ -24,7 +24,7 @@ func(repo *UsersRepository) GetAll() []model.User{
 func (repo *UsersRepository) Create(user *model.User) error {
 	result := repo.Database.Create(user)
 	fmt.Println(result.RowsAffected)
-	return nil
+	return result.Error
 }
 func (repo *UsersRepository) ChangeWhetherIsPublic(dto *Dto.ChangeWhetherIsPublicDto) error {
 	result := repo.Database.Model(model.User{}).Where("user_id = ?", dto.USERID).UpdateColumn("is_public", dto.FLAG)

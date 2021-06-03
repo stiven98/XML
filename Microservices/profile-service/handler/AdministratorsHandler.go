@@ -29,6 +29,7 @@ func (handler AdministratorsHandler) Update(writer http.ResponseWriter, request 
 }
 
 func (handler *AdministratorsHandler) Create(w http.ResponseWriter, r *http.Request) {
+
 	var admin model.Administrator
 	err := json.NewDecoder(r.Body).Decode(&admin)
 	if err != nil {
