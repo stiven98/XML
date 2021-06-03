@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b3b8a302-b56b-4108-a186-f6ea44a3a918" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../messages-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../messages-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../post-service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../post-service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-management-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-management-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../story-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../story-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yml" afterDir="false" />
+    <list default="true" id="fd06faa6-f783-47b0-a69b-92e21f803fe7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="GOROOT" url="file://C:/Program Files/Go" />
+  <component name="GOROOT" url="file:///snap/go/7360" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
   </component>
-  <component name="ProjectId" id="1tGL48pj64qT1uY1PZDezVFotCg" />
+  <component name="ProjectId" id="1tP7BQFwTlBd6azMmiDBmUYEUhg" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -34,11 +29,11 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../post-service" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="Profile service" />
+      <module name="profile-service" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
       <package value="profileservice" />
