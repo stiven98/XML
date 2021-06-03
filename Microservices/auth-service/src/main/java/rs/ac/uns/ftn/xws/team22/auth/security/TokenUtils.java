@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.xws.team22.auth.security;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
@@ -8,7 +9,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class TokenUtils {
@@ -40,14 +43,15 @@ public class TokenUtils {
     private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
     // Funkcija za generisanje JWT token
-    public String generateToken(String username) {
+    public String generateToken(String email, Collection<GrantedAuthority> authorities) {
+        String authoritiesString = authorities.stream().map(grantedAuthority -> grantedAuthority.getAuthority()).collect(Collectors.joining(","));
         return Jwts.builder()
                 .setIssuer(APP_NAME)
-                .setSubject(username)
+                .setSubject(email)
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
-                // .claim("key", value) //moguce je postavljanje proizvoljnih podataka u telo JWT tokena
+                .claim("authorities", authoritiesString) //moguce je postavljanje proizvoljnih podataka u telo JWT tokena
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
     }
 
