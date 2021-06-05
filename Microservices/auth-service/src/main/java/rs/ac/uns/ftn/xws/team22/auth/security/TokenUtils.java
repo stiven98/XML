@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public class TokenUtils {
 
     // Izdavac tokena
-    @Value("spring-security-example")
+    @Value("XWS-Nistagram")
     private String APP_NAME;
 
     // Tajna koju samo backend aplikacija treba da zna kako bi mogla da generise i proveri JWT https://jwt.io/
-    @Value("somesecret")
+    @Value("37a03363763c8e5e8d14a9b0e3acec4b831ffd7c2d00251f3c96adffaea0a0c2")
     public String SECRET;
 
     // Period vazenja
