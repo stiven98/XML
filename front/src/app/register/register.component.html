@@ -3,8 +3,9 @@
     <div class="row py-5 mt-4 align-items-center" style="margin:auto">
         <!-- For Demo Purpose -->
         <div class="col-md-5 pr-lg-5 mb-5 mb-md-0">
-            <img src="../../assets/images/logo.png" alt="" class="img-fluid mb-3 d-none d-md-block">
-            <h1>Registrujte se</h1>
+
+            <img src="../../assets/images/logo.png" alt="" class="img-fluid mb-5 d-none d-md-block">
+            <h1 class="text-primary bt-5">Registrujte se</h1>
             <p class="font-italic text-muted mb-0">Registrujte se na Ništagram kako bi delili fotografije i video zapise sa svojim prijateljima</p>
             <p class="font-italic text-muted"> By <a  class="text-muted">
                 <u>Programeri sa puno para </u></a>
@@ -18,107 +19,86 @@
 
                     <!-- First Name -->
                     <div class="input-group col-lg-6 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-user text-muted"></i>
-                            </span>
+                        <input id="firstName" type="text" name="firstname" placeholder="Ime" onchange="" class="form-control bg-white border-md" [ngClass]="validation.validFirstName"  [(ngModel)]="user.FirstName" (keydown)="onKeyDown()">
+                        <div class="invalid-feedback">
+                          Unesite ime!
                         </div>
-                        <input id="firstName" type="text" name="firstname" placeholder="First Name" onchange="" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Last Name -->
                     <div class="input-group col-lg-6 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-user text-muted"></i>
-                            </span>
+                        <input id="lastName" type="text" name="lastname" placeholder="Prezime" class="form-control bg-white border-md" [ngClass]="validation.validLastName"  [(ngModel)]="user.LastName" (keydown)="onKeyDown()">
+                        <div class="invalid-feedback">
+                          Unesite prezime!
                         </div>
-                        <input id="lastName" type="text" name="lastname" placeholder="Last Name" class="form-control bg-white border-left-0 border-md">
                     </div>
                      <!-- Username -->
                      <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-envelope text-muted"></i>
-                            </span>
-                        </div>
-                        <input id="email" type="email" name="email" placeholder="Username" class="form-control bg-white border-left-0 border-md">
-                    </div>
+
+                         <input id="username" type="text" name="username" placeholder="Korisničko ime" class="form-control bg-white border-md" [ngClass]="validation.validUsername"  [(ngModel)]="user.Username" (keydown)="onKeyDown()">
+                         <div class="invalid-feedback">
+                           Unesite korisnicko ime!
+                         </div>
+                     </div>
                     <!-- Email Address -->
                     <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-envelope text-muted"></i>
-                            </span>
+                        <input id="email" type="email" name="email" placeholder="Email adresa" class="form-control bg-white border-md" [ngClass]="validation.validEmail"  [(ngModel)]="user.Email" (keydown)="onKeyDown()">
+                        <div class="invalid-feedback">
+                          Unesite email u pravilnoj formi!
                         </div>
-                        <input id="email" type="email" name="email" placeholder="Email Address" class="form-control bg-white border-left-0 border-md">
                     </div>
                      <!-- Date of birth -->
                      <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-envelope text-muted"></i>
-                            </span>
-                        </div>
-                        <input id="date" type="text" onfocus="(this.type='date')" name="date" placeholder="Date of birth" title="Date of birth" class="form-control bg-white border-left-0 border-md">
-                    </div>
+                        <input id="date" type="date" onfocus="(this.type='date')" name="date" placeholder="Datum rođenja" title="Date of birth" class="form-control bg-white border-md"  [ngClass]="validation.validDateOfBirthday" (change)="changeDate($event)" [(ngModel)]="user.DateOfBirth">
+                         <div class="invalid-feedback">
+                           Unesite email u pravilnoj formi!
+                         </div>
+                     </div>
 
                     <!-- Phone Number -->
                     <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-phone-square text-muted"></i>
-                            </span>
+
+                        <input id="phoneNumber" type="tel" name="phone" placeholder="Broj telefona" class="form-control bg-white border-md pl-3" [ngClass]="validation.validPhoneNumber"  [(ngModel)]="user.PhoneNumber" (keydown)="onKeyDown()">
+                        <div class="invalid-feedback">
+                          Unesite broj u formi: +xxx-xx-xxx-xx-xx
                         </div>
-                        <select id="countryCode" name="countryCode" style="max-width: 80px" class="custom-select form-control bg-white border-left-0 border-md h-100 font-weight-bold text-muted">
-                            <option value="">+12</option>
-                            <option value="">+10</option>
-                            <option value="">+15</option>
-                            <option value="">+18</option>
-                        </select>
-                        <input id="phoneNumber" type="tel" name="phone" placeholder="Phone Number" class="form-control bg-white border-md border-left-0 pl-3">
                     </div>
 
 
                     <!-- Job -->
                     <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-black-tie text-muted"></i>
-                            </span>
-                        </div>
-                        <select id="job" name="jobtitle" class="form-control custom-select bg-white border-left-0 border-md">
-                            <option value="">Choose gender</option>
-                            <option value="">male</option>
-                            <option value="">female</option>
+
+                        <select id="job" name="jobtitle" class="form-control custom-select bg-white border-md" (change)="this.changeGender($event)" [ngClass]="validation.validGender" [(ngModel)]="user.Gender">
+                            <option value="Pol">Pol</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                         </select>
+                      <div class="invalid-feedback">
+                        Izaberite pol!
+                      </div>
                     </div>
 
                     <!-- Password -->
-                    <div class="input-group col-lg-6 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-lock text-muted"></i>
-                            </span>
+                    <div class="input-group col-lg-12 mb-4">
+                        <input id="password" type="password" name="password" placeholder="Lozinka" class="form-control bg-white  border-md" [ngClass]="validation.validPassword"  [(ngModel)]="user.Password" (keydown)="onKeyDown()">
+                        <div class="invalid-feedback">
+                          Unesite lozinku sa velikim slovom i specijalnim karatretima!
                         </div>
-                        <input id="password" type="password" name="password" placeholder="Password" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Password Confirmation -->
-                    <div class="input-group col-lg-6 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-lock text-muted"></i>
-                            </span>
+                    <div class="input-group col-lg-12 mb-4">
+                        <input id="passwordConfirmation" type="password" name="passwordConfirmation" placeholder="Ponovite lozinku" class="form-control bg-white border-md" [ngClass]="validation.validConfirmPassword"  [(ngModel)]="user.ConfirmPassword" (keydown)="onKeyDown()">
+                        <div class="invalid-feedback">
+                         Lozinke se ne poklapaju
                         </div>
-                        <input id="passwordConfirmation" type="password" name="passwordConfirmation" placeholder="Confirm Password" class="form-control bg-white border-left-0 border-md">
                     </div>
 
                     <!-- Submit Button -->
                     <div class="form-group col-lg-12 mx-auto mb-0">
-                        <a href="/profile" class="btn btn-primary btn-block py-2">
-                            <span class="font-weight-bold">Create your account</span>
-                        </a>
+                        <button class="btn btn-primary btn-block py-2" (click)="createAccount()">
+                            <span class="font-weight-bold">Kreiraj profil</span>
+                        </button>
                     </div>
 
                     <!-- Divider Text -->
@@ -131,7 +111,7 @@
 
                     <!-- Already Registered -->
                     <div class="text-center w-100">
-                        <p class="text-muted font-weight-bold">Already Registered? <a href="/login" class="text-primary ml-2">Login</a></p>
+                        <p class="text-muted font-weight-bold">Već ste registrovani? <a href="/login" class="text-primary ml-2">Prijavite se</a></p>
                     </div>
 
                 </div>
