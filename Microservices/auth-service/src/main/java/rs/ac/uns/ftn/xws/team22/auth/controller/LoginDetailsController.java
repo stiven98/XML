@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import rs.ac.uns.ftn.xws.team22.auth.model.LoginDetails;
-import rs.ac.uns.ftn.xws.team22.auth.service.impl.LoginDetailsService;
+import rs.ac.uns.ftn.xws.team22.auth.model.AuthenticationData;
+import rs.ac.uns.ftn.xws.team22.auth.service.impl.AuthenticationDataService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,14 +19,13 @@ import java.util.Map;
 public class LoginDetailsController {
 
     @Autowired
-    LoginDetailsService loginDetailsService;
+    AuthenticationDataService loginDetailsService;
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        System.out.println("Aca kurva");
         Map<String, String> result = new HashMap<>();
-        List<LoginDetails> loginDetailsList = loginDetailsService.findAll();
-        return new ResponseEntity<>(loginDetailsList, HttpStatus.OK);
+        List<AuthenticationData> authenticationDataList = loginDetailsService.findAll();
+        return new ResponseEntity<>(authenticationDataList, HttpStatus.OK);
     }
 
 }
