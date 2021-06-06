@@ -183,6 +183,7 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/sysusers/create", SystemUsersHandler.Create).Methods("POST")
 	router.HandleFunc("/sysusers/update", SystemUsersHandler.Update).Methods("PUT")
 	router.HandleFunc("/sysusers/getAll",SystemUsersHandler.GetAll).Methods("GET")
+	router.HandleFunc("/sysusers/getAllUsernames",SystemUsersHandler.GetAllUsernames).Methods("GET")
 	router.HandleFunc("/administrators/update",  administratorsHandler.Update).Methods("PUT")
 	router.HandleFunc("/administrators/create",  administratorsHandler.Create).Methods("POST")
 	router.HandleFunc("/administrators/getAll",  administratorsHandler.GetAll).Methods("GET")

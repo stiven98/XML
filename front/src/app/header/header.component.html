@@ -29,10 +29,10 @@
           </a>
         </li>
         <li  *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 600px; margin-top: 15px;">
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Pretraga" aria-label="Search">
+          <div class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" [(ngModel)]="searchParams" (keydown)="onKeyDown($event)" placeholder="Pretraga" aria-label="Search">
             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Pretraga</button>
-          </form>
+          </div>
         </li>
         <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 350px; margin-top: 15px;">
           <form class="form-inline my-2 my-lg-0">
@@ -73,3 +73,6 @@
       </ul>
     </div>
   </nav>
+  <select class="form-control custom-select bg-white border-md" style="margin-left: 810px; width: 205px; margin-top: 5px">
+  <option *ngFor="let username of usernamesForSearch" [value] = "username">{{username}}</option>
+  </select>

@@ -20,3 +20,6 @@ func (service *SystemUsersService) Update(user *model.SystemUser) error {
 func (service *SystemUsersService) GetAll() []model.SystemUser {
 	return  service.Repo.GetAll()
 }
+func (service *SystemUsersService) GetAllUsernames() []string {
+	return  service.Repo.GetAllUsernames()
+}
