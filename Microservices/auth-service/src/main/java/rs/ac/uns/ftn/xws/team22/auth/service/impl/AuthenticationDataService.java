@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.xws.team22.auth.model.AuthenticationData;
 import rs.ac.uns.ftn.xws.team22.auth.repository.LoginDetailsRepository;
@@ -17,7 +18,8 @@ public class AuthenticationDataService implements IAuthenticationDataService, Us
 
     @Autowired
     private LoginDetailsRepository loginDetailsRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public List<AuthenticationData> findAll() {
         return this.loginDetailsRepository.findAll();
@@ -29,12 +31,24 @@ public class AuthenticationDataService implements IAuthenticationDataService, Us
     }
 
     @Override
-    public AuthenticationData findByEmail(String email) {
-        return this.loginDetailsRepository.findByEmail(email);
+    public AuthenticationData findByUsername(String email) {
+        return this.loginDetailsRepository.findByUsername(email);
+    }
+
+    @Override
+    public boolean isValidLogin(String username, String password) {
+        String validPassword = loginDetailsRepository.isValidPassword(username);
+        if(loginDetailsRepository.isValidUsername(username) != null && passwordEncoder.matches(password, validPassword) ) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return this.loginDetailsRepository.findByEmail(s);
+        return this.loginDetailsRepository.findByUsername(s);
     }
+
 }

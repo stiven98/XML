@@ -2,20 +2,33 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Post, PostItem } from '../model/Post.model';
 import { PostsService } from '../service/posts.service';
+import { AuthService } from '../service/authorization/auth.service';
+import { UserService } from '../service/user.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
   public files: any[] = [];
   public hashtag: string = '';
   public location: string = '';
   public description: string = '';
-  constructor(private modalService: NgbModal, private postsService: PostsService) {
-  }
+  
+  searchParams: any;
+  usernames: string[] = [];
+  usernamesForSearch: string[] = [];
+  usernamesToShow: string[] = [];
+
+  constructor(private modalService: NgbModal, private postsService: PostsService, public authService: AuthService,
+    public usersService: UserService) {
+    }
 
   ngOnInit(): void {
+    this.usersService.getAllUsernames().subscribe((response) => {
+      this.usernames = response as string[];
+      console.log(this.usernames);
+    });
   }
 
   uploadPost(): void {
@@ -56,4 +69,17 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  onLogout = () => {
+    this.authService.doLogout();
+  };
+
+  onKeyDown = (event: any) => {
+    for (let username of this.usernames) {
+      if (username.includes(this.searchParams)) {
+        if (!this.usernamesForSearch.includes(username)) {
+          this.usernamesForSearch.push(username);
+        }
+      }
+    }
+  };
 }

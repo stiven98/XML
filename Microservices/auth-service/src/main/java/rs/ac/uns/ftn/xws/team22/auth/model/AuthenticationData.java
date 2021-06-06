@@ -25,8 +25,8 @@ public class AuthenticationData implements UserDetails {
     @Column(name = "id", nullable = false, unique = true)
     private UUID id;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -57,7 +57,7 @@ public class AuthenticationData implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.username;
     }
 
     @Override

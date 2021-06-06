@@ -3,45 +3,62 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item">
                 <a class="nav-link" href="/homePage">
                     <i class="fa fa-home"></i> Početna
                     <span class="sr-only"></span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item">
                 <a class="nav-link" href="/directMessages">
                     <i class="fa fa-envelope-o">
             <span class="badge badge-primary">11</span>
           </i> Poruke
                 </a>
             </li>
-            <li class="nav-item">
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item">
                 <a class="nav-link" href="/notifications">
                     <i class="fa fa-globe">
             <span class="badge badge-primary">11</span>
           </i> Obaveštenja
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="this.authService.isLoggedIn">
                 <a class="nav-link" (click)="openModal(modAddPost)">
                     <i class="fa fa-plus-square">
             <span class="badge badge-primary"></span>
           </i> Dodaj objavu
                 </a>
             </li>
-            <li class="nav-item" style="margin-left: 300px; margin-top: 15px;">
+            <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 600px; margin-top: 15px;">
+                <div class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="text" [(ngModel)]="searchParams" (keydown)="onKeyDown($event)" placeholder="Pretraga" aria-label="Search">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Pretraga</button>
+                </div>
+            </li>
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 350px; margin-top: 15px;">
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="text" placeholder="Pretraga" aria-label="Search">
                     <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Pretraga</button>
                 </form>
             </li>
+            <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px;">
+                <a class="nav-link" href="/login">
+                    <i class="fa fa-sign-in">
+          </i> Prijavite se
+                </a>
+            </li>
+            <li *ngIf="!this.authService.isLoggedIn" class="nav-item">
+                <a class="nav-link" href="/registration">
+                    <i class="fa fa-user-plus">
+          </i> Registrujte se
+                </a>
+            </li>
         </ul>
         <ul class="navbar-nav ">
-            <li class="nav-item dropdown" style="margin-right: 140px;">
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item dropdown" style="margin-right: 50px;">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-user">
             <span class="badge badge-primary">11</span>
@@ -51,12 +68,15 @@
                     <a class="dropdown-item" href="/profile"> <i class="fa fa-user"></i> Profil</a>
                     <a class="dropdown-item" href="/editProfile"> <i class="fa fa-cog"></i> Podešavanja</a>
                     <div class="dropdown-divider"> </div>
-                    <a class="dropdown-item" href="#"> <i class="fa fa-sign-out"></i> Odjava</a>
+                    <a class="dropdown-item" href="/login" (click)="onLogout()"> <i class="fa fa-sign-out"></i> Odjava</a>
                 </div>
             </li>
         </ul>
     </div>
 </nav>
+<select class="form-control custom-select bg-white border-md" style="margin-left: 810px; width: 205px; margin-top: 5px">
+  <option *ngFor="let username of usernamesForSearch" [value]="username">{{username}}</option>
+</select>
 
 <ng-template #modAddPost let-modal>
     <div class="modal-header">
@@ -82,8 +102,8 @@
             <input id="upload" class="form-control border-0" type="file" name="files" multiple (change)="onChange($event)">
             <div class="input-group-append">
                 <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
-              class="fa fa-cloud-upload mr-2 text-muted"></i><small
-              class="text-uppercase font-weight-bold text-muted">Odaberite fajl</small></label>
+            class="fa fa-cloud-upload mr-2 text-muted"></i><small
+            class="text-uppercase font-weight-bold text-muted">Odaberite fajl</small></label>
             </div>
         </div>
         <div *ngFor="let f of files">{{f.name}}</div>
