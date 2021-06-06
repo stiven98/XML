@@ -1,4 +1,3 @@
-
 export class User {
   FirstName: string;
   LastName: string;
@@ -21,8 +20,4 @@ export class User {
     this.ConfirmPassword = '';
     this.DateOfBirth = 'mm/dd/yyyy';
   }
-
-
-
-
 }

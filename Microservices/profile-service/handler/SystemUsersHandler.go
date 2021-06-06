@@ -48,3 +48,8 @@ func (handler *SystemUsersHandler) GetAll(w http.ResponseWriter, r *http.Request
 	users:=handler.Service.GetAll()
 	renderJSON(w, &users)
 }
+
+func (handler *SystemUsersHandler) GetAllUsernames(w http.ResponseWriter, r *http.Request){
+	usernames:=handler.Service.GetAllUsernames()
+	renderJSON(w, &usernames)
+}

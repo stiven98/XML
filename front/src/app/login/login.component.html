@@ -12,20 +12,26 @@
                <form action="" method="post" name="login">
                        <div class="form-group">
                           <label for="exampleInputEmail1">Korisničko ime</label>
-                          <input type="email" name="email"  class="form-control" id="email" aria-describedby="emailHelp" placeholder="Unesite korisničko ime">
+                          <input type="text" name="username"  class="form-control" id="username" aria-describedby="username" [(ngModel)]="user.username"  placeholder="Unesite korisničko ime">
+                          <div *ngIf="!isValidUsername(user.username)" class ="invalid-username">
+                           <p style="color: red;">Neispravno korisničko ime</p>
+                          </div>
                        </div>
                        <div class="form-group">
                           <label for="exampleInputEmail1">Lozinka</label>
-                          <input type="password" name="password" id="password"  class="form-control" aria-describedby="emailHelp" placeholder="Unesite lozinku">
+                          <input type="password" name="password" id="password"  class="form-control" aria-describedby="emailHelp" [(ngModel)]="user.password"   placeholder="Unesite lozinku">
+                          <div *ngIf="!isValidPassword(user.password)" class="invalid-password" style="color: red;">
+                             <p style="color: red;">Neispravna lozinka</p>
+                          </div>
                        </div>
                        <div class="form-group">
                           <p class="text-center">Prijavljivanjem prihvatate naše <a href="#">Uslove korišćenja</a></p>
                        </div>
                        <div class="col-md-12 text-center ">
-                          <a type="submit" href="/profile" class=" btn btn-block mybtn btn-primary tx-tfm">Prijavite se</a>
+                          <button  (click)="onLogin()"  class=" btn btn-block mybtn btn-primary tx-tfm" >Prijavite se</button>
                        </div>
                        <div class="form-group">
-                          <p class="text-center">Nemate profil? <a href="#" id="signup">Registrujte se </a></p>
+                          <p class="text-center">Nemate profil? <a href="/registration" id="signup">Registrujte se </a></p>
                        </div>
                     </form>
              
