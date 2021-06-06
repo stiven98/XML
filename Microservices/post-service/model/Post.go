@@ -15,7 +15,7 @@ type Favourites struct {
 }
 type PostType string
 const (
-	STORY PostType = "story"
+	POST  PostType = "post"
 	ALBUM PostType = "album"
 )
 type Like struct {
@@ -29,7 +29,7 @@ type Dislike struct {
 
 type Post struct {
 	ID uuid.UUID 	`json:"id"`
-	USERID uuid.UUID `json:"userid"`
+	USERNAME string `json:"username"`
 	TIMESTAMP time.Time `json:"timestamp"`
 	ITEMS []PostItem `json:"items"`
 	DESCRIPTION string `json:"description"`

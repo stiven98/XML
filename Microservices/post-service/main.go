@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-redis/redis"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -29,7 +30,10 @@ func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.
 	router.HandleFunc("/posts/create", postsHandler.Create).Methods("POST")
 	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
 	router.HandleFunc("/upload", postsHandler.UploadFile).Methods("POST")
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8086"), router))
+	headers := handlers.AllowedHeaders([] string{"Content-Type"})
+	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([] string{"*"})
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8086"), handlers.CORS(headers, methods, origins) (router)))
 
 }
 

@@ -12,12 +12,24 @@ type PostsRepository struct {
 }
 
 func(repo *PostsRepository) Create(post *model.Post)  error {
-	fmt.Println(post)
-	jsonPost, _ := json.Marshal(post)
-	fmt.Println(jsonPost)
-	result := repo.Database.Set( post.ID.String(), jsonPost, 0).Err()
-	if result != nil {
-		fmt.Println(result)
+	result, err :=  repo.Database.Get(post.USERNAME).Result()
+	var posts[] model.Post
+	if err != nil {
+		posts = append(posts, *post)
+		jsonPosts, _ := json.Marshal(posts)
+		newErr := repo.Database.Set(post.USERNAME, jsonPosts, 0).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	} else{
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &posts)
+		posts = append(posts, *post)
+		jsonPosts, _ := json.Marshal(posts)
+		newErr := repo.Database.Set(post.USERNAME, jsonPosts, 0).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
 	}
 	return nil
 }

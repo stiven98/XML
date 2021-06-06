@@ -6,7 +6,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"io"
-	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -25,7 +24,8 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var post model.Post
 	fmt.Println(json.NewDecoder(r.Body).Decode(&post))
 	err := json.NewDecoder(r.Body).Decode(&post)
-
+	post.ID = uuid.New()
+	post.TIMESTAMP = time.Now()
 	err = handler.Service.Create(&post)
 	if err != nil {
 		fmt.Println(err)
@@ -38,10 +38,12 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Request) {
 	var postItems[] model.PostItem
 	// Maximum upload of 10 MB files
-
 	r.ParseMultipartForm(32 << 20) // 32MB is the default used by FormFile
 	fhs := r.MultipartForm.File["files"]
+	var i int
+	i = 0
 	for _, fh := range fhs {
+		i = i + 1
 		f, err := fh.Open()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -53,7 +55,7 @@ func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Requ
 		fileName := strings.Split(fh.Filename, ".")
 		var filePath string
 		if(len(fileName) >= 2){
-			filePath = filepath.Join("user_posts", randSeq(20) + "." + fileName[1])
+			filePath = filepath.Join("user_posts", uuid.NewString() +  "." + fileName[1])
 		}else{
 			filePath = filepath.Join("user_posts", fh.Filename)
 		}
@@ -79,16 +81,6 @@ func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Requ
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 	renderJSON(w, &postItems)
-}
-
-func randSeq(n int) string {
-	rand.Seed(time.Now().UnixNano())
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
 }
 
 func (handler *PostsHandler) GetByKey(w http.ResponseWriter, r *http.Request){
