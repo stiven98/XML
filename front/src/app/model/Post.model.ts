@@ -1,12 +1,12 @@
 export class Post {
-    Username: string;
+    UserId: string;
     Items : PostItem[];
     Type : string;
     Description : string;
     Location : string;
     Hashtag : string;
     constructor() {
-        this.Username = '';
+        this.UserId = '';
         this.Items = [];
         this.Type = 'post'
         this.Description = '';

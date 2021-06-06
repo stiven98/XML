@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"post_service/model"
+	"post_service/model/dto"
 	"post_service/service"
 	"strings"
 	"time"
@@ -29,8 +30,19 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err = handler.Service.Create(&post)
 	if err != nil {
 		fmt.Println(err)
-		w.WriteHeader(http.StatusExpectationFailed)
+		w.WriteHeader(http.StatusBadRequest)
 	}
+	//rest, err := http.Get("http://localhost:8088/users/getFollowers/" + post.USERID.String())
+	rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
+	var dto dto.FollowersDto
+	err = json.NewDecoder(rest.Body).Decode(&dto)
+	fmt.Println(dto.KEYS)
+	err = handler.Service.AddPostToFeed(dto.KEYS, &post)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }

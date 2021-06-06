@@ -26,10 +26,14 @@ type Dislike struct {
 	UserID uuid.UUID `json:"userid"`
 }
 
+type Feed struct {
+	UserId uuid.UUID `json:"userid"`
+	PostId uuid.UUID `json:"postid"`
+}
 
 type Post struct {
 	ID uuid.UUID 	`json:"id"`
-	USERNAME string `json:"username"`
+	USERID uuid.UUID `json:"userid"`
 	TIMESTAMP time.Time `json:"timestamp"`
 	ITEMS []PostItem `json:"items"`
 	DESCRIPTION string `json:"description"`

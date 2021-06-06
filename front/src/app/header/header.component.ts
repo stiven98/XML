@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
     this.postsService.uploadPosts(formData).subscribe(items => {
       console.log(items);
       // TO-DO
-      post.Username = "acaaca123";
+      post.UserId = "00597172-6717-4250-9a09-90218271c5c6";
       post.Items = items as PostItem[];
       this.files.length == 1 ? post.Type = 'post' : post.Type = 'album';
       this.postsService.createPost(post).subscribe(item => item);
