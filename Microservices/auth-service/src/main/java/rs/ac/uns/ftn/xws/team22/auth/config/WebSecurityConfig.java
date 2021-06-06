@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import rs.ac.uns.ftn.xws.team22.auth.security.TokenUtils;
 import rs.ac.uns.ftn.xws.team22.auth.security.auth.RestAuthenticationEntryPoint;
 import rs.ac.uns.ftn.xws.team22.auth.security.auth.TokenAuthenticationFilter;
-import rs.ac.uns.ftn.xws.team22.auth.service.impl.LoginDetailsService;
+import rs.ac.uns.ftn.xws.team22.auth.service.impl.AuthenticationDataService;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Autowired
-    private LoginDetailsService loginDetailsService;
+    private AuthenticationDataService loginDetailsService;
 
     @Bean
     @Override
@@ -39,14 +39,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(loginDetailsService).passwordEncoder(passwordEncoder());
     }
-
-
 
     @Autowired
     private TokenUtils tokenUtils;
@@ -80,7 +76,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
         web.ignoring().antMatchers(HttpMethod.POST, "/api/login-details");
+        web.ignoring().antMatchers(HttpMethod.POST, "/auth");
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
-                "/**/*.css", "/**/*.js","/api/city/all");
+                "/**/*.css", "/**/*.js");
     }
 }

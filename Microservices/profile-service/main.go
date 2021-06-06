@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -194,8 +195,11 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/agents/create",  agentsHandler.Create).Methods("POST")
 	router.HandleFunc("/agents/getAll",  agentsHandler.GetAll).Methods("GET")
 
+	headers := handlers.AllowedHeaders([] string{"Content-Type"})
+	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([] string{"*"})
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), handlers.CORS(headers, methods, origins) (router)))
 }
 
 func main() {

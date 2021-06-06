@@ -15,6 +15,7 @@
 	<description>Auth service</description>
 	<properties>
 		<java.version>11</java.version>
+		<ehcache-core.version>2.6.11</ehcache-core.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -55,6 +56,22 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-acl</artifactId>
+			<version>5.4.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>5.3.6</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>${ehcache-core.version}</version>
+			<type>jar</type>
 		</dependency>
 	</dependencies>
 

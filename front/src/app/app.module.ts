@@ -11,9 +11,11 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import {FormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
 
 const appRoutes: Routes = [
-  {path: '', component: RegisterComponent },
+  {path: 'registration', component: RegisterComponent },
   {path: 'login', component: LoginComponent },
   {path: 'profile', component: ProfilePageComponent },
   {path: 'editProfile', component: EditProfileComponent },
@@ -38,8 +40,10 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    AppRoutingModule
-  ],
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
