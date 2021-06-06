@@ -199,6 +199,7 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 }
 
 func main() {
+	fmt.Println(uuid.New())
 	database := initDB()
 	sysusersRepo, administratorsRepo, usersRepo, agentsRepo := initRepo(database)
 	systemUsersService, administratorsService, usersService, agentsService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo)
