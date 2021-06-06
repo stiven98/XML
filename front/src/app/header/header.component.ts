@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit {
   };
 
   onKeyDown = (event: any) => {
+
     for (let username of this.usernames) {
       if (username.includes(this.searchParams)) {
         if (!this.usernamesForSearch.includes(username)) {

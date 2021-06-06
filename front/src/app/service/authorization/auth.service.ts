@@ -36,6 +36,7 @@ export class AuthService {
         console.log(res.username);
         let authority = res.role;
         localStorage.setItem('role', authority);
+        localStorage.setItem('id', res.id);
         console.log(authority);
         localStorage.setItem('username', res.username);
         if (authority === 'ROLE_ADMIN') {
@@ -68,6 +69,7 @@ export class AuthService {
     let removeToken = localStorage.removeItem('access_token');
     localStorage.removeItem('role');
     localStorage.removeItem('username');
+    localStorage.removeItem('id');
     if (removeToken == null) {
       this.router.navigate(['/login']);
     }
