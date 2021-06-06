@@ -28,6 +28,7 @@ func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.
 	router.HandleFunc("/comments/getByKey/{key}", commentsHandler.GetByKey).Methods("GET")
 	router.HandleFunc("/posts/create", postsHandler.Create).Methods("POST")
 	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
+	router.HandleFunc("/upload", postsHandler.UploadFile).Methods("POST")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8086"), router))
 
 }

@@ -3,10 +3,17 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"io"
+	"math/rand"
 	"net/http"
+	"os"
+	"path/filepath"
 	"post_service/model"
 	"post_service/service"
+	"strings"
+	"time"
 )
 
 type PostsHandler struct {
@@ -28,6 +35,61 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
+func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Request) {
+	var postItems[] model.PostItem
+	// Maximum upload of 10 MB files
+
+	r.ParseMultipartForm(32 << 20) // 32MB is the default used by FormFile
+	fhs := r.MultipartForm.File["files"]
+	for _, fh := range fhs {
+		f, err := fh.Open()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		fmt.Printf("Uploaded File: %+v\n", fh.Filename)
+		fmt.Printf("File Size: %+v\n", fh.Size)
+		fmt.Printf("MIME Header: %+v\n", fh.Header)
+		fileName := strings.Split(fh.Filename, ".")
+		var filePath string
+		if(len(fileName) >= 2){
+			filePath = filepath.Join("user_posts", randSeq(20) + "." + fileName[1])
+		}else{
+			filePath = filepath.Join("user_posts", fh.Filename)
+		}
+		dst, err := os.Create(filePath)
+		defer dst.Close()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Copy the uploaded file to the created file on the filesystem
+		if _, err := io.Copy(dst, f); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		var postItem model.PostItem
+		postItem.PATH = filePath
+		postItem.ID = uuid.New()
+		postItems = append(postItems, postItem)
+		defer f.Close()
+
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	renderJSON(w, &postItems)
+}
+
+func randSeq(n int) string {
+	rand.Seed(time.Now().UnixNano())
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
 
 func (handler *PostsHandler) GetByKey(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
