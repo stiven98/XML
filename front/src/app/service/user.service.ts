@@ -1,6 +1,8 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {User} from '../model/User.model';
+import {map} from 'rxjs/operators';
+import { AccountInfoModel } from '../model/AccountInfoModel';
 
 @Injectable({
   providedIn: 'root',
@@ -15,4 +17,9 @@ export class UserService {
       system_user: {...user, DateOfBirth: user.DateOfBirth + 'T01:00:00+01:00'}, PhoneNumber: user.PhoneNumber
     });
   }
+
+  isValidLogin(user: AccountInfoModel) {
+    return this.http.get('http://localhost:8080/api/login-details/isValidLogin/' + user.username + "/" + user.password).pipe(map(res => { return res }));
+  } 
+  
 }
