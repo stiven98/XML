@@ -34,22 +34,29 @@
             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Pretraga</button>
           </form>
         </li>
-        <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 300px; margin-top: 15px;">
+        <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 350px; margin-top: 15px;">
           <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Pretraga" aria-label="Search">
             <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Pretraga</button>
           </form>
         </li>
-        <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 650px;">
+        <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px;">
           <a class="nav-link" href="/login">
             <i class="fa fa-sign-in">
             </i>
             Prijavite se
           </a>
         </li>
+        <li *ngIf="!this.authService.isLoggedIn" class="nav-item">
+          <a class="nav-link" href="/registration">
+            <i class="fa fa-user-plus">
+            </i>
+            Registrujte se
+          </a>
+        </li>
       </ul>
       <ul class="navbar-nav ">
-        <li *ngIf="this.authService.isLoggedIn" class="nav-item dropdown" style="margin-right: 140px;">
+        <li *ngIf="this.authService.isLoggedIn" class="nav-item dropdown" style="margin-right: 50px;">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-user">
               <span class="badge badge-primary">11</span>
