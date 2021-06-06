@@ -3,6 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
+	_ "github.com/gorilla/mux"
 	"net/http"
 	"profileservice/model"
 	"profileservice/service"
@@ -52,4 +54,9 @@ func (handler *SystemUsersHandler) GetAll(w http.ResponseWriter, r *http.Request
 func (handler *SystemUsersHandler) GetAllUsernames(w http.ResponseWriter, r *http.Request){
 	usernames:=handler.Service.GetAllUsernames()
 	renderJSON(w, &usernames)
+}
+func (handler *SystemUsersHandler) GetUserId(w http.ResponseWriter, r *http.Request){
+	vars :=mux.Vars(r)
+	id:=handler.Service.GetUserId(vars["username"])
+	renderJSON(w, &id)
 }

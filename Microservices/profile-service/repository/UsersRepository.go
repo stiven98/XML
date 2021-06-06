@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"profileservice/model"
 	"profileservice/model/Dto"
@@ -20,6 +21,18 @@ func(repo *UsersRepository) GetAll() []model.User{
 	repo.Database.Preload("SystemUser").Find(&users)
 	return users
 }
+func(repo *UsersRepository) GetById(id uuid.UUID) model.User{
+	var users []model.User
+	repo.Database.Preload("SystemUser").Find(&users)
+	var ret model.User
+	for _, user := range users {
+		if user.UserID == id {
+			ret = user
+		}
+	}
+	return ret
+}
+
 
 func (repo *UsersRepository) Create(user *model.User) error {
 	result := repo.Database.Create(user)

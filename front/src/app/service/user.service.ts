@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../model/User.model';
 import { map } from 'rxjs/operators';
 import { AccountInfoModel } from '../model/AccountInfoModel';
+import { RegularUser } from '../model/RegularUserModel';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +38,22 @@ export class UserService {
 
   getAllUsernames = () => {
     return this.http.get('http://localhost:8085/sysusers/getAllUsernames').pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  };
+
+  getUserById = (id:string) => {
+    return this.http.get('http://localhost:8085/users/getById/'+id ).pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  };
+
+  getUserId = (username: string) => {
+    return this.http.get('http://localhost:8085/sysusers/getUserId/' + username).pipe(
       map((responseData) => {
         return responseData;
       })

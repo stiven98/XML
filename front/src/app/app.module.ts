@@ -17,7 +17,7 @@ import {HttpClientModule} from '@angular/common/http';
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
   {path: 'login', component: LoginComponent },
-  {path: 'profile', component: ProfilePageComponent },
+  {path: 'profile/:id', component: ProfilePageComponent },
   {path: 'editProfile', component: EditProfileComponent },
   {path: 'directMessages', component: DirectMessagesComponent },
   {path: 'notifications', component: NotificationsComponent },

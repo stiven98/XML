@@ -74,19 +74,6 @@ export class AuthService {
       this.router.navigate(['/login']);
     }
   }
-
-  // // User profile
-  // getUserProfile(): Observable<any> {
-  //   return this.apiService
-  //     .get(this.config.get_user_url, { headers: this.headers })
-  //     .pipe(
-  //       map((res: Response) => {
-  //         return res || {};
-  //       }),
-  //       catchError(this.handleError)
-  //     );
-  // }
-
   tokenIsPresent() {
     return this.access_token != undefined && this.access_token != null;
   }
