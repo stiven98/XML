@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
     return username.length > 12 ? false : true;
   };
   isValidPassword = (password: string) => {
-   return password.length > 12 ? false : true;
+    return password.length > 12 ? false : true;
   };
 
   resetInputs = () => {
