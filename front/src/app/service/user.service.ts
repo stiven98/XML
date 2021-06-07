@@ -1,9 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../model/User.model';
 import { map } from 'rxjs/operators';
-import { AccountInfoModel } from '../model/AccountInfoModel';
-import { RegularUser } from '../model/RegularUserModel';
+import { UserEdit } from '../model/EditUser';
 
 @Injectable({
   providedIn: 'root',
@@ -20,21 +19,6 @@ export class UserService {
       PhoneNumber: user.PhoneNumber,
     });
   };
-
-  isValidLogin(user: AccountInfoModel) {
-    return this.http
-      .get(
-        'http://localhost:8080/api/login-details/isValidLogin/' +
-          user.username +
-          '/' +
-          user.password
-      )
-      .pipe(
-        map((res) => {
-          return res;
-        })
-      );
-  }
 
   getAllUsernames = () => {
     return this.http.get('http://localhost:8085/sysusers/getAllUsernames').pipe(
@@ -59,4 +43,20 @@ export class UserService {
       })
     );
   };
+
+editUser = (editUser: UserEdit) => {
+  return this.http.put('http://localhost:8085/users/update', editUser).pipe(map((res)=> {return res;}));
+
+}
+
+getUsersById = (id: any) => {
+  return this.http.get('http://localhost:8085//users/getById/' + id).pipe(
+    map((responseData) => {
+      return responseData;
+    })
+  );
+}
+
+
+
 }

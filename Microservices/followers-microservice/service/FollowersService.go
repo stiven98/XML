@@ -8,7 +8,7 @@ type FollowersService struct {
 	FollowersRepository *repository.FollowersRepository
 }
 
-func (s FollowersService) GetFollowers(id string) interface{} {
+func (s FollowersService) GetFollowers(id string) []string {
 	return s.FollowersRepository.GetFollowers(id)
 }
 

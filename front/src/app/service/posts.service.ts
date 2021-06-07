@@ -20,4 +20,11 @@ export class PostsService {
     createPost = (post : Post) => {
         return this.http.post('http://localhost:8086/posts/create', post).pipe(res => res);
     }
+
+    getFeed = (id : string) => {
+        return this.http.get('http://localhost:8086/posts/feed/' + id).pipe(map(item => {
+            return item;
+        }));
+    }
+
 }
