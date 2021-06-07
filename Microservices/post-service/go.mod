@@ -1,10 +1,12 @@
 module post_service
 
 go 1.15
+
 require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/google/uuid v1.2.0
+	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/onsi/ginkgo v1.7.0 // indirect

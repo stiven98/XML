@@ -17,3 +17,7 @@ func (service *PostsService) Create(post *model.Post) error {
 func (service *PostsService) GetByKey(key string) *model.Post {
 	return  service.PostsRepo.GetByKey(key)
 }
+
+func (service *PostsService) AddPostToFeed(keys []string, post *model.Post) error {
+	return service.PostsRepo.AddPostToFeed(keys, post)
+}

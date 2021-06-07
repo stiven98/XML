@@ -2,7 +2,7 @@ package repository
 
 import (
 	"fmt"
-	"github.com/google/uuid"
+	_ "github.com/google/uuid"
 	"gorm.io/gorm"
 	"profileservice/model"
 	"profileservice/model/Dto"
@@ -21,12 +21,6 @@ func(repo *UsersRepository) GetAll() []model.User{
 	repo.Database.Preload("SystemUser").Find(&users)
 	return users
 }
-func(repo *UsersRepository) GetById(id uuid.UUID) model.User{
-	var user model.User
-	repo.Database.Preload("SystemUser").Find(&user).Where("user_id = ?", id);
-	return user
-}
-
 
 func (repo *UsersRepository) Create(user *model.User) error {
 	result := repo.Database.Create(user)
@@ -41,4 +35,10 @@ func (repo *UsersRepository) ChangeWhetherIsPublic(dto *Dto.ChangeWhetherIsPubli
 func (repo *UsersRepository) ChangeAllowedTags(dto *Dto.ChangeAllowedTagsDto) error {
 	result := repo.Database.Model(model.User{}).Where("user_id = ?", dto.USERID).UpdateColumn("allowed_tags", dto.FLAG)
 	return result.Error
+}
+
+func (repo *UsersRepository) GetById(id string) (model.User, error) {
+	var user model.User
+	response:= repo.Database.Model(model.User{}).Find(&user, "user_id = ?", id)
+	return user, response.Error
 }

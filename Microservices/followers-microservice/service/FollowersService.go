@@ -27,3 +27,19 @@ func (s FollowersService) CheckRelationship(userID string, targetID string) bool
 func (s FollowersService) Follow(userID string, targetID string) error {
 	return s.FollowersRepository.Follow(userID, targetID)
 }
+
+func (s FollowersService) AddNode(id string) (interface{}, error) {
+	return s.FollowersRepository.AddNode(id)
+}
+
+func (s FollowersService) Request(userID string, targetID string) interface{} {
+	return s.FollowersRepository.Request(userID, targetID)
+}
+
+func (s FollowersService) GetRequests(id string) interface{} {
+	return s.FollowersRepository.GetRequests(id)
+}
+
+func (s FollowersService) Unfollow(userID string, targetID string) interface{} {
+	return s.FollowersRepository.Unfollow(userID, targetID)
+}

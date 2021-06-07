@@ -54,7 +54,7 @@ func initDB() *gorm.DB {
 
 		systemUsers := [] model.SystemUser {
 			{
-				ID:          uuid.UUID{},
+				ID:          uuid.MustParse("69b0597e-4a63-49e5-ae40-5b159ada82b9"),
 				FirstName:   "Aca",
 				LastName:    "Simic",
 				Username:    "acasimic",
@@ -64,17 +64,17 @@ func initDB() *gorm.DB {
 				TypeOfUser: model.ADMIN,
 				DateOfBirth: time.Time{}.AddDate(1998, 10, 1),
 			}, {
-				ID:          uuid.UUID{},
+				ID:          uuid.MustParse("965208b9-287b-4da5-b772-73df5e74ebbc"),
 				FirstName:   "Jovan",
 				LastName:    "Bosnic",
 				Username:    "jovanbosnic",
 				Email:       "jovan@gmail.com",
 				Password:    "jovan123",
 				Gender:      model.MALE,
-				TypeOfUser: model.ADMIN,
+				TypeOfUser: model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 7, 31),
 			}, {
-				ID:          uuid.UUID{},
+				ID:          uuid.MustParse("4579daae-1567-42d5-a25c-1a3818077c84"),
 				FirstName:   "Djordjije",
 				LastName:    "Kundacina",
 				Username:    "djordjijekundacina",
@@ -84,7 +84,7 @@ func initDB() *gorm.DB {
 				TypeOfUser: model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 9, 10),
 			}, {
-				ID:          uuid.UUID{},
+				ID:          uuid.MustParse("5cb65bc8-6130-4436-a1f9-ad4778f112bc"),
 				FirstName:   "Aleksandar",
 				LastName:    "Stevanovic",
 				Username:    "aleksandarstevanovic",
@@ -93,20 +93,68 @@ func initDB() *gorm.DB {
 				Gender:      model.MALE,
 				TypeOfUser: model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 10, 10),
+			}, {
+				ID:          uuid.MustParse("708b65de-fb77-4934-bfd0-d14161a74905"),
+				FirstName:   "Marko",
+				LastName:    "Markovic",
+				Username:    "marko",
+				Email:       "marko@gmail.com",
+				Password:    "marko123",
+				Gender:      model.MALE,
+				TypeOfUser: model.USER,
+				DateOfBirth: time.Time{}.AddDate(1998, 1, 10),
+			}, {
+				ID:          uuid.MustParse("0cf8a7ff-7bb5-48f0-a834-7b07eb306f90"),
+				FirstName:   "Janko",
+				LastName:    "Jankovic",
+				Username:    "janko_98",
+				Email:       "janko@gmail.com",
+				Password:    "janko123",
+				Gender:      model.MALE,
+				TypeOfUser: model.USER,
+				DateOfBirth: time.Time{}.AddDate(1994, 10, 10),
+			}, {
+				ID:          uuid.MustParse("be71d1da-0749-480f-a563-dcc35a14e542"),
+				FirstName:   "Dejan",
+				LastName:    "Dejanovic",
+				Username:    "deki_99",
+				Email:       "dejan@gmail.com",
+				Password:    "dejan123",
+				Gender:      model.MALE,
+				TypeOfUser: model.USER,
+				DateOfBirth: time.Time{}.AddDate(1991, 10, 10),
+			},{
+				ID:          uuid.MustParse("d3ea863d-350e-44f2-bd6e-809aa7100476"),
+				FirstName:   "Milica",
+				LastName:    "Milicevic",
+				Username:    "milica00",
+				Email:       "milica@gmail.com",
+				Password:    "miilica123",
+				Gender:      model.MALE,
+				TypeOfUser: model.USER,
+				DateOfBirth: time.Time{}.AddDate(1992, 12, 10),
 			},
+
 		}
 
 		administrators := []model.Administrator {
 			{
 				UserID: systemUsers[0].ID,
 				SystemUser: systemUsers[0],
-			}, {
-				UserID: systemUsers[1].ID,
-				SystemUser: systemUsers[1],
 			},
 		}
 
 		users := [] model.User {
+			{
+				UserID:      systemUsers[1].ID,
+				SystemUser:  systemUsers[1],
+				IsPublic:    true,
+				PhoneNumber: "00381-44-44-44-111",
+				WebSite:     "www.org.com",
+				Biography:   "Nema je!",
+				AllowedTags: true,
+				IsBlocked:   false,
+			},
 			{
 				UserID:      systemUsers[2].ID,
 				SystemUser:  systemUsers[2],
@@ -119,20 +167,63 @@ func initDB() *gorm.DB {
 			}, {
 				UserID:      systemUsers[3].ID,
 				SystemUser:  systemUsers[3],
-				IsPublic:    false,
-				PhoneNumber: "00381-22-22-22-3333",
+				IsPublic:    true,
+				PhoneNumber: "00381-22-22-22-333",
 				WebSite:     "www.stiven.com",
 				Biography:   "Berem jagode!",
+				AllowedTags: true,
+				IsBlocked:   false,
+			},{
+				UserID:      systemUsers[4].ID,
+				SystemUser:  systemUsers[4],
+				IsPublic:    false,
+				PhoneNumber: "00381-22-22-22-123",
+				WebSite:     "www.google.com",
+				Biography:   "!",
+				AllowedTags: true,
+				IsBlocked:   false,
+			},{
+				UserID:      systemUsers[5].ID,
+				SystemUser:  systemUsers[5],
+				IsPublic:    false,
+				PhoneNumber: "00381-22-22-22-555",
+				WebSite:     "www.yas.com",
+				Biography:   "Berem jagode!",
+				AllowedTags: true,
+				IsBlocked:   false,
+			},{
+				UserID:      systemUsers[6].ID,
+				SystemUser:  systemUsers[6],
+				IsPublic:    false,
+				PhoneNumber: "00381-22-22-22-666",
+				WebSite:     "www.stiven.com",
+				Biography:   "",
+				AllowedTags: true,
+				IsBlocked:   false,
+			},{
+				UserID:      systemUsers[7].ID,
+				SystemUser:  systemUsers[7],
+				IsPublic:    true,
+				PhoneNumber: "00381-33-22-22-777",
+				WebSite:     "www.whynot.com",
+				Biography:   "",
 				AllowedTags: true,
 				IsBlocked:   false,
 			},
 		}
 
 		for i := range administrators {
+			fmt.Println(administrators[i])
 			database.Create(&administrators[i])
 		}
 		for i := range users {
+			fmt.Println(users[i])
 			database.Create(&users[i])
+			//_, err := http.Post("http://localhost:8088/users/addNode/" + users[i].UserID.String(), "", nil)
+			//if err != nil {
+			//	fmt.Println("Pokrenite neo4j i followers microservice!")
+			//	continue
+			//}
 		}
 	}
 	return database
@@ -198,6 +289,7 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/agents/update",  agentsHandler.Update).Methods("PUT")
 	router.HandleFunc("/agents/create",  agentsHandler.Create).Methods("POST")
 	router.HandleFunc("/agents/getAll",  agentsHandler.GetAll).Methods("GET")
+	router.HandleFunc("/users/isPublic/{id}", usersHandler.IsPublic).Methods("GET")
 
 	headers := handlers.AllowedHeaders([] string{"Content-Type"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
