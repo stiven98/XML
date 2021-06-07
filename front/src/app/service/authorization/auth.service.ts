@@ -51,8 +51,8 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  getRole() {
-    return localStorage.getItem('role');
+  sgetRole():string {
+    return localStorage.getItem('role') as string;
   }
   getUsername = () => {
     return localStorage.getItem('username');
