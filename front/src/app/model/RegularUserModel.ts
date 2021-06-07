@@ -1,43 +1,43 @@
 class SystemUser {
-    Id: string;
-    FirstName: string;
-    LastName: string;
-    Username: string;
-    Email: string;
-    Password: string;
-    Gender: string;
-    PhoneNumber: string;
-    DateOfBirth: string;
+    id: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    password: string;
+    gender: string;
+    phoneNumber: string;
+    dateOfBirth: string;
     constructor() {
-        this.Id = '';
-        this.FirstName = '';
-        this.LastName = '';
-        this.Username = '';
-        this.Email = '';
-        this.Password = '';
-        this.Gender = '';
-        this.PhoneNumber = '';
-        this.DateOfBirth = '';
+        this.id = '';
+        this.firstName = '';
+        this.lastName = '';
+        this.username = '';
+        this.email = '';
+        this.password = '';
+        this.gender = '';
+        this.phoneNumber = '';
+        this.dateOfBirth = '';
       }
 }
 export class RegularUser {
-    Id: string;
-    SystemUser: SystemUser;
-    IsPublic: boolean;
-    PhoneNumber: string;
-    Website: string;
-    Biography: string;
-    AllowedTags: boolean;
-    IsBlocked: boolean;
+    id: string;
+    system_user: SystemUser;
+    isPublic: boolean;
+    phoneNumber: string;
+    website: string;
+    biography: string;
+    allowedTags: boolean;
+    isBlocked: boolean;
     
     constructor() {
-      this.Id = '';
-      this.SystemUser = new SystemUser();
-      this.IsPublic = true;
-      this.PhoneNumber = '';
-      this.Website = '';
-      this.Biography = '';
-      this.AllowedTags = true;
-      this.IsBlocked = false;
+      this.id = '';
+      this.system_user = new SystemUser();
+      this.isPublic = true;
+      this.phoneNumber = '';
+      this.website = '';
+      this.biography = '';
+      this.allowedTags = true;
+      this.isBlocked = false;
     }
   }

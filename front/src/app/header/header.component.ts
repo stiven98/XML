@@ -44,7 +44,7 @@ export class HeaderComponent implements OnInit {
     for (let i = 0; i < this.files.length; i++) {
       formData.append("files", this.files[i]);
     }
-    
+
     let post : Post = new Post();
     post.Description = this.description;
     post.Location = this.location;
@@ -94,8 +94,11 @@ export class HeaderComponent implements OnInit {
       this.userId = response;
       this.isSearchResultVisible = false;
       this.searchParams = "";
-      this.router.navigate(['/profile/',this.userId])
+      this.router.navigate(['/profile', this.userId]);
     });
+  }
+  myProfileClick = () => {
+      this.router.navigate(['/profile', localStorage.getItem('id')]);
   }
   onKeyDown = () => {
     this.isSearchResultVisible = true;
