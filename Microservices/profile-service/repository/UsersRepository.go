@@ -22,15 +22,9 @@ func(repo *UsersRepository) GetAll() []model.User{
 	return users
 }
 func(repo *UsersRepository) GetById(id uuid.UUID) model.User{
-	var users []model.User
-	repo.Database.Preload("SystemUser").Find(&users)
-	var ret model.User
-	for _, user := range users {
-		if user.UserID == id {
-			ret = user
-		}
-	}
-	return ret
+	var user model.User
+	repo.Database.Preload("SystemUser").Find(&user).Where("user_id = ?", id);
+	return user
 }
 
 

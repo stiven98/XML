@@ -27,3 +27,7 @@ func (service *SystemUsersService) GetAllUsernames() []string {
 func (service *SystemUsersService) GetUserId(username string) uuid.UUID {
 	return  service.Repo.GetUserId(username);
 }
+
+func (service *SystemUsersService) GetById(id uuid.UUID) model.SystemUser {
+	return  service.Repo.GetById(id)
+}
