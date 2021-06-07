@@ -45,7 +45,7 @@ export class UserService {
   };
 
   getUserById = (id:string) => {
-    return this.http.get('http://localhost:8085/sysusers/getById/'+id ).pipe(
+    return this.http.get('http://localhost:8085/users/getById/'+id ).pipe(
       map((responseData) => {
         return responseData;
       })

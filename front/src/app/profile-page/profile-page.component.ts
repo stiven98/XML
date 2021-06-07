@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RegularUser } from '../model/RegularUserModel';
+import { AuthService } from '../service/authorization/auth.service';
 import { UserService } from '../service/user.service';
 
 @Component({
@@ -11,14 +12,20 @@ import { UserService } from '../service/user.service';
 export class ProfilePageComponent implements OnInit {
   id: string = '';
   user: RegularUser = new RegularUser();
-  constructor(private route: ActivatedRoute, private userService: UserService) {
+  constructor(private route: ActivatedRoute, private userService: UserService, public authService: AuthService) {
     this.id = route.snapshot.params[`id`];
    }
 
   ngOnInit(): void {
     this.userService.getUserById(this.id).subscribe((response) => {
       this.user = response as RegularUser;
-      console.log(this.user)
+      console.log(this.user);
+    })
+  }
+  ngOnChanges(): void {
+    this.userService.getUserById(this.id).subscribe((response) => {
+      this.user = response as RegularUser;
+      console.log(this.user);
     })
   }
 

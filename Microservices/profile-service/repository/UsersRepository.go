@@ -39,6 +39,6 @@ func (repo *UsersRepository) ChangeAllowedTags(dto *Dto.ChangeAllowedTagsDto) er
 
 func (repo *UsersRepository) GetById(id string) (model.User, error) {
 	var user model.User
-	response:= repo.Database.Model(model.User{}).Find(&user, "user_id = ?", id)
+	response:= repo.Database.Preload("SystemUser").Find(&user, "user_id = ?", id)
 	return user, response.Error
 }
