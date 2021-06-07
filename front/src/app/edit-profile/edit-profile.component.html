@@ -8,7 +8,7 @@
                     <div class="user-avatar">
                         <img src="../../assets/images/aca.png" alt="Maxwell Admin">
                     </div>
-                    <h5 class="user-name">Aca Simic </h5>
+                    <h5 class="user-name">{{edit.system_user.firstName }} {{edit.system_user.lastName}}</h5>
                     <h6 class="username">simic_aca</h6>
                 </div>
             </div>
@@ -25,49 +25,49 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="fullName">Ime</label>
-                        <input type="text" class="form-control" id="fullName" placeholder="Unesite ime">
+                        <input type="text" class="form-control" id="fullName" placeholder="Unesite ime" [(ngModel)]="edit.system_user.firstName">
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="lastName">Prezime</label>
-                        <input type="text" class="form-control" id="lastName" placeholder="Unesite prezime">
+                        <input type="text" class="form-control" id="lastName" placeholder="Unesite prezime" [(ngModel)]="edit.system_user.lastName">
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="username">Korisničko ime</label>
-                        <input type="text" class="form-control" id="username" placeholder="Unesite korisničko ime">
+                        <input type="text" class="form-control" id="username" placeholder="Unesite korisničko ime" [(ngModel)]="edit.system_user.username">
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Unesite email">
+                        <input type="email" class="form-control" id="email" placeholder="Unesite email" [(ngModel)]="edit.system_user.email">
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="phone">Broj telefona</label>
-                        <input type="text" class="form-control" id="phone" placeholder="Unesite broj telefona">
+                        <input type="text" class="form-control" id="phone" placeholder="Unesite broj telefona" [(ngModel)]="edit.phoneNumber">
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="bio">Biografija</label>
-                        <input type="text" class="form-control" id="bio" placeholder="Unesite biografiju">
+                        <input type="text" class="form-control" id="bio" placeholder="Unesite biografiju" [(ngModel)]="edit.biography">
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="date">Datum rođenja</label>
-                        <input id="date" type="text" onfocus="(this.type='date')" name="date" placeholder="Unesite datum rođenja" class="form-control bg-white border-left-1 border-md">
+                        <input id="date" type="text" onfocus="(this.type='date')" name="date" placeholder="Unesite datum rođenja" class="form-control bg-white border-left-1 border-md" value="02/02/1998">
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="website">Web sajt URL</label>
-                        <input type="url" class="form-control" id="website" placeholder="Websajt url">
+                        <input type="url" class="form-control" id="website" placeholder="Websajt url" [(ngModel)]="edit.webSite">
                     </div>
                 </div>
             </div>
@@ -77,13 +77,13 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="isPublic" checked>
+                        <input class="form-check-input" type="checkbox" id="isPublic" [(ngModel)]="edit.isPublic">
                         <label class="form-check-label" for="isPublic">Privatan nalog</label>
                       </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="allowedTags" checked>
+                        <input class="form-check-input" type="checkbox" id="allowedTags" [(ngModel)]="edit.allowedTags">
                         <label class="form-check-label" for="allowedTags">Dozvoljeni tagovi</label>
                       </div>
                 </div>
@@ -94,22 +94,22 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
-                        <label for="newPassword">Nova lozinka</label>
-                        <input type="password" class="form-control" id="newPassword" placeholder="Unesite novu lozinku">
+                        <label for="newPassword">Nova lozinka</label>edit.system_user.password
+                        <input type="password" class="form-control" id="newPassword" placeholder="Unesite novu lozinku" [(ngModel)]="new_password">
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="checkPassword">Ponovite lozinku</label>
-                        <input type="password" class="form-control" id="checkPassword" placeholder="Ponovite lozinku">
+                        <input type="password" class="form-control" id="checkPassword" placeholder="Ponovite lozinku" [(ngModel)]="confirm_password">
                     </div>
                 </div>
             </div> 
             <div class="row gutters" style="margin-top: 20px;">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="text-right">
-                        <button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
-                        <button type="button" id="submit" name="submit" class="btn btn-primary">Update</button>
+                        <button type="button" id="submit" name="submit" class="btn btn-secondary" >Cancel</button>
+                        <button type="button" id="submit" name="submit" class="btn btn-primary" (click)="upDate()">Update</button>
                     </div>
                 </div>
             </div>
