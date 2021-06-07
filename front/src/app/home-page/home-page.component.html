@@ -117,7 +117,7 @@
                                 <a href=""><img class="img-fluid rounded-circle" src="../../assets/images/slika.jpg" alt="User" /></a>
                             </div>
                             <div class="media-body">
-                                <p class="m-0">{{ userData.get(post.userid).firstName + ' ' + userData.get(post.userid).lastName }}</p>
+                                <p class="m-0">{{ userData.get(post.userid).system_user.firstName + ' ' + userData.get(post.userid).system_user.lastName }}</p>
                                 <small><span><i class="icon ion-md-pin"></i> {{ post.location }}</span></small>
                                 <small><span><i class="icon ion-md-time"></i> {{convertTimeToText(post.timestamp)}} </span></small>
                             </div>
@@ -150,7 +150,7 @@
                         </ul>
                         <ul>
                             <li>
-                                <a><i class="fa fa-thumbs-up"></i></a>
+                                <a (click)="likeClick(post)"><i class="fa fa-thumbs-up"></i></a>
                             </li>
                             <li>
                                 <a><i class="fa fa-thumbs-down"></i></a>

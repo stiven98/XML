@@ -33,17 +33,22 @@ export class HomePageComponent implements OnInit {
     }
   }
 
+  likeClick = (post : any) => {
+    let postId = post.id;
+    let userId = post.userid;
+  }
+
   ngOnInit(): void {
     let id = localStorage.getItem('id');
     if (id) {
-      this.postsService.getFeed('4579daae-1567-42d5-a25c-1a3818077c84').subscribe(res => {
+      this.postsService.getFeed(id).subscribe(res => {
         this.posts = res as any[];
         console.log(res);
         for (let p of this.posts) {
           if (!this.userData.get(p.userid)) {
-            this.userService.getUserById(p.userid).subscribe(res => {
+            this.userService.getUsersById(p.userid).subscribe(res => {
                 this.userData.set(p.userid, res);
-              console.log(res);
+                console.log(res);
             });
           }
         }
