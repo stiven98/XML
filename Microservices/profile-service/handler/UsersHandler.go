@@ -3,13 +3,13 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
+	_ "github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"net/http"
 	"profileservice/model"
 	"profileservice/model/Dto"
 	"profileservice/service"
-
+	"strings"
 )
 
 type UsersHandler struct {
@@ -54,7 +54,7 @@ func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (handler *UsersHandler) GetById(w http.ResponseWriter, r *http.Request){
 	vars :=mux.Vars(r)
-	user:=handler.Service.GetById(uuid.MustParse(vars["id"]))
+	user, _ :=handler.Service.GetById(vars["id"])
 	renderJSON(w, &user)
 }
 
@@ -92,4 +92,24 @@ func (handler *UsersHandler) ChangeAllowedTags(w http.ResponseWriter, r *http.Re
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler UsersHandler) IsPublic(writer http.ResponseWriter, request *http.Request) {
+	tokens := strings.Split(request.URL.Path, "/")
+	ID := tokens[int(len(tokens))-1]
+
+	fmt.Println("ID")
+	user, err := handler.Service.GetById(ID)
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	fmt.Println(user)
+	res := Dto.IsUserPublicDTO {
+		ID: user.UserID,
+		IsPublic: user.IsPublic,
+	}
+	renderJSON(writer, res)
+	writer.WriteHeader(http.StatusOK)
 }

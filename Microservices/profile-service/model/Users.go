@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"time"
 )
 
@@ -19,7 +18,7 @@ const (
 	AGENT TypeOfUser = "agent"
 )
 type SystemUser struct {
-	ID   uuid.UUID `json:"id"`
+	ID   uuid.UUID `json:"id" gorm:"primaryKey"`
 	FirstName string    `json:"firstName" gorm:"not null"`
 	LastName string    `json:"lastName" gorm:"not null"`
 	Username string    `json:"username" gorm:"unique; not null"`
@@ -51,7 +50,7 @@ type Agent struct {
 }
 
 
-func (sysUser *SystemUser) BeforeCreate(scope *gorm.DB) error {
-	sysUser.ID = uuid.New()
-	return nil
-}
+//func (sysUser *SystemUser) BeforeCreate(scope *gorm.DB) error {
+//	sysUser.ID = uuid.New()
+//	return nil
+//}

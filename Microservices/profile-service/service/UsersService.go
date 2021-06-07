@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/google/uuid"
+	_ "github.com/google/uuid"
 	"profileservice/model"
 	"profileservice/model/Dto"
 	"profileservice/repository"
@@ -30,15 +30,16 @@ func (service *UsersService) Create(user *model.User) error {
 func (service *UsersService) GetAll() []model.User {
 	return  service.UsersRepo.GetAll()
 }
-func (service *UsersService) GetById(id uuid.UUID) model.User {
-	return  service.UsersRepo.GetById(id)
-}
-
 func (service *UsersService) ChangeWhetherIsPublic(dto Dto.ChangeWhetherIsPublicDto) error {
 	return  service.UsersRepo.ChangeWhetherIsPublic(&dto)
 }
 func (service *UsersService) ChangeAllowedTags(dto Dto.ChangeAllowedTagsDto) error {
 	return  service.UsersRepo.ChangeAllowedTags(&dto)
+}
+
+func (service UsersService) GetById(id string) (model.User,error) {
+	return service.UsersRepo.GetById(id)
+
 }
 
 

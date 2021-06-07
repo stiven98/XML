@@ -13,6 +13,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { HomePageComponent } from './home-page/home-page.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -42,7 +43,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
     ],
   providers: [],
   bootstrap: [AppComponent]

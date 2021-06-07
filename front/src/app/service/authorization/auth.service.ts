@@ -59,7 +59,6 @@ export class AuthService {
   getUsername = () => {
     return localStorage.getItem('username');
   };
-
   get isLoggedIn(): boolean {
     let authToken = localStorage.getItem('access_token');
     return authToken !== null ? true : false;
