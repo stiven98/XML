@@ -30,7 +30,7 @@ func (r FollowersRepository) UserExist(id string) interface{} {
 	return response
 }
 
-func (r FollowersRepository) GetFollowers(id string) interface{} {
+func (r FollowersRepository) GetFollowers(id string) []string {
 	session := (*r.Driver).NewSession(neo4j.SessionConfig{})
 	defer session.Close()
 
@@ -45,7 +45,7 @@ func (r FollowersRepository) GetFollowers(id string) interface{} {
 	//fmt.Println(responses.Collect())
 	retVal, err := responses.Collect()
 
-	var followersIds [] uuid.UUID
+	var followersIds [] string
 
 	fmt.Println(len(retVal))
 	fmt.Println(retVal[0].Values[0])
@@ -53,7 +53,7 @@ func (r FollowersRepository) GetFollowers(id string) interface{} {
 	for i := range retVal {
 		s, ok := retVal[i].Values[0].(string)
 		if ok {
-			followersIds = append(followersIds, uuid.MustParse(s))
+			followersIds = append(followersIds, s)
 			fmt.Println(followersIds)
 		}
 	}

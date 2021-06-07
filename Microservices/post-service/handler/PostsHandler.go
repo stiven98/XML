@@ -32,8 +32,14 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 	}
-	//rest, err := http.Get("http://localhost:8088/users/getFollowers/" + post.USERID.String())
-	rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
+	rest, err := http.Get("http://localhost:8088/users/getFollowers/" + post.USERID.String())
+	//rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	var dto dto.FollowersDto
 	err = json.NewDecoder(rest.Body).Decode(&dto)
 	fmt.Println(dto.KEYS)
