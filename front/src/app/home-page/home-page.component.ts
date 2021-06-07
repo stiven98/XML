@@ -35,10 +35,31 @@ export class HomePageComponent implements OnInit {
 
   likeClick = (post : any) => {
     let postId = post.id;
-    let userId = post.userid;
+    let ownerId = post.userid;
+    let id = localStorage.getItem('id');
+    if (id) {
+      this.postsService.likePost({userid : id, postid : postId, ownerid : ownerId}).subscribe(res => {
+        this.initData()
+      });
+    }
+  }
+
+  dislikeClick = (post : any) => {
+    let postId = post.id;
+    let ownerId = post.userid;
+    let id = localStorage.getItem('id');
+    if (id) {
+      this.postsService.dislikePost({userid : id, postid : postId, ownerid : ownerId}).subscribe(res => {
+        this.initData()
+      });
+    }
   }
 
   ngOnInit(): void {
+    this.initData()
+  }
+
+  initData = () => {
     let id = localStorage.getItem('id');
     if (id) {
       this.postsService.getFeed(id).subscribe(res => {
@@ -55,5 +76,4 @@ export class HomePageComponent implements OnInit {
       });
     }
   }
-
-}
+  }
