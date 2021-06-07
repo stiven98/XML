@@ -35,3 +35,9 @@ func (repo *UsersRepository) ChangeAllowedTags(dto *Dto.ChangeAllowedTagsDto) er
 	result := repo.Database.Model(model.User{}).Where("user_id = ?", dto.USERID).UpdateColumn("allowed_tags", dto.FLAG)
 	return result.Error
 }
+
+func (repo *UsersRepository) GetById(id string) (model.User, error) {
+	var user model.User
+	response:= repo.Database.Model(model.User{}).Find(&user, "user_id = ?", id)
+	return user, response.Error
+}
