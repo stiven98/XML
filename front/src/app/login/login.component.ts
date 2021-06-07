@@ -22,17 +22,7 @@ export class LoginComponent implements OnInit {
 
   onLogin = () => {
     if (this.validateInput()) {
-      this.userService.isValidLogin(this.user).subscribe((res) => {
-        this.flag = res;
-        if (this.flag) {
-          this.loginService.signIn(this.user);
-          this.router.navigate(['/homePage']);
-        } else {
-          alert('Pogrešno korisničko ime ili lozinka!');
-          this.resetInputs();
-          return;
-        }
-      });
+      this.loginService.signIn(this.user);
     } else {
       this.resetInputs();
       alert('Morate uneti validne podatke za korisničko ime i lozinku');
