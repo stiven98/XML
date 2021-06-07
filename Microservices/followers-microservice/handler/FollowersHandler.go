@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"followers-microservice/model"
 	"followers-microservice/model/dto"
 	"followers-microservice/service"
 	"net/http"
@@ -27,19 +28,26 @@ func (h FollowersHandler) GetFollowers(writer http.ResponseWriter, request *http
 		return
 	}
 
-	retVal = h.FollowersService.GetFollowers(ID)
+	keys := h.FollowersService.GetFollowers(ID)
 
-	if retVal == nil {
+	if keys == nil {
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	// retVal contains ids of followers
 
+	var followers model.Followers
+	followers.KEYS = keys
 
 	writer.WriteHeader(http.StatusOK)
 	writer.Header().Set("Content-Type", "application/json")
-
+	bytes, err := json.Marshal(followers)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writer.Write(bytes)
 }
 
 func (h FollowersHandler) GetFollowing(writer http.ResponseWriter, request *http.Request) {

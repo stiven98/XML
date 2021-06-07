@@ -44,6 +44,29 @@ func(repo *PostsRepository) GetByKey(key string) *model.Post {
 
 }
 
+func(repo *PostsRepository) GetFeed(id string) []model.Post {
+	fmt.Println("Id je " + id)
+	var posts []model.Post
+	var feedInputs []model.Feed
+	result, _ :=  repo.Database.Get(id + "_feed").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &feedInputs)
+	for i := range feedInputs {
+		var userPosts []model.Post
+		result, _ :=  repo.Database.Get(feedInputs[i].UserId.String()).Result()
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &userPosts)
+		for j := range  userPosts {
+			if userPosts[j].ID == feedInputs[i].PostId {
+				posts = append(posts, userPosts[j])
+				break
+			}
+		}
+	}
+	return posts
+
+}
+
 func(repo *PostsRepository) AddPostToFeed(keys []string, post *model.Post) error {
 	for i := range keys {
 		result, err := repo.Database.Get(keys[i] + "_feed").Result()

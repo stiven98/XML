@@ -18,6 +18,10 @@ func (service *PostsService) GetByKey(key string) *model.Post {
 	return  service.PostsRepo.GetByKey(key)
 }
 
+func (service *PostsService) GetFeed(id string) []model.Post {
+	return  service.PostsRepo.GetFeed(id)
+}
+
 func (service *PostsService) AddPostToFeed(keys []string, post *model.Post) error {
 	return service.PostsRepo.AddPostToFeed(keys, post)
 }

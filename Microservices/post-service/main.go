@@ -29,7 +29,10 @@ func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.
 	router.HandleFunc("/comments/getByKey/{key}", commentsHandler.GetByKey).Methods("GET")
 	router.HandleFunc("/posts/create", postsHandler.Create).Methods("POST")
 	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
+	router.HandleFunc("/posts/feed/{id}", postsHandler.GetFeed).Methods("GET")
 	router.HandleFunc("/upload", postsHandler.UploadFile).Methods("POST")
+	router.Handle("/images/{rest}",
+		http.StripPrefix("/images/", http.FileServer(http.Dir("./user_posts/"))))
 	headers := handlers.AllowedHeaders([] string{"Content-Type"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
 	origins := handlers.AllowedOrigins([] string{"*"})
