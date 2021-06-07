@@ -1,6 +1,7 @@
 package service
 
 import (
+	_ "github.com/google/uuid"
 	"profileservice/model"
 	"profileservice/model/Dto"
 	"profileservice/repository"

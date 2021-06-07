@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	_ "github.com/google/uuid"
 	"gorm.io/gorm"
 	"profileservice/model"
 	"profileservice/model/Dto"

@@ -36,6 +36,7 @@ export class AuthService {
         console.log(res.username);
         let authority = res.role;
         localStorage.setItem('role', authority);
+        localStorage.setItem('id', res.id);
         console.log(authority);
         localStorage.setItem('username', res.username);
         if (authority === 'ROLE_ADMIN') {
@@ -68,23 +69,11 @@ export class AuthService {
     let removeToken = localStorage.removeItem('access_token');
     localStorage.removeItem('role');
     localStorage.removeItem('username');
+    localStorage.removeItem('id');
     if (removeToken == null) {
       this.router.navigate(['/login']);
     }
   }
-
-  // // User profile
-  // getUserProfile(): Observable<any> {
-  //   return this.apiService
-  //     .get(this.config.get_user_url, { headers: this.headers })
-  //     .pipe(
-  //       map((res: Response) => {
-  //         return res || {};
-  //       }),
-  //       catchError(this.handleError)
-  //     );
-  // }
-
   tokenIsPresent() {
     return this.access_token != undefined && this.access_token != null;
   }
