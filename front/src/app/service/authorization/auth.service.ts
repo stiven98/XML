@@ -31,12 +31,9 @@ export class AuthService {
       .post('http://localhost:8080/auth', user)
       .subscribe((res: any) => {
         localStorage.setItem('access_token', res.token);
-        console.log(res.token);
-        console.log(res.role);
-        console.log(res.username);
         let authority = res.role;
         localStorage.setItem('role', authority);
-        console.log(authority);
+        localStorage.setItem('id', res.id);
         localStorage.setItem('username', res.username);
         if (authority === 'ROLE_ADMIN') {
           this.router.navigate(['/homePage']);
@@ -45,7 +42,9 @@ export class AuthService {
         } else if (authority === 'ROLE_AGENT') {
           this.router.navigate(['/homePage']);
         }
-      });
+      },
+      error => {if(error.status === 401) alert("Pogresno ime ili lozinka")}
+      );
   }
 
   getToken() {
@@ -68,23 +67,11 @@ export class AuthService {
     let removeToken = localStorage.removeItem('access_token');
     localStorage.removeItem('role');
     localStorage.removeItem('username');
+    localStorage.removeItem('id');
     if (removeToken == null) {
       this.router.navigate(['/login']);
     }
   }
-
-  // // User profile
-  // getUserProfile(): Observable<any> {
-  //   return this.apiService
-  //     .get(this.config.get_user_url, { headers: this.headers })
-  //     .pipe(
-  //       map((res: Response) => {
-  //         return res || {};
-  //       }),
-  //       catchError(this.handleError)
-  //     );
-  // }
-
   tokenIsPresent() {
     return this.access_token != undefined && this.access_token != null;
   }

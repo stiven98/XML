@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/google/uuid"
 	"profileservice/model"
 	"profileservice/repository"
 )
@@ -22,4 +23,11 @@ func (service *SystemUsersService) GetAll() []model.SystemUser {
 }
 func (service *SystemUsersService) GetAllUsernames() []string {
 	return  service.Repo.GetAllUsernames()
+}
+func (service *SystemUsersService) GetUserId(username string) uuid.UUID {
+	return  service.Repo.GetUserId(username);
+}
+
+func (service *SystemUsersService) GetById(id uuid.UUID) model.SystemUser {
+	return  service.Repo.GetById(id)
 }
