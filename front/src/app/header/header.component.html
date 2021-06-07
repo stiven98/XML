@@ -63,7 +63,7 @@
           </i> Moj profil
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/profile"> <i class="fa fa-user"></i> Profil</a>
+                    <a class="dropdown-item" (click) = "myProfileClick()"> <i class="fa fa-user"></i> Profil</a>
                     <a class="dropdown-item" href="/editProfile"> <i class="fa fa-cog"></i> Podešavanja</a>
                     <div class="dropdown-divider"> </div>
                     <a class="dropdown-item" href="/login" (click)="onLogout()"> <i class="fa fa-sign-out"></i> Odjava</a>
@@ -72,7 +72,7 @@
         </ul>
     </div>
 </nav>
-<div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px;">
+<div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px; margin-right: 575px;">
   <div class="card mt-5 p-4">
     <p *ngIf="usernamesToShow.length == 0">Nema rezultata</p>
       <div *ngFor="let username of usernamesToShow" class="d-flex flex-row justify-content-between mb-3">

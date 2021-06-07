@@ -8,16 +8,16 @@
     </div>
 
     <div class="profile-user-settings">
-      <h1 class="profile-user-name">simic_aca</h1>
+      <h1 class="profile-user-name" >{{user.system_user.username}}</h1>
 
-      <a class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
+      <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
 
-      <button class="btn profile-settings-btn" aria-label="profile settings">
+      <button  *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn" aria-label="profile settings">
         <i class="fa fa-cog" aria-hidden="true"></i>
       </button>
     </div>
 
-    <div class="profile-stats">
+    <div class="profile-stats" style="margin-left: -40px;">
       <ul>
         <li><span class="profile-stat-count">164</span> objave</li>
         <li><span class="profile-stat-count">188</span> prati</li>
@@ -27,8 +27,10 @@
 
     <div class="profile-bio">
       <p>
-        <span class="profile-real-name">Aca Simic</span> Ja sam Aca cao svima 📷✈️🏕️
+        <span class="profile-real-name">{{user.system_user.firstName}} {{user.system_user.lastName}} <br></span> 
+        <span>{{user.biography}} <br> {{user.phoneNumber}} {{user.system_user.email}}  {{user.website}} </span> 
       </p>
+      
     </div>
   </div>
   <!-- End of profile section -->
