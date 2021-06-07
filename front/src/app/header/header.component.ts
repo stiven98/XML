@@ -88,12 +88,13 @@ export class HeaderComponent implements OnInit {
   onLinkClick = (username:string) => {
     this.usersService.getUserId(username).subscribe((response) => {
       this.userId = response;
+      this.isSearchResultVisible = false;
+      this.searchParams = "";
       this.router.navigate(['/profile/',this.userId])
     });
   }
-  onKeyDown = (event: any) => {
+  onKeyDown = () => {
     this.isSearchResultVisible = true;
-    console.log(this.searchParams);
     for (let username of this.usernames) {
       if (username.includes(this.searchParams)) {
         if (!this.usernamesForSearch.includes(username)) {

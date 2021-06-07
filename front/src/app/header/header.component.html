@@ -32,17 +32,15 @@
           </i> Dodaj objavu
                 </a>
             </li>
-            <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 600px; margin-top: 15px;">
+            <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" [(ngModel)]="searchParams" (keydown)="onKeyDown($event)" placeholder="Pretraga" aria-label="Search">
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Pretraga</button>
+                  <input class="form-control mr-sm-2"  style="width: 400px;" [(ngModel)]="searchParams" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
-            <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 350px; margin-top: 15px;">
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Pretraga" aria-label="Search">
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Pretraga</button>
-                </form>
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 200px; margin-top: 15px;">
+                <div class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" style="width: 400px;"  [(ngModel)]="searchParams" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
+                </div>
             </li>
             <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px;">
                 <a class="nav-link" href="/login">
@@ -86,9 +84,6 @@
         </div>
    </div>
 </div>
-<select class="form-control custom-select bg-white border-md" style="margin-left: 810px; width: 205px; margin-top: 5px">
-  <option *ngFor="let username of usernamesForSearch" [value]="username">{{username}}</option>
-</select>
 
 <ng-template #modAddPost let-modal>
     <div class="modal-header">
