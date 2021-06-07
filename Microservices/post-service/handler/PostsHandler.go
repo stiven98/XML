@@ -27,6 +27,9 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&post)
 	post.ID = uuid.New()
 	post.TIMESTAMP = time.Now()
+	post.COMMENTS = []model.Comment{}
+	post.LIKES = []model.Like{}
+	post.DISLIKES = []model.Dislike{}
 	err = handler.Service.Create(&post)
 	if err != nil {
 		fmt.Println(err)
@@ -72,8 +75,10 @@ func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Requ
 		fmt.Printf("MIME Header: %+v\n", fh.Header)
 		fileName := strings.Split(fh.Filename, ".")
 		var filePath string
+		var resourceName string
 		if(len(fileName) >= 2){
-			filePath = filepath.Join("user_posts", uuid.NewString() +  "." + fileName[1])
+			resourceName = uuid.NewString() +  "." + fileName[1]
+			filePath = filepath.Join("user_posts", resourceName)
 		}else{
 			filePath = filepath.Join("user_posts", fh.Filename)
 		}
@@ -90,7 +95,7 @@ func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Requ
 			return
 		}
 		var postItem model.PostItem
-		postItem.PATH = filePath
+		postItem.PATH = resourceName
 		postItem.ID = uuid.New()
 		postItems = append(postItems, postItem)
 		defer f.Close()
@@ -105,6 +110,12 @@ func (handler *PostsHandler) GetByKey(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
 	fmt.Println(vars["key"])
 	post :=handler.Service.GetByKey(vars["key"])
+	renderJSON(w, &post)
+}
 
+func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	fmt.Println(vars["id"])
+	post :=handler.Service.GetFeed(vars["id"])
 	renderJSON(w, &post)
 }
