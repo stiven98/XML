@@ -31,13 +31,9 @@ export class AuthService {
       .post('http://localhost:8080/auth', user)
       .subscribe((res: any) => {
         localStorage.setItem('access_token', res.token);
-        console.log(res.token);
-        console.log(res.role);
-        console.log(res.username);
         let authority = res.role;
         localStorage.setItem('role', authority);
         localStorage.setItem('id', res.id);
-        console.log(authority);
         localStorage.setItem('username', res.username);
         if (authority === 'ROLE_ADMIN') {
           this.router.navigate(['/homePage']);
@@ -46,7 +42,9 @@ export class AuthService {
         } else if (authority === 'ROLE_AGENT') {
           this.router.navigate(['/homePage']);
         }
-      });
+      },
+      error => {if(error.status === 401) alert("Pogresno ime ili lozinka")}
+      );
   }
 
   getToken() {
