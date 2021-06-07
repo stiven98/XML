@@ -37,6 +37,11 @@ func (service *UsersService) ChangeAllowedTags(dto Dto.ChangeAllowedTagsDto) err
 	return  service.UsersRepo.ChangeAllowedTags(&dto)
 }
 
+func (service UsersService) GetById(id string) (model.User,error) {
+	return service.UsersRepo.GetById(id)
+
+}
+
 
 
 

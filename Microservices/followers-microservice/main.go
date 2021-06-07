@@ -29,12 +29,8 @@ func initDB() *neo4j.Driver {
 		break
 	}
 
-	//defer driver.Close()
-
 	session := driver.NewSession(neo4j.SessionConfig{})
 	defer session.Close()
-	//fmt.Println(session)
-
 
 	err, _ := session.WriteTransaction(insertUsers)
 
@@ -43,24 +39,27 @@ func initDB() *neo4j.Driver {
 	}
 
 	return &driver
-
 }
 
 func insertUsers(tx neo4j.Transaction) (interface{},  error) {
-	tx.Run("MATCH ()-[r:FOLLOWING]->() DELETE r", map[string]interface{}{})
+	tx.Run("MATCH ()-[r]->() DELETE r", map[string]interface{}{})
 	tx.Run("MATCH (u) REMOVE u:User", map[string]interface{}{})
 
 	users := [] model.User {
 		{
-			ID: uuid.MustParse("b94a0d50-c3c0-11eb-8529-0242ac130004"),
+			ID: uuid.MustParse("965208b9-287b-4da5-b772-73df5e74ebbc"),
 		},{
-			ID: uuid.MustParse("5d9faac6-c3c7-11eb-8529-0242ac130004"),
+			ID: uuid.MustParse("4579daae-1567-42d5-a25c-1a3818077c84"),
 		},{
-			ID: uuid.MustParse("e8cf21de-c3f5-11eb-8529-0242ac130003"),
+			ID: uuid.MustParse("5cb65bc8-6130-4436-a1f9-ad4778f112bc"),
 		},{
-			ID: uuid.MustParse("ec34c504-c3f5-11eb-8529-0242ac130003"),
+			ID: uuid.MustParse("708b65de-fb77-4934-bfd0-d14161a74905"),
 		},{
-			ID: uuid.MustParse("ef99cdf2-c3f5-11eb-8529-0242ac130003"),
+			ID: uuid.MustParse("0cf8a7ff-7bb5-48f0-a834-7b07eb306f90"),
+		},{
+			ID: uuid.MustParse("be71d1da-0749-480f-a563-dcc35a14e542"),
+		},{
+			ID: uuid.MustParse("d3ea863d-350e-44f2-bd6e-809aa7100476"),
 		},
 
 	}
@@ -76,30 +75,29 @@ func insertUsers(tx neo4j.Transaction) (interface{},  error) {
 	}
 
 	_, err := tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
-		"idB" : "b94a0d50-c3c0-11eb-8529-0242ac130004",
-		"idA" : "5d9faac6-c3c7-11eb-8529-0242ac130004",
+		"idB" : "965208b9-287b-4da5-b772-73df5e74ebbc",
+		"idA" : "4579daae-1567-42d5-a25c-1a3818077c84",
 	})
 
 	_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
-		"idB" : "b94a0d50-c3c0-11eb-8529-0242ac130004",
-		"idA" : "e8cf21de-c3f5-11eb-8529-0242ac130003",
+		"idB" : "4579daae-1567-42d5-a25c-1a3818077c84",
+		"idA" : "965208b9-287b-4da5-b772-73df5e74ebbc",
 	})
 
 	_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
-		"idB" : "b94a0d50-c3c0-11eb-8529-0242ac130004",
-		"idA" : "ef99cdf2-c3f5-11eb-8529-0242ac130003",
+		"idB" : "5cb65bc8-6130-4436-a1f9-ad4778f112bc",
+		"idA" : "965208b9-287b-4da5-b772-73df5e74ebbc",
 	})
 
-	_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
-		"idA" : "b94a0d50-c3c0-11eb-8529-0242ac130004",
-		"idB" : "ef99cdf2-c3f5-11eb-8529-0242ac130003",
-	})
-
-	_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
-		"idA" : "ec34c504-c3f5-11eb-8529-0242ac130003",
-		"idB" : "ef99cdf2-c3f5-11eb-8529-0242ac130003",
-	})
-
+	//_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
+	//	"idA" : "b94a0d50-c3c0-11eb-8529-0242ac130004",
+	//	"idB" : "ef99cdf2-c3f5-11eb-8529-0242ac130003",
+	//})
+	//
+	//_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
+	//	"idA" : "ec34c504-c3f5-11eb-8529-0242ac130003",
+	//	"idB" : "ef99cdf2-c3f5-11eb-8529-0242ac130003",
+	//})
 
 
 
@@ -126,8 +124,12 @@ func initHandler(followersService *service.FollowersService) *handler.FollowersH
 func handlerFunc(followersHandler *handler.FollowersHandler)  {
 	router := mux.NewRouter().StrictSlash(true)
 
+	router.HandleFunc("/users/addNode/{id}", followersHandler.AddNode).Methods("POST")
 	router.HandleFunc("/users/getFollowers/{id}", followersHandler.GetFollowers).Methods("GET")
 	router.HandleFunc("/users/getFollowing/{id}", followersHandler.GetFollowing).Methods("GET")
+	router.HandleFunc("/users/getRequests/{id}", followersHandler.GetRequest).Methods("GET")
+	router.HandleFunc("/users/unfollow/{idUser}/{idTarget}", followersHandler.Unfollow).Methods("POST")
+	router.HandleFunc("/users/acceptRequest/{idUser}/{idTarget}", followersHandler.AcceptRequest).Methods("POST")
 	router.HandleFunc("/users/follow/{idUser}/{idTarget}", followersHandler.Follow).Methods("POST")
 	router.HandleFunc("/users/isFollowing/{idUser}/{idTarget}", followersHandler.IsFollowing).Methods("GET")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8088"), router))
