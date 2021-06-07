@@ -40,7 +40,7 @@ public class AuthenticationService implements IAuthenticationService {
                 break;
             }
         }
-        AuthenticationResponseDTO responseDTO = new AuthenticationResponseDTO(data.getUsername(), jwt, role, expiresIn);
+        AuthenticationResponseDTO responseDTO = new AuthenticationResponseDTO(data.getId(), data.getUsername(), jwt, role, expiresIn);
         return responseDTO;
     }
 }

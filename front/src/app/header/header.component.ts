@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Post, PostItem } from '../model/Post.model';
 import { PostsService } from '../service/posts.service';
@@ -9,6 +10,7 @@ import { UserService } from '../service/user.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
+
 export class HeaderComponent implements OnInit {
   public files: any[] = [];
   public hashtag: string = '';
@@ -16,13 +18,19 @@ export class HeaderComponent implements OnInit {
   public description: string = '';
   
   searchParams: any;
+  userId: any;
   usernames: string[] = [];
   usernamesForSearch: string[] = [];
   usernamesToShow: string[] = [];
+  isSearchResultVisible: boolean = false;
+  constructor(
+    public authService: AuthService,
+    public usersService: UserService,
+    private router:Router,private modalService: NgbModal, 
+    private postsService: PostsService
+  ) {}
 
-  constructor(private modalService: NgbModal, private postsService: PostsService, public authService: AuthService,
-    public usersService: UserService) {
-    }
+ 
 
   ngOnInit(): void {
     this.usersService.getAllUsernames().subscribe((response) => {
@@ -76,7 +84,19 @@ export class HeaderComponent implements OnInit {
     this.authService.doLogout();
   };
 
+  onClick = () => {
+    this.isSearchResultVisible = false;
+  };
+
+  onLinkClick = (username:string) => {
+    this.usersService.getUserId(username).subscribe((response) => {
+      this.userId = response;
+      this.router.navigate(['/profile/',this.userId])
+    });
+  }
   onKeyDown = (event: any) => {
+    this.isSearchResultVisible = true;
+    console.log(this.searchParams);
     for (let username of this.usernames) {
       if (username.includes(this.searchParams)) {
         if (!this.usernamesForSearch.includes(username)) {
@@ -84,5 +104,10 @@ export class HeaderComponent implements OnInit {
         }
       }
     }
+    this.usernamesToShow = this.usernamesForSearch.filter(
+      (value, index, arr) => {
+        return value.includes(this.searchParams);
+      }
+    );
   };
 }

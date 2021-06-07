@@ -3,6 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	_ "github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"net/http"
 	"profileservice/model"
 	"profileservice/model/Dto"
@@ -50,6 +52,11 @@ func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
+func (handler *UsersHandler) GetById(w http.ResponseWriter, r *http.Request){
+	vars :=mux.Vars(r)
+	user, _ :=handler.Service.GetById(vars["id"])
+	renderJSON(w, &user)
+}
 
 func (handler *UsersHandler) GetAll(w http.ResponseWriter, r *http.Request){
 	users:=handler.Service.GetAll()
