@@ -8,5 +8,8 @@ import java.util.UUID;
 public interface IAuthenticationDataService {
     List<AuthenticationData> findAll();
     AuthenticationData findById(UUID id);
-    AuthenticationData findByEmail(String email);
+    AuthenticationData findByUsername(String email);
+
+    boolean isValidLogin(String username, String password);
+
 }

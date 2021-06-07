@@ -27,13 +27,20 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public AuthenticationResponseDTO login(AuthenticationRequestDTO dto) {
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         AuthenticationData data = (AuthenticationData) authentication.getPrincipal();
         Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) authentication.getAuthorities();
         String jwt = tokenUtils.generateToken(data.getUsername(), authorities);
         int expiresIn = tokenUtils.getExpiredIn();
-        AuthenticationResponseDTO responseDTO = new AuthenticationResponseDTO(data.getUsername(), jwt, expiresIn);
+        String role = null;
+        for (GrantedAuthority grantedAuthority : authorities) {
+            if (grantedAuthority.getAuthority().contains("ROLE")) {
+                role = grantedAuthority.getAuthority();
+                break;
+            }
+        }
+        AuthenticationResponseDTO responseDTO = new AuthenticationResponseDTO(data.getUsername(), jwt, role, expiresIn);
         return responseDTO;
     }
 }
