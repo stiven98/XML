@@ -44,6 +44,7 @@ export class HeaderComponent implements OnInit {
     for (let i = 0; i < this.files.length; i++) {
       formData.append("files", this.files[i]);
     }
+    
     let post : Post = new Post();
     post.Description = this.description;
     post.Location = this.location;
