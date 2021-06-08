@@ -7,7 +7,9 @@ import (
 	"followers-microservice/repository"
 	"followers-microservice/service"
 	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 	"log"
 	"net/http"
@@ -132,7 +134,13 @@ func handlerFunc(followersHandler *handler.FollowersHandler)  {
 	router.HandleFunc("/users/acceptRequest/{idUser}/{idTarget}", followersHandler.AcceptRequest).Methods("POST")
 	router.HandleFunc("/users/follow/{idUser}/{idTarget}", followersHandler.Follow).Methods("POST")
 	router.HandleFunc("/users/isFollowing/{idUser}/{idTarget}", followersHandler.IsFollowing).Methods("GET")
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8088"), router))
+
+	headers := handlers.AllowedHeaders([] string{"Content-Type"})
+	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([] string{"*"})
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8088"), handlers.CORS(headers, methods, origins) (router)))
+
 }
 
 

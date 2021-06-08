@@ -16,7 +16,7 @@ func (s FollowersService) UserExists(id string) interface{} {
 	return s.FollowersRepository.UserExist(id)
 }
 
-func (s FollowersService) GetFollowing(id string) interface{} {
+func (s FollowersService) GetFollowing(id string) []string {
 	return s.FollowersRepository.GetFollowing(id)
 }
 
@@ -36,7 +36,7 @@ func (s FollowersService) Request(userID string, targetID string) interface{} {
 	return s.FollowersRepository.Request(userID, targetID)
 }
 
-func (s FollowersService) GetRequests(id string) interface{} {
+func (s FollowersService) GetRequests(id string) []string {
 	return s.FollowersRepository.GetRequests(id)
 }
 
