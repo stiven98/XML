@@ -45,6 +45,14 @@ func(repo *PostsRepository) GetByKey(key string) []model.Post {
 
 }
 
+func(repo *PostsRepository) GetPublic(keys []string) []model.Post {
+	var posts []model.Post
+	for i := range keys {
+		posts = append(posts, repo.GetByKey(keys[i])...)
+	}
+	return posts
+}
+
 func(repo *PostsRepository) LikePost(likeReq dto.LikeDto) error {
 	var posts []model.Post
 	result, _ :=  repo.Database.Get(likeReq.OWNERID.String()).Result()

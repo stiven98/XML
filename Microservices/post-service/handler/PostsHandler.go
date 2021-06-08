@@ -149,3 +149,162 @@ func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
 	post :=handler.Service.GetFeed(vars["id"])
 	renderJSON(w, &post)
 }
+
+func (handler *PostsHandler) GetPublic(w http.ResponseWriter, r *http.Request){
+	rest, err := http.Get("http://localhost:8085/users/public-ids")
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var dto dto.KeyValueListDto
+	err = json.NewDecoder(rest.Body).Decode(&dto)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(dto.KEYS)
+	posts := handler.Service.GetPublic(dto.KEYS)
+	renderJSON(w, &posts)
+}
+
+func (handler *PostsHandler) GetAllTagsPublic(w http.ResponseWriter, r *http.Request){
+	//public users ids
+	rest, err := http.Get("http://localhost:8085/users/public-ids")
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var dtoIds dto.KeyValueListDto
+	err = json.NewDecoder(rest.Body).Decode(&dtoIds)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(dtoIds.KEYS)
+	posts := handler.Service.GetPublic(dtoIds.KEYS)
+
+	var tags dto.KeyValueListDto
+
+	for i := range posts {
+		tags.KEYS = append(tags.KEYS, posts[i].HASHTAG)
+	}
+
+	renderJSON(w, &tags)
+}
+
+func (handler *PostsHandler) GetAllTagsSignedIn(w http.ResponseWriter, r *http.Request){
+
+	vars := mux.Vars(r)
+	fmt.Println(vars["id"])
+
+	//public users ids
+	rest, err := http.Get("http://localhost:8085/users/public-ids")
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var dtoIds dto.KeyValueListDto
+	err = json.NewDecoder(rest.Body).Decode(&dtoIds)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(dtoIds.KEYS)
+
+
+	restFollowers, _ := http.Get("http://localhost:8088/users/getFollowers/" + vars["id"])
+	var dtoFollowers dto.FollowersDto
+	err = json.NewDecoder(restFollowers.Body).Decode(&dtoFollowers)
+	fmt.Println(dtoFollowers.KEYS)
+
+	var idsList []string
+
+	idsList = append(idsList, dtoIds.KEYS...)
+	idsList = append(idsList, dtoFollowers.KEYS...)
+
+	posts := handler.Service.GetPublic(idsList)
+
+	var tags dto.KeyValueListDto
+
+	for i := range posts {
+		tags.KEYS = append(tags.KEYS, posts[i].HASHTAG)
+	}
+
+	renderJSON(w, &tags)
+}
+
+func (handler *PostsHandler) GetAllLocationsPublic(w http.ResponseWriter, r *http.Request){
+	//public users ids
+	rest, err := http.Get("http://localhost:8085/users/public-ids")
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var dtoIds dto.KeyValueListDto
+	err = json.NewDecoder(rest.Body).Decode(&dtoIds)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(dtoIds.KEYS)
+	posts := handler.Service.GetPublic(dtoIds.KEYS)
+
+	var locations dto.KeyValueListDto
+
+	for i := range posts {
+		locations.KEYS = append(locations.KEYS, posts[i].LOCATION)
+	}
+
+	renderJSON(w, &locations)
+}
+
+func (handler *PostsHandler) GetAllLocationsSignedIn(w http.ResponseWriter, r *http.Request){
+
+	vars := mux.Vars(r)
+	fmt.Println(vars["id"])
+
+	//public users ids
+	rest, err := http.Get("http://localhost:8085/users/public-ids")
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var dtoIds dto.KeyValueListDto
+	err = json.NewDecoder(rest.Body).Decode(&dtoIds)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(dtoIds.KEYS)
+
+
+	restFollowers, _ := http.Get("http://localhost:8088/users/getFollowers/" + vars["id"])
+	var dtoFollowers dto.FollowersDto
+	err = json.NewDecoder(restFollowers.Body).Decode(&dtoFollowers)
+	fmt.Println(dtoFollowers.KEYS)
+
+	var idsList []string
+
+	idsList = append(idsList, dtoIds.KEYS...)
+	idsList = append(idsList, dtoFollowers.KEYS...)
+
+	posts := handler.Service.GetPublic(idsList)
+
+	var locations dto.KeyValueListDto
+
+	for i := range posts {
+		locations.KEYS = append(locations.KEYS, posts[i].LOCATION)
+	}
+
+	renderJSON(w, &locations)
+}
