@@ -31,6 +31,10 @@ func (service *UsersService) GetAll() []model.User {
 	return  service.UsersRepo.GetAll()
 }
 
+func (service *UsersService) GetAllPublic() []model.User {
+	return  service.UsersRepo.GetAllPublic()
+}
+
 func (service *UsersService) ChangeWhetherIsPublic(dto Dto.ChangeWhetherIsPublicDto) error {
 	return  service.UsersRepo.ChangeWhetherIsPublic(&dto)
 }

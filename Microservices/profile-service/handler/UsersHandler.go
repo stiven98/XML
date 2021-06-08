@@ -113,3 +113,12 @@ func (handler UsersHandler) IsPublic(writer http.ResponseWriter, request *http.R
 	renderJSON(writer, res)
 	writer.WriteHeader(http.StatusOK)
 }
+
+func (handler *UsersHandler) GetPublicUsersIds(w http.ResponseWriter, r *http.Request){
+	var ids Dto.PublicUsersIdsDto
+	users := handler.Service.GetAllPublic()
+	for i := range users {
+		ids.KEYS = append(ids.KEYS, users[i].UserID.String())
+	}
+	renderJSON(w, &ids)
+}

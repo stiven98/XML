@@ -22,6 +22,13 @@ func(repo *UsersRepository) GetAll() []model.User{
 	return users
 }
 
+func(repo *UsersRepository) GetAllPublic() []model.User{
+	var users []model.User
+	repo.Database.Preload("SystemUser").Where("is_public = 'true'").Find(&users)
+	return users
+}
+
+
 func (repo *UsersRepository) Create(user *model.User) error {
 	result := repo.Database.Create(user)
 	fmt.Println(result.RowsAffected)
