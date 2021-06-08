@@ -19,3 +19,9 @@ export interface PostItem{
     Id : string;
     Path : string;
 }
+
+export interface LikeReq{
+    userid : string;
+    postid : string;
+    ownerid : string;
+}
