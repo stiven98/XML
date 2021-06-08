@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis"
 	"post_service/model"
+	"post_service/model/dto"
 )
 
 type PostsRepository struct {
@@ -34,14 +35,104 @@ func(repo *PostsRepository) Create(post *model.Post)  error {
 	return nil
 }
 
-func(repo *PostsRepository) GetByKey(key string) *model.Post {
+func(repo *PostsRepository) GetByKey(key string) []model.Post {
 	fmt.Println("Key je " + key)
-	var post *model.Post
+	var posts []model.Post
 	result, _ :=  repo.Database.Get(key).Result()
 	bytes := []byte(result)
-	json.Unmarshal(bytes, &post)
-	return post
+	json.Unmarshal(bytes, &posts)
+	return posts
 
+}
+
+func(repo *PostsRepository) GetPublic(keys []string) []model.Post {
+	var posts []model.Post
+	for i := range keys {
+		posts = append(posts, repo.GetByKey(keys[i])...)
+	}
+	return posts
+}
+
+func(repo *PostsRepository) LikePost(likeReq dto.LikeDto) error {
+	var posts []model.Post
+	result, _ :=  repo.Database.Get(likeReq.OWNERID.String()).Result()
+	bytes := []byte(result)
+	err := json.Unmarshal(bytes, &posts)
+	if err != nil {
+		return err
+	}
+
+	for i := range posts {
+		flag := true
+		if posts[i].ID == likeReq.POSTID {
+			for j := range posts[i].DISLIKES {
+				if posts[i].DISLIKES[j].UserID == likeReq.USERID {
+					posts[i].DISLIKES = removeDislike(posts[i].DISLIKES, j)
+				}
+			}
+			for k := range posts[i].LIKES {
+				if posts[i].LIKES[k].UserID == likeReq.USERID {
+					posts[i].LIKES = removeLike(posts[i].LIKES, k)
+					flag = false
+				}
+			}
+			if flag {
+				posts[i].LIKES = append(posts[i].LIKES, model.Like{likeReq.USERID})
+			}
+			break
+		}
+	}
+	jsonPosts, _ := json.Marshal(posts)
+	newErr := repo.Database.Set(likeReq.OWNERID.String(), jsonPosts, 0).Err()
+	if newErr != nil {
+		return newErr
+	}
+	return err
+}
+
+func(repo *PostsRepository) DislikePost(dislikeReq dto.LikeDto) error {
+	var posts []model.Post
+	result, _ :=  repo.Database.Get(dislikeReq.OWNERID.String()).Result()
+	bytes := []byte(result)
+	err := json.Unmarshal(bytes, &posts)
+	if err != nil {
+		return err
+	}
+
+	for i := range posts {
+		flag := true
+		if posts[i].ID == dislikeReq.POSTID {
+			for j := range posts[i].DISLIKES {
+				if posts[i].DISLIKES[j].UserID == dislikeReq.USERID {
+					posts[i].DISLIKES = removeDislike(posts[i].DISLIKES, j)
+					flag = false
+				}
+			}
+			for k := range posts[i].LIKES {
+				if posts[i].LIKES[k].UserID == dislikeReq.USERID {
+					posts[i].LIKES = removeLike(posts[i].LIKES, k)
+				}
+			}
+			if flag {
+				posts[i].DISLIKES = append(posts[i].DISLIKES, model.Dislike{dislikeReq.USERID})
+			}
+			break
+		}
+	}
+	jsonPosts, _ := json.Marshal(posts)
+	newErr := repo.Database.Set(dislikeReq.OWNERID.String(), jsonPosts, 0).Err()
+	if newErr != nil {
+		return newErr
+	}
+	return err
+}
+
+func removeDislike(slice []model.Dislike, s int) []model.Dislike {
+	return append(slice[:s], slice[s+1:]...)
+}
+
+func removeLike(slice []model.Like, s int) []model.Like {
+	return append(slice[:s], slice[s+1:]...)
 }
 
 func(repo *PostsRepository) GetFeed(id string) []model.Post {

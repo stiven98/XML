@@ -31,8 +31,7 @@ func (h FollowersHandler) GetFollowers(writer http.ResponseWriter, request *http
 	keys := h.FollowersService.GetFollowers(ID)
 
 	if keys == nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		return
+		keys = []string{}
 	}
 
 	// retVal contains ids of followers
@@ -64,18 +63,26 @@ func (h FollowersHandler) GetFollowing(writer http.ResponseWriter, request *http
 		return
 	}
 
-	retVal = h.FollowersService.GetFollowing(ID)
+	keys := h.FollowersService.GetFollowing(ID)
 
-	if retVal == nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		return
+	if keys == nil {
+		keys = []string{}
+
+		//	writer.WriteHeader(http.StatusBadRequest)
+	//	return
 	}
 
-	// retVal contains ids of followers
-
+	var followers model.Followers
+	followers.KEYS = keys
 
 	writer.WriteHeader(http.StatusOK)
 	writer.Header().Set("Content-Type", "application/json")
+	bytes, err := json.Marshal(followers)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writer.Write(bytes)
 }
 
 func (h FollowersHandler) Follow(writer http.ResponseWriter, request *http.Request) {
@@ -205,20 +212,29 @@ func (h FollowersHandler) GetRequest(writer http.ResponseWriter, request *http.R
 		return
 	}
 
-	retVal = h.FollowersService.GetRequests(ID)
+	keys := h.FollowersService.GetRequests(ID)
 
-	if retVal == nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		return
+	fmt.Println(len(keys))
+	if keys == nil {
+		keys = []string{}
+
+		//	fmt.Println("DJOLE")
+	//	writer.WriteHeader(http.StatusBadRequest)
+	//	return
 	}
 
-	fmt.Println(retVal)
-	// retVal contains ids of followers
-
+	var followers model.Followers
+	followers.KEYS = keys
 
 	writer.WriteHeader(http.StatusOK)
 	writer.Header().Set("Content-Type", "application/json")
+	bytes, err := json.Marshal(followers)
 
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writer.Write(bytes)
 
 }
 
