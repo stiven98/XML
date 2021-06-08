@@ -47,17 +47,21 @@ export class HeaderComponent implements OnInit {
       this.usernames = response as string[];
       if(this.authService.isLoggedIn) {
         this.usersService.getSingedInLocations(localStorage.getItem('id') as string).subscribe((response)=> {
+          // @ts-ignore
           this.locations = response.keys as string[];
         });
         this.usersService.getSingedInTags(localStorage.getItem('id') as string).subscribe((response)=> {
+          // @ts-ignore
           this.tags = response.keys as string[];
         });
       }
       else {
         this.usersService.getPublicLocations().subscribe((response)=> {
+          // @ts-ignore
           this.locations = response.keys as string[];
         });
         this.usersService.getPublicTags().subscribe((response)=> {
+          // @ts-ignore
           this.tags = response.keys as string[];
         });
       }
