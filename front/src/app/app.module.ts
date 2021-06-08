@@ -23,7 +23,9 @@ const appRoutes: Routes = [
   {path: 'directMessages', component: DirectMessagesComponent },
   {path: 'notifications', component: NotificationsComponent },
   {path: 'homePage', component: HomePageComponent },
-  { path: '**', redirectTo: '/404'}
+  {path: 'homePage/tag/:tag', component: HomePageComponent },
+  {path: 'homePage/location/:location', component: HomePageComponent },
+{ path: '**', redirectTo: '/404'}
 ];
 
 @NgModule({

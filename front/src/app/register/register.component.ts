@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../model/User.model';
 import {UserValidationModel} from '../model/UserValidation.model';
+import { FollowService } from '../service/follow.service';
 import {UserService} from '../service/user.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class RegisterComponent implements OnInit {
   user: User = new User();
   validation: UserValidationModel = new UserValidationModel();
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private followerService: FollowService) { }
 
   ngOnInit(): void {
   }
