@@ -23,6 +23,10 @@ func (service *PostsService) GetFeed(id string) []model.Post {
 	return  service.PostsRepo.GetFeed(id)
 }
 
+func (service *PostsService) GetPublic(keys []string) []model.Post {
+	return  service.PostsRepo.GetPublic(keys)
+}
+
 func (service *PostsService) LikePost(likeReq dto.LikeDto) error {
 	return service.PostsRepo.LikePost(likeReq)
 }
