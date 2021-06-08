@@ -23,7 +23,7 @@ services:
     expose: 
       - '5432'
     ports:
-      - '5432:5432'
+      - '5435:5432'
     networks:
       - backend 
     volumes:
@@ -66,6 +66,18 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - backend
+
+  db-followers:
+    image: neo4j:latest
+    hostname: neo4j
+    container_name: db-followers
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    networks:
+      - backend 
+    environment:
+      NEO4J_AUTH: neo4j/root
 
   profile-service:
     image: profile-service
@@ -130,12 +142,41 @@ services:
       dockerfile: Dockerfile
     networks:
       - backend
+    volumes: 
+      - ./Microservices/post-service/user_posts/:/app/post-service/user_posts/
     environment:
       - HOST_NAME=db-auth
     expose: 
       - '8080'
-    ports: 
+    ports:
       - '8080:8080'
+
+  followers-microservice:
+    image: followers-microservice
+    build:
+      context: ./Microservices/followers-microservice
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    environment:
+      - HOST_NAME=db-followers
+    expose: 
+      - '8088'
+    ports: 
+      - '8088:8088'
+
+  frontend:
+    image: frontend
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    restart: on-failure
+    expose: 
+      - '4200'
+    ports: 
+      - '4200:4200'
 
 networks:
   backend:
