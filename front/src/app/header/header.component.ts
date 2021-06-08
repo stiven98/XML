@@ -20,7 +20,13 @@ export class HeaderComponent implements OnInit {
   searchParams: any;
   userId: any;
   usernames: string[] = [];
+  tags : string[] = [];
+  locations : string[] = [];
   usernamesForSearch: string[] = [];
+  tagsForSearch: string[] = [];
+  tagsToShow: string[] = [];
+  locationsForSearch: string[]  = [];
+  locationsToShow: string[] = [];
   usernamesToShow: string[] = [];
   isSearchResultVisible: boolean = false;
   isUsersSearchSelected: boolean = false;
@@ -39,7 +45,22 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.usersService.getAllUsernames().subscribe((response) => {
       this.usernames = response as string[];
-      console.log(this.usernames);
+      if(this.authService.isLoggedIn) {
+        this.usersService.getSingedInLocations(localStorage.getItem('id') as string).subscribe((response)=> {
+          this.locations = response.keys as string[];
+        });
+        this.usersService.getSingedInTags(localStorage.getItem('id') as string).subscribe((response)=> {
+          this.tags = response.keys as string[];
+        });
+      }
+      else {
+        this.usersService.getPublicLocations().subscribe((response)=> {
+          this.locations = response.keys as string[];
+        });
+        this.usersService.getPublicTags().subscribe((response)=> {
+          this.tags = response.keys as string[];
+        });
+      }
     });
   }
 
@@ -94,17 +115,40 @@ export class HeaderComponent implements OnInit {
   };
 
   onLinkClick = (username:string) => {
-    this.usersService.getUserId(username).subscribe((response) => {
-      this.userId = response;
+    if(this.isUsersSearchSelected) {
+      this.usersService.getUserId(username).subscribe((response) => {
+        this.userId = response;
+        this.isSearchResultVisible = false;
+        this.searchParams = "";
+        this.isUsersSearchSelected = false;
+        this.isTagsSearchSelected = false;
+        this.usernamesToShow = [];
+        this.isLocationsSearchSelected = false;
+        this.isInputDisalbed = true;
+        this.router.navigate(['/profile', this.userId]);
+      });
+    }
+    if(this.isTagsSearchSelected) {
       this.isSearchResultVisible = false;
-      this.searchParams = "";
-      this.isUsersSearchSelected = false;
-      this.isTagsSearchSelected = false;
-      this.usernamesToShow = [];
-      this.isLocationsSearchSelected = false;
-      this.isInputDisalbed = true;
-      this.router.navigate(['/profile', this.userId]);
-    });
+        this.isUsersSearchSelected = false;
+        this.isTagsSearchSelected = false;
+        this.usernamesToShow = [];
+        this.searchParams = "";
+        this.isLocationsSearchSelected = false;
+        this.isInputDisalbed = true;
+        this.router.navigate(['/homePage/tag/', username]);
+    }
+    if(this.isLocationsSearchSelected) {
+      this.isSearchResultVisible = false;
+        this.isUsersSearchSelected = false;
+        this.isTagsSearchSelected = false;
+        this.usernamesToShow = [];
+        this.isLocationsSearchSelected = false;
+        this.isInputDisalbed = true;
+        this.searchParams = "";
+        this.router.navigate(['/homePage/location/', username]);
+    }
+    
   }
   myProfileClick = () => {
       this.router.navigate(['/profile', localStorage.getItem('id')]);
@@ -116,6 +160,12 @@ export class HeaderComponent implements OnInit {
     }
     if(this.isUsersSearchSelected) {
       this.searchUsers();
+    }
+    if(this.isTagsSearchSelected) {
+      this.searchTags();
+    }
+    if(this.isLocationsSearchSelected) {
+      this.searchLocations();
     }
   
   };
@@ -134,6 +184,38 @@ export class HeaderComponent implements OnInit {
       }
     );
   }
+  searchTags = () => {
+    console.log(this.searchParams);
+    for (let tag of this.tags) {
+      if (tag.includes(this.searchParams)) {
+        if (!this.tagsForSearch.includes(tag)) {
+          this.tagsForSearch.push(tag);
+        }
+      }
+    }
+    this.usernamesToShow = this.tagsForSearch.filter(
+      (value, index, arr) => {
+        return value.includes(this.searchParams);
+      }
+    );
+  }
+
+  searchLocations = () => {
+    console.log(this.searchParams);
+    for (let location of this.locations) {
+      if (location.includes(this.searchParams)) {
+        if (!this.locationsForSearch.includes(location)) {
+          this.locationsForSearch.push(location);
+        }
+      }
+    }
+    this.usernamesToShow = this.locationsForSearch.filter(
+      (value, index, arr) => {
+        return value.includes(this.searchParams);
+      }
+    );
+  }
+  
   setUsersSearchActive = () => {
     this.isUsersSearchSelected = true;
     this.isTagsSearchSelected = false;
@@ -141,6 +223,7 @@ export class HeaderComponent implements OnInit {
     this.isInputDisalbed = false;
   }
   setTagsSearchActive = () => {
+    console.log(this.tags);
     this.isUsersSearchSelected = false;
     this.isTagsSearchSelected = true;
     this.isLocationsSearchSelected = false;
@@ -148,6 +231,7 @@ export class HeaderComponent implements OnInit {
     this.isInputDisalbed = false;
   }
   setLocationsSearchActive = () => {
+    console.log(this.locations);
     this.isUsersSearchSelected = false;
     this.isTagsSearchSelected = false;
     this.isLocationsSearchSelected = true;

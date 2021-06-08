@@ -56,7 +56,35 @@ getUsersById = (id: any) => {
     })
   );
 }
+getPublicTags = () => {
+  return this.http.get(' http://localhost:8086/posts/public-tags').pipe(
+    map((responseData) => {
+      return responseData;
+    })
+  );
+};
+getPublicLocations = () => {
+  return this.http.get('http://localhost:8086/posts/public-locations').pipe(
+    map((responseData) => {
+      return responseData;
+    })
+  );
+};
 
+getSingedInTags = (id:string) => {
+  return this.http.get('http://localhost:8086/posts/signed-in-tags/' +  id).pipe(
+    map((responseData) => {
+      return responseData;
+    })
+  );
+};
+getSingedInLocations = (id: string) => {
+  return this.http.get('http://localhost:8086/posts/signed-in-locations/' + id).pipe(
+    map((responseData) => {
+      return responseData;
+    })
+  );
+};
 
 
 }
