@@ -109,8 +109,38 @@ func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Requ
 func (handler *PostsHandler) GetByKey(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
 	fmt.Println(vars["key"])
-	post :=handler.Service.GetByKey(vars["key"])
-	renderJSON(w, &post)
+	posts :=handler.Service.GetByKey(vars["key"])
+	renderJSON(w, &posts)
+}
+
+func (handler *PostsHandler) LikePost(w http.ResponseWriter, r *http.Request){
+	var likeReq dto.LikeDto
+	err := json.NewDecoder(r.Body).Decode(&likeReq)
+	if err != nil {
+		w.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	err = handler.Service.LikePost(likeReq)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (handler *PostsHandler) DislikePost(w http.ResponseWriter, r *http.Request){
+	var dislikeReq dto.LikeDto
+	err := json.NewDecoder(r.Body).Decode(&dislikeReq)
+	if err != nil {
+		w.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	err = handler.Service.DislikePost(dislikeReq)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators'
 import { Injectable } from '@angular/core';
-import { Post } from '../model/Post.model';
+import { LikeReq, Post } from '../model/Post.model';
 
 @Injectable({
     providedIn: 'root',
@@ -25,6 +25,14 @@ export class PostsService {
         return this.http.get('http://localhost:8086/posts/feed/' + id).pipe(map(item => {
             return item;
         }));
+    }
+
+    likePost = (likeReq : LikeReq) => {
+        return this.http.post('http://localhost:8086/like-post', likeReq).pipe(res => res);
+    }
+
+    dislikePost = (likeReq : LikeReq) => {
+        return this.http.post('http://localhost:8086/dislike-post', likeReq).pipe(res => res);
     }
 
 }

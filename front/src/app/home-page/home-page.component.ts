@@ -33,22 +33,47 @@ export class HomePageComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  likeClick = (post : any) => {
+    let postId = post.id;
+    let ownerId = post.userid;
     let id = localStorage.getItem('id');
     if (id) {
-      this.postsService.getFeed('4579daae-1567-42d5-a25c-1a3818077c84').subscribe(res => {
+      this.postsService.likePost({userid : id, postid : postId, ownerid : ownerId}).subscribe(res => {
+        this.initData()
+      });
+    }
+  }
+
+  dislikeClick = (post : any) => {
+    let postId = post.id;
+    let ownerId = post.userid;
+    let id = localStorage.getItem('id');
+    if (id) {
+      this.postsService.dislikePost({userid : id, postid : postId, ownerid : ownerId}).subscribe(res => {
+        this.initData()
+      });
+    }
+  }
+
+  ngOnInit(): void {
+    this.initData()
+  }
+
+  initData = () => {
+    let id = localStorage.getItem('id');
+    if (id) {
+      this.postsService.getFeed(id).subscribe(res => {
         this.posts = res as any[];
         console.log(res);
         for (let p of this.posts) {
           if (!this.userData.get(p.userid)) {
-            this.userService.getUserById(p.userid).subscribe(res => {
+            this.userService.getUsersById(p.userid).subscribe(res => {
                 this.userData.set(p.userid, res);
-              console.log(res);
+                console.log(res);
             });
           }
         }
       });
     }
   }
-
-}
+  }
