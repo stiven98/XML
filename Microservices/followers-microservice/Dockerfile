@@ -12,4 +12,4 @@ COPY --from=builder /app/followers-service .
 #COPY --from=builder /app/wait_for_postgres.sh
 # Command to run the executable
 EXPOSE 8088
-CMD ["./followers-service"]
+CMD ["./followers-microservice"]

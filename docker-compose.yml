@@ -65,6 +65,32 @@ services:
     networks:
       - backend
 
+  db-auth:
+    image: postgres
+    container_name: db-auth
+    environment:
+      POSTGRES_PASSWORD: root
+    expose: 
+      - '5432'
+    ports:
+      - '5430:5432'
+    networks:
+      - backend 
+    volumes:
+      - ./db_init_scripts/auth:/docker-entrypoint-initdb.d/
+
+  db-followers:
+    image: neo4j:latest
+    hostname: neo4j
+    container_name: db-followers
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    networks:
+      - backend 
+    environment:
+      NEO4J_AUTH: neo4j/root
+
   profile-service:
     image: profile-service
     build:
@@ -134,6 +160,34 @@ services:
       - '8086'
     ports: 
       - '8086:8086'
+
+  auth-service:
+    image: auth-service
+    build:
+      context: ./Microservices/auth-service
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    environment:
+      - HOST_NAME=db
+    expose: 
+      - '8080'
+    ports: 
+      - '8080:8080'
+
+  followers-service:
+    image: followers-service
+    build:
+      context: ./Microservices/followers-service
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    environment:
+      - HOST_NAME=db-followers
+    expose: 
+      - '8088'
+    ports: 
+      - '8088:8088'
 
 networks:
   backend:
