@@ -23,6 +23,10 @@ export class HeaderComponent implements OnInit {
   usernamesForSearch: string[] = [];
   usernamesToShow: string[] = [];
   isSearchResultVisible: boolean = false;
+  isUsersSearchSelected: boolean = false;
+  isTagsSearchSelected: boolean = false;
+  isLocationsSearchSelected: boolean = false;
+  isInputDisalbed: boolean = true;
   constructor(
     public authService: AuthService,
     public usersService: UserService,
@@ -94,6 +98,11 @@ export class HeaderComponent implements OnInit {
       this.userId = response;
       this.isSearchResultVisible = false;
       this.searchParams = "";
+      this.isUsersSearchSelected = false;
+      this.isTagsSearchSelected = false;
+      this.usernamesToShow = [];
+      this.isLocationsSearchSelected = false;
+      this.isInputDisalbed = true;
       this.router.navigate(['/profile', this.userId]);
     });
   }
@@ -102,6 +111,16 @@ export class HeaderComponent implements OnInit {
   }
   onKeyDown = () => {
     this.isSearchResultVisible = true;
+    if(this.searchParams == "") {
+      this.isSearchResultVisible = false;
+    }
+    if(this.isUsersSearchSelected) {
+      this.searchUsers();
+    }
+  
+  };
+  searchUsers = () => {
+    console.log(this.searchParams);
     for (let username of this.usernames) {
       if (username.includes(this.searchParams)) {
         if (!this.usernamesForSearch.includes(username)) {
@@ -114,5 +133,28 @@ export class HeaderComponent implements OnInit {
         return value.includes(this.searchParams);
       }
     );
-  };
+  }
+  setUsersSearchActive = () => {
+    this.isUsersSearchSelected = true;
+    this.isTagsSearchSelected = false;
+    this.isLocationsSearchSelected = false;
+    this.isInputDisalbed = false;
+  }
+  setTagsSearchActive = () => {
+    this.isUsersSearchSelected = false;
+    this.isTagsSearchSelected = true;
+    this.isLocationsSearchSelected = false;
+    this.usernamesToShow = [];
+    this.isInputDisalbed = false;
+  }
+  setLocationsSearchActive = () => {
+    this.isUsersSearchSelected = false;
+    this.isTagsSearchSelected = false;
+    this.isLocationsSearchSelected = true;
+    this.usernamesToShow = [];
+    this.isInputDisalbed = false;
+  }
+  onFocus = () => {
+    this.isSearchResultVisible = true;
+  }
 }

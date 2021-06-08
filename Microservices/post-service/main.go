@@ -59,6 +59,7 @@ func main() {
 		DB: 1,
 	})
 	pong, err := client.Ping().Result()
+	fmt.Println(client.MGet())
 	fmt.Println(pong, err)
 
 	commentRepo, postRepo := initRepo(client)

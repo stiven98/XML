@@ -34,5 +34,4 @@ export class PostsService {
     dislikePost = (likeReq : LikeReq) => {
         return this.http.post('http://localhost:8086/dislike-post', likeReq).pipe(res => res);
     }
-
 }
