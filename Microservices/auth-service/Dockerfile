@@ -1,13 +1,13 @@
-FROM maven:3.6.3-ibmjava-8-alpine AS appBuild
+FROM maven:3.8.1-jdk-11 AS appBuild
 
 LABEL maintainer="danijelradakovic@uns.ac.rs"
 
-WORKDIR /usr/src/consumer_service
+WORKDIR /usr/src/auth_service
 COPY . .
-RUN mvn package -DskipTests
+RUN mvn clean verify -DskipTests
 
-FROM openjdk:8-jdk-alpine AS appRuntime
+FROM openjdk:11.0-jdk-oracle AS appRuntime
 WORKDIR /app
-COPY --from=appBuild /usr/src/consumer_service/target/consumer_service.jar ./
+COPY --from=appBuild /usr/src/auth_service/target/auth-0.0.1-SNAPSHOT.jar ./
 EXPOSE 8080
-CMD java -jar consumer_service.jar
+CMD java -jar auth-0.0.1-SNAPSHOT.jar
