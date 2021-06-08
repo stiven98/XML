@@ -34,12 +34,12 @@
             </li>
             <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
-                  <input class="form-control mr-sm-2"  style="width: 400px;" [(ngModel)]="searchParams" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
+                  <input class="form-control mr-sm-2"  style="width: 400px;" [(ngModel)]="searchParams"  [readonly] = "this.isInputDisalbed"  (focus) = "onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
             <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 200px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" style="width: 400px;"  [(ngModel)]="searchParams" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
+                    <input class="form-control mr-sm-2" style="width: 400px;"  [(ngModel)]="searchParams" [readonly] = "this.isInputDisalbed" (focus) = "onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
             <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px;">
@@ -74,10 +74,15 @@
 </nav>
 <div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px; margin-right: 575px;">
   <div class="card mt-5 p-4">
-    <p *ngIf="usernamesToShow.length == 0">Nema rezultata</p>
+    <p *ngIf="usernamesToShow.length == 0 && isUsersSearchSelected">Nema rezultata</p>
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        <button type="button" (click) = "setUsersSearchActive()" class="btn btn-outline-primary">Korisnici</button>
+        <button type="button" (click) = "setTagsSearchActive()" class="btn btn-outline-primary">Tagovi</button>
+        <button type="button" (click) = "setLocationsSearchActive()" class="btn btn-outline-primary">Lokacije</button>
+      </div>
       <div *ngFor="let username of usernamesToShow" class="d-flex flex-row justify-content-between mb-3">
           <div class="d-flex flex-column p-3">
-              <a (click) = "onLinkClick(username)" style="color: black;" class="mb-1">{{username}}</a> <small class="text-muted">kliknite da biste videli profil</small>
+              <a (click) = "onLinkClick(username)" style="color: black; cursor: pointer;" class="mb-1">{{username}}</a> <small class="text-muted">kliknite da biste videli profil</small>
           </div>
           <div class="price pt-3 pl-3"> <img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/aca.png">
           </div>
