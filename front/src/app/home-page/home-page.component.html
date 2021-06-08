@@ -1,4 +1,4 @@
-<section class="pt-5 pb-5">
+<section class="pt-5 pb-5" *ngIf="this.authService.isLoggedIn">
     <div class="container">
         <div class="row">
             <div class="col-6"></div>
@@ -108,7 +108,7 @@
 <section class="hero">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6 offset-lg-3" *ngFor='let post of posts'>
+            <div class="col-lg-6 offset-lg-3" *ngFor='let post of postsToShow'>
                 <div class="cardbox shadow-lg bg-white">
                     <div class="cardbox-heading">
                         <!--/ dropdown -->
@@ -117,7 +117,7 @@
                                 <a href=""><img class="img-fluid rounded-circle" src="../../assets/images/slika.jpg" alt="User" /></a>
                             </div>
                             <div class="media-body">
-                                <p class="m-0">{{ userData.get(post.userid).system_user.firstName + ' ' + userData.get(post.userid).system_user.lastName }}</p>
+                                <p class="m-0">{{ userDataToShow.get(post.userid).system_user.firstName + ' ' + userDataToShow.get(post.userid).system_user.lastName }}</p>
                                 <small><span><i class="icon ion-md-pin"></i> {{ post.location }}</span></small>
                                 <small><span><i class="icon ion-md-time"></i> {{convertTimeToText(post.timestamp)}} </span></small>
                             </div>

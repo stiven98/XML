@@ -27,6 +27,12 @@ export class PostsService {
         }));
     }
 
+    getPublicPosts = () => {
+        return this.http.get('http://localhost:8086/posts/public').pipe(map(item => {
+            return item;
+        }));
+    }
+
     likePost = (likeReq : LikeReq) => {
         return this.http.post('http://localhost:8086/like-post', likeReq).pipe(res => res);
     }
