@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.xws.team22.auth.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,17 +28,23 @@ public class LoginDetailsController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    private static final Logger log = LoggerFactory.getLogger(LoginDetailsController.class);
+
     @GetMapping
     public ResponseEntity<?> findAll() {
         Map<String, String> result = new HashMap<>();
-        List<AuthenticationData> authenticationDataList = loginDetailsService.findAll();
-        return new ResponseEntity<>(authenticationDataList, HttpStatus.OK);
+        try
+        {
+            List<AuthenticationData> authenticationDataList = loginDetailsService.findAll();
+            log.info("Successfully got all authenticated data");
+            return new ResponseEntity<>(authenticationDataList, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            log.info("Failed to get all authenticated data");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping("/isValidLogin/{username}/{password}")
-    public ResponseEntity<?> isValidLogin(@PathVariable String username, @PathVariable String password) {
-        boolean isValidLogin = loginDetailsService.isValidLogin(username, password);
-        return new ResponseEntity<Boolean>(isValidLogin, HttpStatus.OK);
-    }
 
 }

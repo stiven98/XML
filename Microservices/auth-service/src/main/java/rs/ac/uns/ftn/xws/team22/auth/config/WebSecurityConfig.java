@@ -13,8 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import rs.ac.uns.ftn.xws.team22.auth.security.TokenUtils;
+import rs.ac.uns.ftn.xws.team22.auth.security.auth.CustomAccessDeniedHandler;
 import rs.ac.uns.ftn.xws.team22.auth.security.auth.RestAuthenticationEntryPoint;
 import rs.ac.uns.ftn.xws.team22.auth.security.auth.TokenAuthenticationFilter;
 import rs.ac.uns.ftn.xws.team22.auth.service.impl.AuthenticationDataService;
@@ -38,6 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new CustomAccessDeniedHandler();
+    }
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
