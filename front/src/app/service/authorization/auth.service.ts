@@ -27,8 +27,9 @@ export class AuthService {
   private access_token = null;
 
   signIn(user: AccountInfoModel) {
+    alert("Picka");
     return this.apiService
-      .post('http://localhost:8080/auth', user)
+      .post('http://localhost:8080/adsdsadasdsd', user)
       .subscribe((res: any) => {
         localStorage.setItem('access_token', res.token);
         let authority = res.role;
