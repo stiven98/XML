@@ -12,7 +12,11 @@ export class ResetPasswordComponent implements OnInit {
   newPassword: string = '';
   confirmPassword: string = '';
   id: any;
-  constructor(private route: ActivatedRoute, private userService: UserService, private router: Router) {
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private router: Router
+  ) {
     this.id = route.snapshot.params[`id`];
   }
 
@@ -28,8 +32,8 @@ export class ResetPasswordComponent implements OnInit {
       resetPassword.requestId = this.id;
       this.userService.checkResetPasswordRequest(this.id).subscribe((res) => {
         if (res) {
-          alert("Lozinka uspešno promenjena")
-          this.userService.resetPassword(resetPassword).subscribe((res)=>res);
+          alert('Lozinka uspešno promenjena');
+          this.userService.resetPassword(resetPassword).subscribe((res) => res);
           this.router.navigate(['/login']);
         } else {
           alert('Došlo je do greške');
