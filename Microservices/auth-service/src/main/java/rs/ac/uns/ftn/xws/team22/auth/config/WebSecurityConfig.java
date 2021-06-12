@@ -70,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/forgotPassword").permitAll()
                 .antMatchers("/api/checkRequest/{id}").permitAll()
                 .antMatchers("/api/checkRequest/{id}").permitAll()
+                .antMatchers("/auth/activate/{id}").permitAll()
 
 
 

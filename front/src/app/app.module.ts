@@ -21,6 +21,7 @@ const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
   {path: 'login', component: LoginComponent },
   {path: 'reset/:id', component: ResetPasswordComponent},
+  {path: 'activate/:id', component: ActivateComponent},
   {path: 'profile/:id', component: ProfilePageComponent },
   {path: 'editProfile', component: EditProfileComponent },
   {path: 'directMessages', component: DirectMessagesComponent },

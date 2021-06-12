@@ -106,7 +106,7 @@ getSingedInLocations = (id: string) => {
 
   activateAccount = (id: string) => {
     return this.http
-    .post('https://localhost/auth/activate/', + id)
+    .post('https://localhost:8080/auth/activate/', + id)
     .pipe(map((res) => {return res}));
   }
 
