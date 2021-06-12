@@ -9,8 +9,6 @@ import { UserService } from '../service/user.service';
   styleUrls: ['./reset-password.component.css'],
 })
 export class ResetPasswordComponent implements OnInit {
-  newPassword: string = '';
-  confirmPassword: string = '';
   id: any;
   constructor(
     private route: ActivatedRoute,
@@ -22,28 +20,9 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  resetPassword = () => {
-    console.log(this.newPassword);
-    console.log(this.confirmPassword);
-    if (this.newPassword === this.confirmPassword) {
-      let resetPassword = new ResetPassword();
-      resetPassword.password = this.newPassword;
-      resetPassword.password2 = this.confirmPassword;
-      resetPassword.requestId = this.id;
-      this.userService.checkResetPasswordRequest(this.id).subscribe((res) => {
-        if (res) {
-          alert('Lozinka uspešno promenjena');
-          this.userService.resetPassword(resetPassword).subscribe((res) => res);
-          this.router.navigate(['/login']);
-        } else {
-          alert('Došlo je do greške');
-          return;
-        }
+  activateAccount = () => {
+      this.userService.activateAccount(this.id).subscribe((res) => {
+          alert('Nalog uspesno aktiviran');
       });
-    } else {
-      alert('Lozinke se ne poklapaju!');
-      this.newPassword = '';
-      this.confirmPassword = '';
-    }
   };
 }

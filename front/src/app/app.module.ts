@@ -15,6 +15,7 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ActivateComponent } from './activate/activate.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -42,6 +43,7 @@ const appRoutes: Routes = [
     NotificationsComponent,
     HomePageComponent,
     ResetPasswordComponent,
+    ActivateComponent,
   ],
   imports: [
     BrowserModule,
