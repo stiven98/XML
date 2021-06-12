@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	_ "github.com/google/uuid"
@@ -17,6 +18,20 @@ type UsersHandler struct {
 }
 
 func (handler UsersHandler) Update(writer http.ResponseWriter, request *http.Request) {
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", request.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		writer.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	var user model.User
 	err := json.NewDecoder(request.Body).Decode(&user)
 	if err != nil {

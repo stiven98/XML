@@ -11,7 +11,7 @@ export class FollowService {
 
   getFollowers = (id: string) => {
     return this.http
-      .get('http://localhost:8088/users/getFollowers/' + id)
+      .get('https://localhost/users/getFollowers/' + id)
       .pipe(
         map((responseData) => {
           // @ts-ignore
@@ -21,7 +21,7 @@ export class FollowService {
 
   getFollowing = (id: string) => {
     return this.http
-      .get('http://localhost:8088/users/getFollowing/' + id)
+      .get('https://localhost/users/getFollowing/' + id)
       .pipe(
         map((responseData) => {
           // @ts-ignore
@@ -31,7 +31,7 @@ export class FollowService {
 
   getRequests = (id: string | null) => {
     return this.http
-      .get('http://localhost:8088/users/getRequests/' + id)
+      .get('https://localhost/users/getRequests/' + id)
       .pipe(
         map((responseData) => {
           // @ts-ignore
@@ -41,17 +41,17 @@ export class FollowService {
 
   follow = (userID: string | null, targetID: string) => {
     return this.http
-      .post('http://localhost:8088/users/follow/' + userID + '/' + targetID, null);
+      .post('https://localhost/users/follow/' + userID + '/' + targetID, null);
   }
 
   unfollow = (userID: string | null, targetID: string | null) => {
     return this.http
-      .post('http://localhost:8088/users/unfollow/' + userID + '/' + targetID, null);
+      .post('https://localhost/users/unfollow/' + userID + '/' + targetID, null);
   }
 
 
   approveRequest = (userElement: never, myId: string | null) => {
     return this.http
-      .post('http://localhost:8088/users/acceptRequest/' + userElement + '/' + myId, null);
+      .post('https://localhost/users/acceptRequest/' + userElement + '/' + myId, null);
   }
 }

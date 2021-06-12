@@ -32,6 +32,15 @@ func (handler *SystemUsersHandler) Create(w http.ResponseWriter, r *http.Request
 }
 
 func (handler *SystemUsersHandler) Update(w http.ResponseWriter, r *http.Request) {
+
+	_, errAuth := http.Get("https://localhost:9000/auth/is-authenticated")
+
+	if errAuth != nil {
+		fmt.Println("Unauthorized")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	var user model.SystemUser
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {

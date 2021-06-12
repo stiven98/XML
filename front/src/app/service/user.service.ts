@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   registrationUser = (user: User) => {
-    return this.http.post('http://localhost:8085/users/create', {
+    return this.http.post('https://localhost/users/create', {
       system_user: {
         ...user,
         DateOfBirth: user.DateOfBirth + 'T01:00:00+01:00',
@@ -21,7 +21,7 @@ export class UserService {
   };
 
   getAllUsernames = () => {
-    return this.http.get('http://localhost:8085/sysusers/getAllUsernames').pipe(
+    return this.http.get('https://localhost/sysusers/getAllUsernames').pipe(
       map((responseData) => {
         return responseData;
       })
@@ -29,7 +29,7 @@ export class UserService {
   };
 
   getUserById = (id:string) => {
-    return this.http.get('http://localhost:8085/users/getById/'+id ).pipe(
+    return this.http.get('https://localhost/users/getById/'+id ).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -37,7 +37,7 @@ export class UserService {
   };
 
   getUserId = (username: string) => {
-    return this.http.get('http://localhost:8085/sysusers/getUserId/' + username).pipe(
+    return this.http.get('https://localhost/sysusers/getUserId/' + username).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -45,26 +45,26 @@ export class UserService {
   };
 
 editUser = (editUser: UserEdit) => {
-  return this.http.put('http://localhost:8085/users/update', editUser).pipe(map((res)=> {return res;}));
+  return this.http.put('https://localhost/users/update', editUser).pipe(map((res)=> {return res;}));
 
 }
 
 getUsersById = (id: any) => {
-  return this.http.get('http://localhost:8085/users/getById/' + id).pipe(
+  return this.http.get('https://localhost/users/getById/' + id).pipe(
     map((responseData) => {
       return responseData;
     })
   );
 }
 getPublicTags = () => {
-  return this.http.get(' http://localhost:8086/posts/public-tags').pipe(
+  return this.http.get('https://localhost/posts/public-tags').pipe(
     map((responseData) => {
       return responseData;
     })
   );
 };
 getPublicLocations = () => {
-  return this.http.get('http://localhost:8086/posts/public-locations').pipe(
+  return this.http.get('https://localhost/posts/public-locations').pipe(
     map((responseData) => {
       return responseData;
     })
@@ -72,14 +72,14 @@ getPublicLocations = () => {
 };
 
 getSingedInTags = (id:string) => {
-  return this.http.get('http://localhost:8086/posts/signed-in-tags/' +  id).pipe(
+  return this.http.get('https://localhost/posts/signed-in-tags/' +  id).pipe(
     map((responseData) => {
       return responseData;
     })
   );
 };
 getSingedInLocations = (id: string) => {
-  return this.http.get('http://localhost:8086/posts/signed-in-locations/' + id).pipe(
+  return this.http.get('https://localhost/posts/signed-in-locations/' + id).pipe(
     map((responseData) => {
       return responseData;
     })

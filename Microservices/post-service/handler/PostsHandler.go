@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
@@ -22,6 +23,20 @@ type PostsHandler struct {
 
 
 func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	var post model.Post
 	fmt.Println(json.NewDecoder(r.Body).Decode(&post))
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -57,6 +72,20 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Request) {
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	var postItems[] model.PostItem
 	// Maximum upload of 10 MB files
 	r.ParseMultipartForm(32 << 20) // 32MB is the default used by FormFile
@@ -114,6 +143,18 @@ func (handler *PostsHandler) GetByKey(w http.ResponseWriter, r *http.Request){
 }
 
 func (handler *PostsHandler) LikePost(w http.ResponseWriter, r *http.Request){
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	var likeReq dto.LikeDto
 	err := json.NewDecoder(r.Body).Decode(&likeReq)
 	if err != nil {
@@ -129,6 +170,18 @@ func (handler *PostsHandler) LikePost(w http.ResponseWriter, r *http.Request){
 }
 
 func (handler *PostsHandler) DislikePost(w http.ResponseWriter, r *http.Request){
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	var dislikeReq dto.LikeDto
 	err := json.NewDecoder(r.Body).Decode(&dislikeReq)
 	if err != nil {
@@ -144,6 +197,18 @@ func (handler *PostsHandler) DislikePost(w http.ResponseWriter, r *http.Request)
 }
 
 func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
 	post :=handler.Service.GetFeed(vars["id"])
@@ -197,6 +262,19 @@ func (handler *PostsHandler) GetAllTagsPublic(w http.ResponseWriter, r *http.Req
 }
 
 func (handler *PostsHandler) GetAllTagsSignedIn(w http.ResponseWriter, r *http.Request){
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
@@ -267,6 +345,19 @@ func (handler *PostsHandler) GetAllLocationsPublic(w http.ResponseWriter, r *htt
 }
 
 func (handler *PostsHandler) GetAllLocationsSignedIn(w http.ResponseWriter, r *http.Request){
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", r.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])

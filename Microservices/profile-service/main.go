@@ -292,10 +292,9 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/users/isPublic/{id}", usersHandler.IsPublic).Methods("GET")
 	router.HandleFunc("/users/public-ids",  usersHandler.GetPublicUsersIds).Methods("GET")
 
-	headers := handlers.AllowedHeaders([] string{"Content-Type"})
-	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
+	headers := handlers.AllowedHeaders([] string{"*"})
+	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT", "OPTIONS", "DELETE"})
 	origins := handlers.AllowedOrigins([] string{"*"})
-
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), handlers.CORS(headers, methods, origins) (router)))
 }
 

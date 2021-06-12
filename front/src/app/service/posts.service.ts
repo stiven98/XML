@@ -12,32 +12,32 @@ export class PostsService {
     }
 
     uploadPosts = (formData: FormData) => {
-        return this.http.post('http://localhost:8086/upload', formData).pipe(map(item => {
+        return this.http.post('https://localhost/upload', formData).pipe(map(item => {
             return item;
         }));
     }
 
     createPost = (post: Post) => {
-        return this.http.post('http://localhost:8086/posts/create', post).pipe(res => res);
+        return this.http.post('https://localhost/posts/create', post).pipe(res => res);
     }
 
     getFeed = (id: string) => {
-        return this.http.get('http://localhost:8086/posts/feed/' + id).pipe(map(item => {
+        return this.http.get('https://localhost/posts/feed/' + id).pipe(map(item => {
             return item;
         }));
     }
 
     getPublicPosts = () => {
-        return this.http.get('http://localhost:8086/posts/public').pipe(map(item => {
+        return this.http.get('https://localhost/posts/public').pipe(map(item => {
             return item;
         }));
     }
 
     likePost = (likeReq : LikeReq) => {
-        return this.http.post('http://localhost:8086/like-post', likeReq).pipe(res => res);
+        return this.http.post('https://localhost/like-post', likeReq).pipe(res => res);
     }
 
     dislikePost = (likeReq : LikeReq) => {
-        return this.http.post('http://localhost:8086/dislike-post', likeReq).pipe(res => res);
+        return this.http.post('https://localhost/dislike-post', likeReq).pipe(res => res);
     }
 }

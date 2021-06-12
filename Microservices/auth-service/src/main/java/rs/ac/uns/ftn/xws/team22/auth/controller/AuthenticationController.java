@@ -86,7 +86,7 @@ public class AuthenticationController {
     public ResponseEntity<?> isAuthenticated(){
         try
         {
-            log.info("Successfully got role  'ROLE_AGENT'");
+            log.info("User is authenticated");
             return new ResponseEntity<>("", HttpStatus.OK);
         }
         catch (Exception e)

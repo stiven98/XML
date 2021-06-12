@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"followers-microservice/model"
@@ -86,6 +87,20 @@ func (h FollowersHandler) GetFollowing(writer http.ResponseWriter, request *http
 }
 
 func (h FollowersHandler) Follow(writer http.ResponseWriter, request *http.Request) {
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", request.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		writer.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	tokens := strings.Split(request.URL.Path, "/")
 	userID := tokens[int(len(tokens))-2]
 	targetID := tokens[int(len(tokens))-1]
@@ -197,6 +212,18 @@ func (h FollowersHandler) AddNode(writer http.ResponseWriter, request *http.Requ
 }
 
 func (h FollowersHandler) GetRequest(writer http.ResponseWriter, request *http.Request) {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", request.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		writer.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	tokens := strings.Split(request.URL.Path, "/")
 	ID := tokens[int(len(tokens))-1]
 	if !IsValidUUID(ID){
@@ -239,6 +266,18 @@ func (h FollowersHandler) GetRequest(writer http.ResponseWriter, request *http.R
 }
 
 func (h FollowersHandler) Unfollow(writer http.ResponseWriter, request *http.Request) {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", request.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		writer.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	tokens := strings.Split(request.URL.Path, "/")
 	userID := tokens[int(len(tokens))-2]
 	targetID := tokens[int(len(tokens))-1]
@@ -269,6 +308,18 @@ func (h FollowersHandler) Unfollow(writer http.ResponseWriter, request *http.Req
 }
 
 func (h FollowersHandler) AcceptRequest(writer http.ResponseWriter, request *http.Request) {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req.Header.Add("Authorization", request.Header.Get("Authorization"))
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		writer.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	tokens := strings.Split(request.URL.Path, "/")
 	userID := tokens[int(len(tokens))-2]
 	targetID := tokens[int(len(tokens))-1]

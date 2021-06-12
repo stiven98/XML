@@ -16,7 +16,7 @@ export class ConfigService {
     return this._refresh_token_url;
   }
 
-  private _login_url = this._auth_url + '/login';
+  private _login_url = this._auth_url;
 
   get login_url(): string {
     return this._login_url;
