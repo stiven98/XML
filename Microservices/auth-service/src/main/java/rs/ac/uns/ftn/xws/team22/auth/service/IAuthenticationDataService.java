@@ -9,7 +9,6 @@ public interface IAuthenticationDataService {
     List<AuthenticationData> findAll();
     AuthenticationData findById(UUID id);
     AuthenticationData findByUsername(String email);
-
     boolean isValidLogin(String username, String password);
 
 }

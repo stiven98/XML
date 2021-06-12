@@ -24,3 +24,12 @@
 {"handler":"/users/getById/965208b9-287b-4da5-b772-73df5e74ebbc","level":"info","msg":"User successfully get by id","time":"2021-06-12T18:06:41+02:00","user":"965208b9-287b-4da5-b772-73df5e74ebbc"}
 {"handler":"/users/getById/965208b9-287b-4da5-b772-73df5e74ebbc","level":"info","msg":"User successfully get by id","time":"2021-06-12T18:08:27+02:00","user":"965208b9-287b-4da5-b772-73df5e74ebbc"}
 {"handler":"/users/getById/965208b9-287b-4da5-b772-73df5e74ebbc","level":"info","msg":"User successfully get by id","time":"2021-06-12T18:08:37+02:00","user":"965208b9-287b-4da5-b772-73df5e74ebbc"}
+{"level":"info","msg":"Connecting to database...","time":"2021-06-12T20:41:44+02:00"}
+{"level":"info","msg":"Connected to database","time":"2021-06-12T20:41:44+02:00"}
+{"handler":"/users/create","level":"error","msg":"Error during creation","time":"2021-06-12T20:43:39+02:00","user":"00000000-0000-0000-0000-000000000000"}
+{"handler":"/users/create","level":"info","msg":"User successfully created","time":"2021-06-12T20:43:39+02:00","user":"00000000-0000-0000-0000-000000000000"}
+{"handler":"/users/create","level":"info","msg":"User successfully created","time":"2021-06-12T20:43:49+02:00","user":"00000000-0000-0000-0000-000000000000"}
+{"handler":"/users/create","level":"info","msg":"User successfully created","time":"2021-06-12T20:49:35+02:00","user":"00000000-0000-0000-0000-000000000000"}
+{"level":"info","msg":"Connecting to database...","time":"2021-06-12T20:54:39+02:00"}
+{"level":"info","msg":"Connected to database","time":"2021-06-12T20:54:39+02:00"}
+{"handler":"/users/create","level":"info","msg":"User successfully created","time":"2021-06-12T20:55:15+02:00","user":"00000000-0000-0000-0000-000000000000"}

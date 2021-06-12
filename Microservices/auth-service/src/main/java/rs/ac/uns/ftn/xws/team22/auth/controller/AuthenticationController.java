@@ -38,6 +38,14 @@ public class AuthenticationController {
         }
     }
 
+    @PostMapping("/activate/{id}")
+    public ResponseEntity<?> activateAccount(@PathVariable("id")String id){
+        if(authService.activateAccount(UUID.fromString(id))){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+
     @PostMapping("/forgotPassword")
     public HttpStatus forgotPassword(@RequestBody String email) {
         System.out.println(email);
@@ -97,6 +105,7 @@ public class AuthenticationController {
             return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
         }
     }
+
 
     @GetMapping("/has-agent-role")
     @PreAuthorize("hasAuthority('ROLE_AGENT')")

@@ -10,6 +10,8 @@ import java.util.UUID;
 public interface IAuthenticationService {
     AuthenticationResponseDTO login(AuthenticationRequestDTO dto);
 
+    boolean activateAccount(UUID id);
+
     ResetPasswordRequest checkRequest(UUID id);
 
 

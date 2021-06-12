@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
@@ -71,6 +72,29 @@ func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
+
+	userCreds := &Dto.UserCredentialsDto{
+		USERNAME: user.SystemUser.Username,
+		PASSWORD: user.SystemUser.Password,
+		EMAIL:    user.SystemUser.Email,
+	}
+
+	payloadBuf := new(bytes.Buffer)
+	json.NewEncoder(payloadBuf).Encode(userCreds)
+
+	client := &http.Client{Transport: tr}
+	req, _ := http.NewRequest("POST", "https://localhost:8080//api/login-details", payloadBuf)
+	_, errAuth := client.Do(req)
+
+	if errAuth != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	user.SystemUser.TypeOfUser = model.USER
 	fmt.Println(user)
 	err = handler.Service.Create(&user)

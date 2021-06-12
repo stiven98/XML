@@ -41,10 +41,10 @@ export class LoginComponent implements OnInit {
   };
 
   isValidUsername = (username: string) => {
-    return username.length > 12 ? false : true;
+    return username.length > 20 ? false : true;
   };
   isValidPassword = (password: string) => {
-    return password.length > 12 ? false : true;
+    return password.length > 20 ? false : true;
   };
 
   resetInputs = () => {

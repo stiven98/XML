@@ -123,6 +123,17 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
+    public boolean activateAccount(UUID id) {
+        AuthenticationData user= repository.findById(id).orElse(null);
+        if(user!=null){
+            user.setActive(true);
+            repository.save(user);
+            return  true;
+        }
+        return false;
+    }
+
+    @Override
     public ResetPasswordRequest checkRequest(UUID id) {
         ResetPasswordRequest request= passwordRequestRepository.findById(id).orElse(null);
         if(request!=null){
