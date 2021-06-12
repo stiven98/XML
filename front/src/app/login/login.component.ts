@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AccountInfoModel } from '../model/AccountInfoModel';
 import { AuthService } from '../service/authorization/auth.service';
 import { UserService } from '../service/user.service';
@@ -12,10 +13,13 @@ import { UserService } from '../service/user.service';
 export class LoginComponent implements OnInit {
   user: AccountInfoModel = new AccountInfoModel();
   flag: any;
+  email: string = '';
+  showForgotPassword: boolean = false;
   constructor(
     private loginService: AuthService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {}
@@ -46,5 +50,27 @@ export class LoginComponent implements OnInit {
   resetInputs = () => {
     this.user.username = '';
     this.user.password = '';
+  };
+
+  forgotPassword = () => {
+    this.showForgotPassword = true;
+  };
+  sendMail = () => {
+    if (this.validateEmail(this.email)) {
+      this.userService.forgotPassword(this.email).subscribe(res => res);
+      alert("Proverite Vaš mail!");
+      
+    } else {
+      alert("Neispravno ste uneli email");
+      this.email = "";
+    }
+  };
+
+  validateEmail = (Email: string) => {
+    if (Email.match(new RegExp('.+(@).+(.com)'))) {
+      return true;
+    } else {
+      return false;
+    }
   };
 }

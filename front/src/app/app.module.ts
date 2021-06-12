@@ -14,10 +14,12 @@ import { HomePageComponent } from './home-page/home-page.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
   {path: 'login', component: LoginComponent },
+  {path: 'reset/:id', component: ResetPasswordComponent},
   {path: 'profile/:id', component: ProfilePageComponent },
   {path: 'editProfile', component: EditProfileComponent },
   {path: 'directMessages', component: DirectMessagesComponent },
@@ -39,6 +41,7 @@ const appRoutes: Routes = [
     DirectMessagesComponent,
     NotificationsComponent,
     HomePageComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

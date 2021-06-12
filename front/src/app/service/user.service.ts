@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../model/User.model';
 import { map } from 'rxjs/operators';
 import { UserEdit } from '../model/EditUser';
+import { ResetPassword } from '../model/ResetPassword';
 
 @Injectable({
   providedIn: 'root',
@@ -85,6 +86,22 @@ getSingedInLocations = (id: string) => {
     })
   );
 };
+  forgotPassword = (email: string) => {
+    return this.http
+      .post('https://localhost/auth/forgotPassword', email)
+      .pipe(map((res) => {return res}));
+  };
 
+  checkResetPasswordRequest = (id : any) => {
+    return this.http
+    .get('https://localhost/auth/checkRequest/'+ id)
+    .pipe(map((res) => {return res}));
+};
+
+  resetPassword = (resetPassword: ResetPassword) => {
+    return this.http
+    .post('https://localhost/auth/resetPassword', resetPassword)
+    .pipe(map((res) => {return res}));
+  }
 
 }

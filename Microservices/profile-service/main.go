@@ -5,9 +5,11 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
+	"io"
 	"net/http"
 	"os"
 	"profileservice/handler"
@@ -24,6 +26,7 @@ func initDB() *gorm.DB {
 	}
 	user := "postgres"
 	password := "root"
+	//dbname := "postgres"
 	dbname := "users_service"
 	dbport := "5432"
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", host, user, password, dbname, dbport)
@@ -298,7 +301,26 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), handlers.CORS(headers, methods, origins) (router)))
 }
 
+func initLogger() {
+	_, err := os.OpenFile("./profile-service.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+
+	if err != nil {
+		fmt.Printf("error opening file: %v", err)
+		os.Exit(1)
+	}
+
+	w := io.MultiWriter(os.Stdout,&lumberjack.Logger{
+		Filename:   "./profile-service.log",
+		MaxSize:    1,  // megabytes after which new file is created
+		MaxBackups: 3,  // number of backups
+		MaxAge:     28, //days
+	})
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetOutput(w)
+	return
+}
 func main() {
+	initLogger()
 	fmt.Println(uuid.New())
 	database := initDB()
 	sysusersRepo, administratorsRepo, usersRepo, agentsRepo := initRepo(database)

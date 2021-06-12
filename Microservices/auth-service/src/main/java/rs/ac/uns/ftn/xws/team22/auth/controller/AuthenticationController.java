@@ -10,9 +10,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.xws.team22.auth.dto.AuthenticationRequestDTO;
 import rs.ac.uns.ftn.xws.team22.auth.dto.AuthenticationResponseDTO;
+import rs.ac.uns.ftn.xws.team22.auth.dto.ResetPasswordDTO;
 import rs.ac.uns.ftn.xws.team22.auth.service.impl.AuthenticationService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,9 +34,39 @@ public class AuthenticationController {
 
         } catch (Exception e) {
             log.warn("Failed to log in " + dto.getUsername() + ", from: " + request.getHeader("Origin"));
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/forgotPassword")
+    public HttpStatus forgotPassword(@RequestBody String email) {
+        System.out.println(email);
+        if(authService.sendResetPasswordRequest(email)){
+            log.info("Sent mail for password recover - " +email);
+            return HttpStatus.OK;
+        }
+        log.warn("Bad request for password recovery - "+email );
+        return HttpStatus.BAD_REQUEST;
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO dto){
+        if(authService.resetPassword(dto)){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/checkRequest/{id}")
+    public ResponseEntity<?> checkRequest(@PathVariable("id")String id){
+        if(authService.checkRequest(UUID.fromString(id))!=null){
+            log.info("Valid reset password request | " + id);
+            return new ResponseEntity(true, HttpStatus.OK);
+        }
+        log.warn("Invalid reset password request | " +id);
+        return new ResponseEntity(false,HttpStatus.FORBIDDEN);
+    }
+
 
     @GetMapping("/has-admin-role")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

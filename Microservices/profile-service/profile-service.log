@@ -1,0 +1,6 @@
+{"level":"info","msg":"Connecting to database...","time":"2021-06-12T12:55:08+02:00"}
+{"level":"info","msg":"Connected to database","time":"2021-06-12T12:55:08+02:00"}
+{"handler":"/users/getById/0cf8a7ff-7bb5-48f0-a834-7b07eb306f90","level":"info","msg":"User successfully get by id","time":"2021-06-12T12:56:37+02:00","user":"0cf8a7ff-7bb5-48f0-a834-7b07eb306f90"}
+{"handler":"/users/update","level":"info","msg":"Profile successfully updated","time":"2021-06-12T12:56:44+02:00","user":"0cf8a7ff-7bb5-48f0-a834-7b07eb306f90"}
+{"level":"info","msg":"Connecting to database...","time":"2021-06-12T13:09:16+02:00"}
+{"level":"info","msg":"Connected to database","time":"2021-06-12T13:09:16+02:00"}
