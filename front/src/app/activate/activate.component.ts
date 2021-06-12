@@ -23,6 +23,6 @@ export class ActivateComponent implements OnInit {
   }
 
   activateAccount() {
-    this.userService.activateAccount(this.id).subscribe(res => alert("Uspesno ste aktivirali nalog"));
+    this.userService.activateAccount(this.id).subscribe((res : any) => {if(res)alert("Uspesno ste aktivirali nalog")});
   }
 }

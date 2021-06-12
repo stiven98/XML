@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.xws.team22.auth.dto.AuthenticationRequestDTO;
 import rs.ac.uns.ftn.xws.team22.auth.dto.AuthenticationResponseDTO;
+import rs.ac.uns.ftn.xws.team22.auth.dto.IdDto;
 import rs.ac.uns.ftn.xws.team22.auth.dto.ResetPasswordDTO;
 import rs.ac.uns.ftn.xws.team22.auth.service.impl.AuthenticationService;
 
@@ -38,12 +39,13 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/activate/{id}")
-    public ResponseEntity<?> activateAccount(@PathVariable("id")String id){
-        if(authService.activateAccount(UUID.fromString(id))){
+
+    @PostMapping("/activate")
+    public ResponseEntity<?> activateAccount(@RequestBody IdDto id){
+        if(authService.activateAccount(id.getId())){
             return new ResponseEntity(HttpStatus.OK);
         }
-        return new ResponseEntity(HttpStatus.FORBIDDEN);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/forgotPassword")

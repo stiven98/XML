@@ -12,10 +12,11 @@ import { DirectMessagesComponent } from './direct-messages/direct-messages.compo
 import { NotificationsComponent } from './notifications/notifications.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ActivateComponent } from './activate/activate.component';
+import { TokenInterceptor } from './interceptor/TokenInterceptor';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -54,7 +55,13 @@ const appRoutes: Routes = [
     HttpClientModule,
     NgbModule
     ],
-  providers: [],
+    providers: [
+      {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+      }
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -92,7 +92,8 @@ func (h FollowersHandler) Follow(writer http.ResponseWriter, request *http.Reque
 		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
 	}
 	client := &http.Client{Transport: tr}
-	req, _ := http.NewRequest("GET", "http://localhost:8080/auth/is-authenticated", nil)
+	req, _ := http.NewRequest("GET", "https://localhost:8080/auth/is-authenticated", nil)
+	fmt.Println(request.Header.Get("Authorization"))
 	req.Header.Add("Authorization", request.Header.Get("Authorization"))
 	_, errAuth := client.Do(req)
 

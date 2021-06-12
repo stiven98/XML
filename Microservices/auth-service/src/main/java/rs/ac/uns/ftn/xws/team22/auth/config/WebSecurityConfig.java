@@ -63,16 +63,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
                 // svim korisnicima dopusti da pristupe putanjama /auth/**, (/h2-console/** ako se koristi H2 baza) i /api/foo
-                .authorizeRequests().antMatchers("/auth/**").permitAll()
+                .authorizeRequests().antMatchers("/auth").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/login-details").permitAll()
+                .antMatchers("/auth/activate").permitAll()
                 .antMatchers("/api/login-details/**").permitAll()
                 .antMatchers("/api/forgotPassword").permitAll()
                 .antMatchers("/api/checkRequest/{id}").permitAll()
-                .antMatchers("/api/checkRequest/{id}").permitAll()
-                .antMatchers("/auth/activate/{id}").permitAll()
-
-
 
                 // za svaki drugi zahtev korisnik mora biti autentifikovan
                 .anyRequest().authenticated().and()
@@ -92,6 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/login-details");
         web.ignoring().antMatchers(HttpMethod.GET, "/api/login-details");
         web.ignoring().antMatchers(HttpMethod.POST, "/auth");
+        web.ignoring().antMatchers(HttpMethod.POST, "/auth/activate");
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js");
     }
