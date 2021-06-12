@@ -109,3 +109,4 @@
 12-06-2021 14:39:30.831 | INFO  | rs.ac.uns.ftn.xws.team22.auth.controller.AuthenticationController.createAuthenticationToken | Successfully logged in jovanbosnic
 12-06-2021 14:40:02.880 | WARN  | net.sf.ehcache.config.ConfigurationFactory.parseConfiguration | No configuration found. Configuring ehcache from ehcache-failsafe.xml  found in the classpath: jar:file:/C:/Users/Aleksandar/.m2/repository/net/sf/ehcache/ehcache-core/2.6.11/ehcache-core-2.6.11.jar!/ehcache-failsafe.xml
 12-06-2021 14:40:07.439 | WARN  | rs.ac.uns.ftn.xws.team22.auth.controller.AuthenticationController.createAuthenticationToken | Failed to log in aleksandar, from: http://localhost:4200
+12-06-2021 14:40:13.883 | INFO  | rs.ac.uns.ftn.xws.team22.auth.controller.AuthenticationController.createAuthenticationToken | Successfully logged in jovanbosnic
