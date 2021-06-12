@@ -73,10 +73,6 @@ func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
-	}
-
 	userCreds := &Dto.UserCredentialsDto{
 		USERNAME: user.SystemUser.Username,
 		PASSWORD: user.SystemUser.Password,
@@ -86,11 +82,19 @@ func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 	payloadBuf := new(bytes.Buffer)
 	json.NewEncoder(payloadBuf).Encode(userCreds)
 
+	fmt.Println(payloadBuf)
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify : true},
+	}
 	client := &http.Client{Transport: tr}
-	req, _ := http.NewRequest("POST", "https://localhost:8080//api/login-details", payloadBuf)
-	_, errAuth := client.Do(req)
+	req, _ := http.NewRequest("POST", "https://localhost:8080/api/login-details/create", payloadBuf)
+	req.Header.Set("Content-Type","application/json; charset=UTF-8")
+	res, errAuth := client.Do(req)
+
+	fmt.Println(res)
 
 	if errAuth != nil {
+		fmt.Println(errAuth)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

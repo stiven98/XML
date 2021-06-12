@@ -53,7 +53,7 @@ public class LoginDetailsController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> createUserCredentials(@RequestBody CreateUserCredentialsDTO dto, HttpServletRequest request) {
         AuthenticationData authenticationData = new AuthenticationData();
         authenticationData.setActive(false);
