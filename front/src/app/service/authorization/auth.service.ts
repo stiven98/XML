@@ -27,9 +27,8 @@ export class AuthService {
   private access_token = null;
 
   signIn(user: AccountInfoModel) {
-    return this.apiService
-      .post('https://localhost:8080/auth', user)
-      .subscribe((res: any) => {
+    return this.apiService.post('https://localhost:8080/auth', user).subscribe(
+      (res: any) => {
         localStorage.setItem('access_token', res.token);
         let authority = res.role;
         localStorage.setItem('role', authority);
@@ -43,15 +42,17 @@ export class AuthService {
           this.router.navigate(['/homePage']);
         }
       },
-      error => {if(error.status === 401) alert("Pogresno ime ili lozinka")}
-      );
+      (error) => {
+        if (error.status === 401) alert('Pogresno ime ili lozinka');
+      }
+    );
   }
 
   getToken() {
     return localStorage.getItem('access_token');
   }
 
-  sgetRole():string {
+  sgetRole(): string {
     return localStorage.getItem('role') as string;
   }
   getUsername = () => {
@@ -61,7 +62,7 @@ export class AuthService {
   get isLoggedIn(): boolean {
     let authToken = localStorage.getItem('access_token');
     return authToken !== null ? true : false;
-  };
+  }
 
   doLogout() {
     let removeToken = localStorage.removeItem('access_token');

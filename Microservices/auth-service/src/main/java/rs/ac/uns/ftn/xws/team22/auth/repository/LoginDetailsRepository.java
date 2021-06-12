@@ -16,4 +16,6 @@ public interface LoginDetailsRepository extends JpaRepository<AuthenticationData
     @Query("select ad.password from AuthenticationData ad where ad.username = ?1")
     String isValidPassword(String username);
 
+    AuthenticationData findByEmail(String email);
+
 }

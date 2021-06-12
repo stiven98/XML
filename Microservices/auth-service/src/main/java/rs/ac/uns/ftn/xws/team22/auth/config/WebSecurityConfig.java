@@ -67,6 +67,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/login-details/**").permitAll()
                 .antMatchers("/api/login-details/isValidUsername").permitAll()
+                .antMatchers("/api/forgotPassword").permitAll()
+                .antMatchers("/api/checkRequest/{id}").permitAll()
+                .antMatchers("/api/checkRequest/{id}").permitAll()
+
+
 
                 // za svaki drugi zahtev korisnik mora biti autentifikovan
                 .anyRequest().authenticated().and()
