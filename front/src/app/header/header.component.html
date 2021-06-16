@@ -84,8 +84,11 @@
           <div class="d-flex flex-column p-3">
               <a (click) = "onLinkClick(username)" style="color: black; cursor: pointer;" class="mb-1">{{username}}</a>
           </div>
-          <div class="price pt-3 pl-3"> <img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/aca.png">
-          </div>
+          <div class="price pt-3 pl-3"> 
+              <img *ngIf="isUsersSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/aca.png">
+              <img *ngIf="isTagsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/hashtag.png">
+              <img *ngIf="isLocationsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/location.jpg">
+            </div>
         </div>
    </div>
 </div>
