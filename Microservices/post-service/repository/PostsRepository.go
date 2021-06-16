@@ -126,6 +126,28 @@ func(repo *PostsRepository) DislikePost(dislikeReq dto.LikeDto) error {
 	}
 	return err
 }
+func(repo *PostsRepository) ReportPost(reportReq dto.ReportDto) error {
+	var posts []model.Post
+	result, _ :=  repo.Database.Get(reportReq.OWNERID.String()).Result()
+	bytes := []byte(result)
+	err := json.Unmarshal(bytes, &posts)
+	if err != nil {
+		return err
+	}
+
+	for i := range posts {
+		if posts[i].ID == reportReq.POSTID {
+			posts[i].REPORTS = append(posts[i].REPORTS, model.ReportedBy{reportReq.USERID})
+			break
+		}
+	}
+	jsonPosts, _ := json.Marshal(posts)
+	newErr := repo.Database.Set(reportReq.OWNERID.String(), jsonPosts, 0).Err()
+	if newErr != nil {
+		return newErr
+	}
+	return err
+}
 
 func removeDislike(slice []model.Dislike, s int) []model.Dislike {
 	return append(slice[:s], slice[s+1:]...)

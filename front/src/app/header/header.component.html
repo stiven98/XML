@@ -82,7 +82,7 @@
       </div>
       <div *ngFor="let username of usernamesToShow" class="d-flex flex-row justify-content-between mb-3">
           <div class="d-flex flex-column p-3">
-              <a (click) = "onLinkClick(username)" style="color: black; cursor: pointer;" class="mb-1">{{username}}</a>
+              <a (click) = "onLinkClick(username)" style="color: black; cursor: pointer; margin-top:10px" class="mb-1">{{username}}</a>
           </div>
           <div class="price pt-3 pl-3"> 
               <img *ngIf="isUsersSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/aca.png">
