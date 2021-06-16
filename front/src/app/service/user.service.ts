@@ -86,5 +86,11 @@ getSingedInLocations = (id: string) => {
   );
 };
 
+uploadProfilePicture = (formData: FormData) => {
+  return this.http.post('http://localhost:8085/upload', formData).pipe(map(item => {
+      return item;
+  }));
+}
+
 
 }

@@ -4,10 +4,21 @@
     <div class="card h-100 container">
         <div class="card-body">
             <div class="account-settings">
+                <div *ngIf = "!changeProfilePictureFlag" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+                    <input id="uploadProfilePictrue" class="form-control border-0" type="file" name="files" (change)="onChange($event)">
+                    <div class="input-group-append">
+                        <label for="uploadProfilePictrue" class="btn btn-light m-0 rounded-pill px-4"> <i
+                    class="fa fa-cloud-upload mr-2 text-muted"></i><small
+                    class="text-uppercase font-weight-bold text-muted">Odaberite fajl</small></label>
+                    </div>
+                </div>
                 <div class="user-profile">
                     <div class="user-avatar">
-                        <img src="../../assets/images/aca.png" alt="Maxwell Admin">
+                        <img *ngIf = "changeProfilePictureFlag" src="../../assets/images/aca.png" alt="Maxwell Admin">
                     </div>
+                  
+                    <button *ngIf = "changeProfilePictureFlag" (click)="changePictureFlag()" class="btn btn-outline-primary"> Izmeni fotografiju </button>
+                    <button *ngIf = "!changeProfilePictureFlag" (click)="changeProfilePicture()" class="btn btn-outline-primary"> Potvrdi </button>
                     <h5 class="user-name">{{edit.system_user.firstName }} {{edit.system_user.lastName}}</h5>
                     <h6 class="username">{{edit.system_user.username}}</h6>
                 </div>
@@ -61,8 +72,8 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                         <label for="date">Datum rođenja</label>
-                        <input id="date" type="text" onfocus="(this.type='date')" name="date" placeholder="Unesite datum rođenja" class="form-control bg-white border-left-1 border-md" value="02/02/1998">
-                    </div>
+                        <input id="date" type="date" onfocus="(this.type='date')" name="date" placeholder="Datum rođenja" title="Date of birth" class="form-control bg-white border-md"  (change)="changeDate($event)" [(ngModel)]="edit.system_user.dateOfBirth">
+                  </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
@@ -94,7 +105,7 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
-                        <label for="newPassword">Nova lozinka</label>edit.system_user.password
+                        <label for="newPassword">Nova lozinka</label>
                         <input type="password" class="form-control" id="newPassword" placeholder="Unesite novu lozinku" [(ngModel)]="new_password">
                     </div>
                 </div>
