@@ -7,6 +7,7 @@ class EditUser {
     password: string;
     gender: string;
     dateOfBirth: string;
+    picturePath: string
   
     constructor() {
       this.id = '';
@@ -17,6 +18,7 @@ class EditUser {
       this.password = '';
       this.gender = 'Pol';
       this.dateOfBirth = 'mm/dd/yyyy';
+      this.picturePath = 'Pol';
     }
   }
 

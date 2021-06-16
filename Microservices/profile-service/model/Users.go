@@ -27,6 +27,7 @@ type SystemUser struct {
 	Gender Gender 	`json:"gender" gorm:"not null"`
 	TypeOfUser TypeOfUser `json:"type_of_user" gorm:"not null"`
 	DateOfBirth time.Time  `json:"dateOfBirth" gorm:"not null"`
+	PicturePath string  `json:"picturePath" gorm:"not null"`
 }
 
 type User struct {
