@@ -38,6 +38,7 @@ func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.
 	router.HandleFunc("/upload", postsHandler.UploadFile).Methods("POST")
 	router.HandleFunc("/like-post", postsHandler.LikePost).Methods("POST")
 	router.HandleFunc("/dislike-post", postsHandler.DislikePost).Methods("POST")
+	router.HandleFunc("/report-post", postsHandler.ReportPost).Methods("POST")
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./user_posts/"))))
 	headers := handlers.AllowedHeaders([] string{"Content-Type"})

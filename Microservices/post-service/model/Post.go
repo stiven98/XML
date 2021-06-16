@@ -30,7 +30,9 @@ type Feed struct {
 	UserId uuid.UUID `json:"userid"`
 	PostId uuid.UUID `json:"postid"`
 }
-
+type ReportedBy struct {
+	UserId uuid.UUID `json:"userid"`
+}
 type Post struct {
 	ID uuid.UUID 	`json:"id"`
 	USERID uuid.UUID `json:"userid"`
@@ -43,6 +45,7 @@ type Post struct {
 	TYPE string `json:"type"`
 	LIKES []Like `json:"likes"`
 	DISLIKES []Dislike `json:"dislikes"`
+	REPORTS []ReportedBy `json:"reports"`
 }
 
 
