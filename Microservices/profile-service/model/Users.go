@@ -39,6 +39,11 @@ type User struct {
 	Biography string `json:"biography"`
 	AllowedTags bool `json:"allowedTags"`
 	IsBlocked bool `json:"isBlocked"`
+	AcceptMessagesFromNotFollowProfile bool `json:"acceptMessagesFromNotFollowProfiles"`
+	NotifyPosts bool `json:"notifyPosts"`
+	NotifyMessages bool `json:"notifyMessages"`
+	NotifyStory bool `json:"notifyStory" `
+	NotifyComments bool `json:"notifyComments"`
 }
 type Administrator struct {
 	UserID   uuid.UUID `json:"id"`

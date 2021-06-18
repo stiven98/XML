@@ -28,6 +28,8 @@ func (handler UsersHandler) Update(writer http.ResponseWriter, request *http.Req
 		return
 	}
 
+	fmt.Println(user)
+
 	err = handler.Service.Update(&user)
 	if err != nil {
 		fmt.Println(err)
