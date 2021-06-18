@@ -1,74 +1,67 @@
 <div class="container">
-  <div class="profile">
-    <div class="profile-image">
-      <img
-        src="../../assets/images/aca.png"
-        alt=""
-      />
-    </div>
+    <div class="profile">
+        <div class="profile-image">
+            <img class="img-fluid" src="{{'http://localhost:8085/images/'+user.system_user.picturePath}}" alt="" />
+        </div>
 
-    <div class="profile-user-settings">
-      <h1 class="profile-user-name" >{{user.system_user.username}}</h1>
+        <div class="profile-user-settings">
+            <h1 class="profile-user-name">{{user.system_user.username}}</h1>
 
-      <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
+            <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
 
-      <button  *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn" aria-label="profile settings">
+            <button *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn" aria-label="profile settings">
         <i class="fa fa-cog" aria-hidden="true"></i>
       </button>
 
-      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
-      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
-      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Cancel request</a>
+            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
+            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
+            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Cancel request</a>
+
+
+
+        </div>
+
+        <div class="profile-stats" style="margin-left: -40px;" *ngIf="this.followers != null && this.following != null">
+            <ul>
+                <li><span class="profile-stat-count"></span> objave</li>
+                <li><span class="profile-stat-count">{{this.following.length}}</span> prati</li>
+                <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li>
+            </ul>
+        </div>
+
+        <div class="profile-bio">
+            <p>
+                <span class="profile-real-name">{{user.system_user.firstName}} {{user.system_user.lastName}} <br></span>
+                <span>{{user.biography}} <br> </span>
+            </p>
+
+        </div>
+
 
 
 
     </div>
-
-    <div class="profile-stats" style="margin-left: -40px;" *ngIf="this.followers != null && this.following != null">
-      <ul>
-        <li><span class="profile-stat-count"></span> objave</li>
-        <li><span class="profile-stat-count">{{this.following.length}}</span> prati</li>
-        <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li>
-      </ul>
-    </div>
-
-    <div class="profile-bio">
-      <p>
-        <span class="profile-real-name">{{user.system_user.firstName}} {{user.system_user.lastName}} <br></span>
-        <span>{{user.biography}} <br> </span>
-      </p>
-
-    </div>
-
-
-
-
-  </div>
-  <!-- End of profile section -->
+    <!-- End of profile section -->
 </div>
 <!-- End of container -->
 <main *ngIf="!user.isPublic">
-  <div class="container d-flex justify-content-center">
-    <h1 class="text-dark">Profil je privatan!</h1>
-  </div>
+    <div class="container d-flex justify-content-center">
+        <h1 class="text-dark">Profil je privatan!</h1>
+    </div>
 </main>
 
 
 
 <main *ngIf="user.isPublic">
-  <div class="container">
-    <div class="gallery">
-      <div class="gallery-item" tabindex="0">
-        <img
-          src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?w=500&h=500&fit=crop"
-          class="gallery-image"
-          alt=""
-        />
+    <div class="container">
+        <div class="gallery">
+            <div class="gallery-item" tabindex="0">
+                <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?w=500&h=500&fit=crop" class="gallery-image" alt="" />
 
-        <div class="gallery-item-info">
-          <ul>
-            <li class="gallery-item-likes">
-              <span class="visually-hidden">Likes:</span
+                <div class="gallery-item-info">
+                    <ul>
+                        <li class="gallery-item-likes">
+                            <span class="visually-hidden">Likes:</span
               ><i class="fa fa-heart" aria-hidden="true"></i> 56
             </li>
             <li class="gallery-item-comments">
