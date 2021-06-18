@@ -14,6 +14,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PostsComponent } from './home-page/posts/posts.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -39,6 +40,7 @@ const appRoutes: Routes = [
     DirectMessagesComponent,
     NotificationsComponent,
     HomePageComponent,
+    PostsComponent,
   ],
   imports: [
     BrowserModule,
