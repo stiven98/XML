@@ -30,6 +30,7 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	post.COMMENTS = []model.Comment{}
 	post.LIKES = []model.Like{}
 	post.DISLIKES = []model.Dislike{}
+	post.REPORTS = []model.ReportedBy{}
 	err = handler.Service.Create(&post)
 	if err != nil {
 		fmt.Println(err)
@@ -142,6 +143,23 @@ func (handler *PostsHandler) DislikePost(w http.ResponseWriter, r *http.Request)
 	}
 	w.WriteHeader(http.StatusOK)
 }
+func (handler *PostsHandler) ReportPost(w http.ResponseWriter, r *http.Request){
+	var reportReq dto.ReportDto
+	err := json.NewDecoder(r.Body).Decode(&reportReq)
+	if err != nil {
+		w.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	fmt.Println(reportReq.POSTID)
+	fmt.Println(reportReq.USERID)
+	err = handler.Service.ReportPost(reportReq)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 
 func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)

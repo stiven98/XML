@@ -34,6 +34,9 @@ func (service *PostsService) LikePost(likeReq dto.LikeDto) error {
 func (service *PostsService) DislikePost(dislikeReq dto.LikeDto) error {
 	return service.PostsRepo.DislikePost(dislikeReq)
 }
+func (service *PostsService) ReportPost(reportReq dto.ReportDto) error {
+	return service.PostsRepo.ReportPost(reportReq)
+}
 
 func (service *PostsService) AddPostToFeed(keys []string, post *model.Post) error {
 	return service.PostsRepo.AddPostToFeed(keys, post)

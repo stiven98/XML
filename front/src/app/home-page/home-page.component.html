@@ -112,10 +112,14 @@
                 <div class="cardbox shadow-lg bg-white">
                     <div class="cardbox-heading">
                         <!--/ dropdown -->
+                        <div *ngIf="this.authService.isLoggedIn" style="float: right;">
+                            <i class="fa fa-ban" title="Prijavi kao neprikladno" (click)="reportPost(post.id, post.userid)" style="cursor: pointer;"></i>
+                        </div>
                         <div class="media m-0">
                             <div class="d-flex mr-3">
-                                <a href=""><img class="img-fluid rounded-circle" src="../../assets/images/slika.jpg" alt="User" /></a>
+                                <a href=""><img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userDataToShow.get(post.userid).system_user.picturePath}}" alt="User" /></a>
                             </div>
+
                             <div class="media-body">
                                 <p class="m-0">{{ userDataToShow.get(post.userid).system_user.firstName + ' ' + userDataToShow.get(post.userid).system_user.lastName }}</p>
                                 <small><span><i class="icon ion-md-pin"></i> {{ post.location }}</span></small>

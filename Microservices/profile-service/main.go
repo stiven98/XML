@@ -292,6 +292,8 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/users/isPublic/{id}", usersHandler.IsPublic).Methods("GET")
 	router.HandleFunc("/users/public-ids",  usersHandler.GetPublicUsersIds).Methods("GET")
 	router.HandleFunc("/upload", usersHandler.UploadFile).Methods("POST")
+	router.Handle("/images/{rest}",
+		http.StripPrefix("/images/", http.FileServer(http.Dir("./profile_picture/"))))
 
 	headers := handlers.AllowedHeaders([] string{"Content-Type"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
