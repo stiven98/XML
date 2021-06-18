@@ -10,10 +10,10 @@ import { UserService } from 'src/app/service/user.service';
   styleUrls: ['./posts.component.css']
 })
 export class PostsComponent implements OnInit {
-  @Input() tagFilter : boolean = false;
-  @Input() locationFilter : boolean = false;
-  @Input() tagForSearch : string = '';
-  @Input() locationForSearch : string = '';
+  @Input() tagFilter: boolean = false;
+  @Input() locationFilter: boolean = false;
+  @Input() tagForSearch: string = '';
+  @Input() locationForSearch: string = '';
   public posts: any[] = [];
   public postsToShow: any[] = [];
   public publicPosts: any[] = [];
@@ -24,7 +24,7 @@ export class PostsComponent implements OnInit {
   constructor(public postsService: PostsService,
     public userService: UserService,
     public authService: AuthService) {
-    if(!this.authService.isLoggedIn){
+    if (!this.authService.isLoggedIn) {
       this.showPublic = true;
     }
   }
@@ -111,48 +111,61 @@ export class PostsComponent implements OnInit {
           this.setPostsToDisplay();
         });
       }
+      this.setPostsToDisplay();
     });
   }
 
   setPostsToDisplay = () => {
     this.postsToShow = [];
-    if(this.authService.isLoggedIn && this.showPublic){
+    if (this.authService.isLoggedIn && this.showPublic) {
       this.postsToShow = this.joinArraysWithNoCopies(this.posts, this.publicPosts);
     }
-    if(this.authService.isLoggedIn && !this.showPublic){
+    if (this.authService.isLoggedIn && !this.showPublic) {
       this.postsToShow = this.posts;
     }
-    else{
+    else {
       this.postsToShow = this.publicPosts;
     }
-
     this.doFilter();
   }
 
   doFilter = () => {
-    if(this.tagForSearch.trim().length > 0){
+    if (this.tagForSearch.trim().length > 0) {
       this.postsToShow = this.postsToShow.filter(p => (p.hashtag === this.tagForSearch));
     }
-    if(this.locationForSearch.trim().length > 0){
+    if (this.locationForSearch.trim().length > 0) {
       this.postsToShow = this.postsToShow.filter(p => (p.location === this.locationForSearch));
     }
   }
 
-  joinArraysWithNoCopies = (array1 : any[], array2 : any[]) : any[] => {
-    let retVal : any[] = [];
+  joinArraysWithNoCopies = (array1: any[], array2: any[]): any[] => {
+    let retVal: any[] = [];
     retVal = array1;
-    for(let i = 0; i < array2.length; i++){
+    for (let i = 0; i < array2.length; i++) {
       let flag = true;
-      for(let j = 0; j < array1.length; j++){
-        if(array2[i].id === array1[j].id){
+      for (let j = 0; j < array1.length; j++) {
+        if (array2[i].id === array1[j].id) {
           flag = false;
           break;
         }
       }
-      if(flag){
+      if (flag) {
         retVal.push(array2[i]);
       }
     }
     return retVal;
   }
+
+  isImage = (name: string): boolean => {
+    let imgFormats = ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'];
+    let flag = false;
+    for(let i = 0; i < imgFormats.length; i++){
+      if(name.includes(imgFormats[i])){
+        flag = true;
+        break;
+      }
+    }
+    return flag;
+  }
+
 }
