@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	_ "github.com/google/uuid"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"net/http"
 	"profileservice/model"
@@ -41,9 +41,15 @@ func (handler *UsersHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	ID := uuid.New()
+	fmt.Println(ID)
+	user.SystemUser.ID = ID
+	user.UserID = ID
+	user.SystemUser.Password, _ = HashPassword(user.SystemUser.Password)
 	user.SystemUser.TypeOfUser = model.USER
-	fmt.Println(user)
+	//fmt.Println(user)
 	err = handler.Service.Create(&user)
+	fmt.Println(err)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)

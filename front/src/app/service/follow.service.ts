@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,14 +10,21 @@ export class FollowService {
   constructor(private http: HttpClient) {
   }
 
-  getFollowers = (id: string) => {
+  getFollowers(id: string): Observable<string []> {
     return this.http
-      .get('http://localhost:8088/users/getFollowers/' + id)
-      .pipe(
-        map((responseData) => {
-          // @ts-ignore
-          return responseData.keys;
-        }));
+      .get<string[]>('http://localhost:8088/users/getFollowers/' + id);
+      // .pipe(
+        // tap((responseData) => {
+        //   console.log('dole');
+        //   console.log(responseData);
+        //   console.log(responseData.valueOf().hasOwnProperty('keys'));
+        //
+        //   if (responseData.valueOf().hasOwnProperty(`keys`)) {
+        //     console.log(responseData.valueOf());
+        //   }
+        //   return [];
+
+       // }));
   }
 
   getFollowing = (id: string) => {

@@ -16,18 +16,41 @@
         <i class="fa fa-cog" aria-hidden="true"></i>
       </button>
 
-      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
-      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
-      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Cancel request</a>
+<!--     <div *ngIf="this.status !== 'NO_STATUS'">-->
+        <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" data-toggle="modal" data-target="#follow" (click)="this.onFollow()">Follow</a>
+        <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
+        <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Cancel request</a>
+
+
+<!--      </div>-->
 
 
 
     </div>
 
-    <div class="profile-stats" style="margin-left: -40px;" *ngIf="this.followers != null && this.following != null">
+    <div class="profile-stats" style="margin-left: -40px;" >
       <ul>
         <li><span class="profile-stat-count"></span> objave</li>
-        <li><span class="profile-stat-count">{{this.following.length}}</span> prati</li>
+        <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span class="profile-stat-count" >{{this.following.length}}</span> prati</a></li>
+        <div class="modal fade" id="follow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                ...
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li>
       </ul>
     </div>

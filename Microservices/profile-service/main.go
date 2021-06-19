@@ -213,11 +213,11 @@ func initDB() *gorm.DB {
 		}
 
 		for i := range administrators {
-			fmt.Println(administrators[i])
+			//fmt.Println(administrators[i])
 			database.Create(&administrators[i])
 		}
 		for i := range users {
-			fmt.Println(users[i])
+			//fmt.Println(users[i])
 			database.Create(&users[i])
 			//_, err := http.Post("http://localhost:8088/users/addNode/" + users[i].UserID.String(), "", nil)
 			//if err != nil {
@@ -299,7 +299,6 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 }
 
 func main() {
-	fmt.Println(uuid.New())
 	database := initDB()
 	sysusersRepo, administratorsRepo, usersRepo, agentsRepo := initRepo(database)
 	systemUsersService, administratorsService, usersService, agentsService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo)
