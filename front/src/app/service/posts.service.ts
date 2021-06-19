@@ -35,12 +35,12 @@ export class PostsService {
     }
 
     getLikedPosts = (id:string) => {
-        return this.http.get('http://localhost:8086/posts/liked' + id).pipe(map(item => {
+        return this.http.get('http://localhost:8086/posts/liked/' + id).pipe(map(item => {
             return item;
         }));
     }
     getDislikedPosts = (id:string) => {
-        return this.http.get('http://localhost:8086/posts/disliked' + id).pipe(map(item => {
+        return this.http.get('http://localhost:8086/posts/disliked/' + id).pipe(map(item => {
             return item;
         }));
     }

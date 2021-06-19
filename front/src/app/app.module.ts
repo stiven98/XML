@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {RouterModule, Routes} from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,7 +16,7 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PostsComponent } from './home-page/posts/posts.component';
 import { TokenInterceptor } from './interceptor/TokenInterceptor';
-import { LikedDislikedPostsComponent } from './liked-disliked-posts/liked-disliked-posts.component';
+import { LikedDislikedPostsComponent } from './home-page/liked-disliked-posts/liked-disliked-posts.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -45,6 +45,7 @@ const appRoutes: Routes = [
     NotificationsComponent,
     HomePageComponent,
     PostsComponent,
+    LikedDislikedPostsComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +53,7 @@ const appRoutes: Routes = [
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
     ],
     providers: [
       {

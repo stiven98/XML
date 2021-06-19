@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ReportReq } from '../model/ReportReq';
-import { AuthService } from '../service/authorization/auth.service';
-import { PostsService } from '../service/posts.service';
-import { UserService } from '../service/user.service';
-import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReportReq } from 'src/app/model/ReportReq';
+import { AuthService } from 'src/app/service/authorization/auth.service';
+import { PostsService } from 'src/app/service/posts.service';
+import { UserService } from 'src/app/service/user.service';
+
 
 @Component({
   selector: 'app-liked-disliked-posts',
@@ -24,13 +23,27 @@ export class LikedDislikedPostsComponent implements OnInit {
 
   ngOnInit(): void {
     let id = localStorage.getItem('id') as string;
-    if (window.location.href.includes('liked')) {
-      this.postsService.getLikedPosts(id).subscribe((res) => {
-        this.posts = res as any[];
-      });
-    } else {
+    if (window.location.href.includes('disliked')) {
       this.postsService.getDislikedPosts(id).subscribe((res) => {
         this.posts = res as any[];
+        for (let p of this.posts) {
+          if (!this.userData.get(p.userid)) {
+            this.userService.getUsersById(p.userid).subscribe(res => {
+              this.userData.set(p.userid, res);
+            });
+          }
+        }
+      });
+    } else {
+      this.postsService.getLikedPosts(id).subscribe((res) => {
+        this.posts = res as any[];
+        for (let p of this.posts) {
+          if (!this.userData.get(p.userid)) {
+            this.userService.getUsersById(p.userid).subscribe(res => {
+              this.userData.set(p.userid, res);
+            });
+          }
+        }
       })
     }
   }
@@ -88,4 +101,16 @@ export class LikedDislikedPostsComponent implements OnInit {
     this.reportReq.OwnerId = ownerId;
     this.postsService.reportPost(this.reportReq).subscribe((res) => res);
   };
+
+  isImage = (name: string): boolean => {
+    let imgFormats = ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'];
+    let flag = false;
+    for(let i = 0; i < imgFormats.length; i++){
+      if(name.includes(imgFormats[i])){
+        flag = true;
+        break;
+      }
+    }
+    return flag;
+  }
 }
