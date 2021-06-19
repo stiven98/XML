@@ -34,6 +34,17 @@ export class PostsService {
         }));
     }
 
+    getLikedPosts = (id:string) => {
+        return this.http.get('http://localhost:8086/posts/liked/' + id).pipe(map(item => {
+            return item;
+        }));
+    }
+    getDislikedPosts = (id:string) => {
+        return this.http.get('http://localhost:8086/posts/disliked/' + id).pipe(map(item => {
+            return item;
+        }));
+    }
+
     likePost = (likeReq : LikeReq) => {
         return this.http.post('http://localhost:8086/like-post', likeReq).pipe(res => res);
     }

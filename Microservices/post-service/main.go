@@ -31,6 +31,8 @@ func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.
 	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
 	router.HandleFunc("/posts/feed/{id}", postsHandler.GetFeed).Methods("GET")
 	router.HandleFunc("/posts/public", postsHandler.GetPublic).Methods("GET")
+	router.HandleFunc("/posts/liked/{id}", postsHandler.GetLiked).Methods("GET")
+	router.HandleFunc("/posts/disliked/{id}", postsHandler.GetDisliked).Methods("GET")
 	router.HandleFunc("/posts/public-tags", postsHandler.GetAllTagsPublic).Methods("GET")
 	router.HandleFunc("/posts/public-locations", postsHandler.GetAllLocationsPublic).Methods("GET")
 	router.HandleFunc("/posts/signed-in-tags/{id}", postsHandler.GetAllTagsSignedIn).Methods("GET")

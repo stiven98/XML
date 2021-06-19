@@ -23,6 +23,14 @@ func (service *PostsService) GetFeed(id string) []model.Post {
 	return  service.PostsRepo.GetFeed(id)
 }
 
+func (service *PostsService) GetLiked(id string) []model.Post {
+	return  service.PostsRepo.GetLiked(id)
+}
+func (service *PostsService) GetDisliked(id string) []model.Post {
+	return  service.PostsRepo.GetDisliked(id)
+}
+
+
 func (service *PostsService) GetPublic(keys []string) []model.Post {
 	return  service.PostsRepo.GetPublic(keys)
 }

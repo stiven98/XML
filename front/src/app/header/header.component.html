@@ -56,6 +56,18 @@
             </li>
         </ul>
         <ul class="navbar-nav ">
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item">
+                <a class="nav-link" href="/liked">
+                    <i class="fa fa-thumbs-up">
+          </i> Lajkovane objave
+                </a>
+            </li>
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item">
+                <a class="nav-link" href="/disliked">
+                    <i class="fa fa-thumbs-down">
+          </i> Dislajkovane objave
+                </a>
+            </li>
             <li *ngIf="this.authService.isLoggedIn" class="nav-item dropdown" style="margin-right: 50px;">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-user">
