@@ -38,6 +38,7 @@ type User struct {
 	Biography string `json:"biography"`
 	AllowedTags bool `json:"allowedTags"`
 	IsBlocked bool `json:"isBlocked"`
+	IsVerified bool `json:"isVerified"`
 }
 type Administrator struct {
 	UserID   uuid.UUID `json:"id"`

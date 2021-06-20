@@ -14,6 +14,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
   {path: 'directMessages', component: DirectMessagesComponent },
   {path: 'notifications', component: NotificationsComponent },
   {path: 'homePage', component: HomePageComponent },
+  {path: 'verificationRequests', component: VerificationRequestsComponent},
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -37,6 +39,7 @@ const appRoutes: Routes = [
     DirectMessagesComponent,
     NotificationsComponent,
     HomePageComponent,
+    VerificationRequestsComponent,
   ],
   imports: [
     BrowserModule,

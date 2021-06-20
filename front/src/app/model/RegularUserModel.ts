@@ -29,7 +29,8 @@ export class RegularUser {
     biography: string;
     allowedTags: boolean;
     isBlocked: boolean;
-    
+  isVerified: boolean;
+
     constructor() {
       this.id = '';
       this.system_user = new SystemUser();
@@ -39,5 +40,6 @@ export class RegularUser {
       this.biography = '';
       this.allowedTags = true;
       this.isBlocked = false;
+      this.isVerified = false;
     }
   }

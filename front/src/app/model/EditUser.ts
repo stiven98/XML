@@ -7,7 +7,7 @@ class EditUser {
     password: string;
     gender: string;
     dateOfBirth: string;
-  
+
     constructor() {
       this.id = '';
       this.firstName = '';
@@ -29,6 +29,7 @@ export class UserEdit{
     biography:string;
     allowedTags:boolean;
     isBlocked:boolean
+    isVerified
     constructor() {
         this.userId = '';
         this.system_user = new EditUser();
@@ -38,6 +39,6 @@ export class UserEdit{
         this.biography = '';
         this.allowedTags = false;
         this.isBlocked = false;
+        this.isVerified = false;
     }
 }
-  

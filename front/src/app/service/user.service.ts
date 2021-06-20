@@ -28,8 +28,8 @@ export class UserService {
     );
   };
 
-  getUserById = (id:string) => {
-    return this.http.get('http://localhost:8085/users/getById/'+id ).pipe(
+  getUserById = (id: string) => {
+    return this.http.get('http://localhost:8085/users/getById/' + id).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -58,5 +58,10 @@ getUsersById = (id: any) => {
 }
 
 
-
+  verify = (id: string) => {
+    return this.http.put('http://localhost:8085/users/updateVerification/' + id, null)
+      .pipe(map((res) => {
+        return res;
+      }));
+  }
 }

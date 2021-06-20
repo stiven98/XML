@@ -7,8 +7,10 @@
       />
     </div>
 
-    <div class="profile-user-settings">
+    <div class="profile-user-settings mt-3">
       <h1 class="profile-user-name" >{{user.system_user.username}}</h1>
+
+      <i *ngIf="user.isVerified" class=" fa fa-check-circle fa-3x ml-4"> </i>
 
       <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
 
@@ -20,7 +22,6 @@
         <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" data-toggle="modal" data-target="#follow" (click)="this.onFollow()">Follow</a>
         <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
         <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Cancel request</a>
-
 
 <!--      </div>-->
 
