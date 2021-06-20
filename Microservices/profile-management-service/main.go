@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -118,7 +119,7 @@ func initRepo(database *gorm.DB) (*repository.BlockedUsersRepository, *repositor
 }
 
 func initServices(blockedUsersRepository *repository.BlockedUsersRepository, closeFriendRepository *repository.CloseFriendsRepository, mutedUsersRepository * repository.MutedUsersRepository) (*service.BlockedUsersService, *service.CloseFriendsService, *service.MutedUsersService){
-	return &service.BlockedUsersService{BlockedUsersRepository: blockedUsersRepository}, &service.CloseFriendsService{CloseFriendsService: closeFriendRepository}, &service.MutedUsersService{MutedUsersService: mutedUsersRepository}
+	return &service.BlockedUsersService{BlockedUsersRepository: blockedUsersRepository}, &service.CloseFriendsService{CloseFriendsService: closeFriendRepository}, &service.MutedUsersService{MutedUsersRepository: mutedUsersRepository}
 }
 
 func initHandler(blockedUserService *service.BlockedUsersService, closeFriendService *service.CloseFriendsService, mutedUsersService *service.MutedUsersService) (*handler.BlockedUsersHandler, *handler.CloseFriendHandler, *handler.MutedUsersHandler) {
@@ -130,10 +131,20 @@ func handleFunc(blockedUsersHandler *handler.BlockedUsersHandler, closeFriendsHa
 
 	router.HandleFunc("/users/blocked/{id}", blockedUsersHandler.GetAllBlockedBy).Methods("GET")
 	router.HandleFunc("/users/block/{blockedById}/{blockedId}", blockedUsersHandler.BlockUserByUser).Methods("POST")
+	router.HandleFunc("/users/unblock/{blockedById}/{blockedId}", blockedUsersHandler.UnBlockUserByUser).Methods("POST")
+	router.HandleFunc("/users/isBlocked/{blockedById}/{blockedId}", blockedUsersHandler.IsBlocked).Methods("GET")
+	router.HandleFunc("/users/isMuted/{mutedById}/{mutedId}", mutedUsersHandler.IsMuted).Methods("GET")
+	router.HandleFunc("/users/mute/{mutedById}/{mutedId}", mutedUsersHandler.MutedUserByUser).Methods("POST")
+	router.HandleFunc("/users/unmute/{mutedById}/{mutedId}", mutedUsersHandler.UnMutedUserByUser).Methods("POST")
 	//router.HandleFunc("/users/getAll",SystemUsersHandler.GetAll).Methods("GET")
 	//router.HandleFunc("/administrators/update",  administratorsHandler.Update).Methods("PUT")
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8087"), router))
+
+	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
+	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([] string{"*"})
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8087"),handlers.CORS(headers, methods, origins)  (router)))
 }
 
 func main() {

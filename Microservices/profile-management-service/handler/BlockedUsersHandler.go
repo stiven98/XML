@@ -48,3 +48,47 @@ func (h BlockedUsersHandler) BlockUserByUser(writer http.ResponseWriter, request
 	writer.Header().Set("Content-Type", "application/json")
 
 }
+
+
+
+func (h BlockedUsersHandler) IsBlocked(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	blockedByID := vars["blockedById"]
+	blockedID := vars["blockedId"]
+	blockedUser := model.BlockedUsers{
+		BlockedByID: uuid.MustParse(blockedByID),
+		BlockedID:   uuid.MustParse(blockedID),
+	}
+
+	isBlocked, err := h.BlockedUsersService.IsBlocked(&blockedUser)
+
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+	}
+
+	renderJSON(writer,isBlocked)
+}
+
+func (h BlockedUsersHandler) UnBlockUserByUser(writer http.ResponseWriter, request *http.Request) {
+
+	vars := mux.Vars(request)
+	blockedByID := vars["blockedById"]
+	blockedID := vars["blockedId"]
+	blockedUser := model.BlockedUsers{
+		BlockedByID: uuid.MustParse(blockedByID),
+		BlockedID:   uuid.MustParse(blockedID),
+	}
+
+	// Check User exist in Profile service and return bad request if don't
+
+	err := h.BlockedUsersService.UnBlockUserByUser(&blockedUser)
+
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+	}
+	writer.WriteHeader(http.StatusCreated)
+	writer.Header().Set("Content-Type", "application/json")
+
+}
+
+

@@ -25,3 +25,17 @@ func (service BlockedUsersService) GetAllBlockedByUserId(id string) ([]uuid.UUID
 
 	return list , err
 }
+
+func (service BlockedUsersService) IsBlocked(b *model.BlockedUsers) (bool, error) {
+	var blocked model.BlockedUsers
+	blocked, err := service.BlockedUsersRepository.IsBlocked(b)
+
+	if blocked.BlockedByID != b.BlockedByID{
+		return false,err
+	}
+	return true,err
+}
+
+func (service BlockedUsersService) UnBlockUserByUser(b *model.BlockedUsers) error {
+	return service.BlockedUsersRepository.UnBlockUserByUser(b)
+}
