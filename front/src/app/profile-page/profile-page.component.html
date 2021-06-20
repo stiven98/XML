@@ -28,7 +28,7 @@
     <div class="profile-stats" style="margin-left: -40px;" >
       <ul>
         <li><span class="profile-stat-count"></span> objave</li>
-        <!-- <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span class="profile-stat-count" >{{this.following.length}}</span> prati</a></li> -->
+        <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span class="profile-stat-count" >{{this.following.length}}</span> prati</a></li>
         <div class="modal fade" id="follow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -48,7 +48,7 @@
             </div>
           </div>
         </div>
-        <!-- <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li> -->
+        <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li>
         <li  *ngIf="isMyProfile && !isBlockedUsesr" (click)="block()">block</li>
         <li  *ngIf="isMyProfile && !isMuted && !isBlockedUsesr" (click)="mute()">mute</li>
         <li  *ngIf="isMyProfile && isBlockedUsesr" (click)="unBlock()">unBlock</li>
@@ -58,8 +58,8 @@
         <div class="profile-stats" style="margin-left: -40px;" *ngIf="this.followers != null && this.following != null">
             <ul>
                 <li><span class="profile-stat-count"></span> objave</li>
-                <!-- <li><span class="profile-stat-count">{{this.following.length}}</span> prati</li>
-                <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li> -->
+                <li><span class="profile-stat-count">{{this.following.length}}</span> prati</li>
+                <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li>
        
             </ul>
         </div>
