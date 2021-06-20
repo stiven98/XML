@@ -39,6 +39,7 @@ type User struct {
 	Biography string `json:"biography"`
 	AllowedTags bool `json:"allowedTags"`
 	IsBlocked bool `json:"isBlocked"`
+	IsVerified bool `json:"isVerified"`
 	AcceptMessagesFromNotFollowProfile bool `json:"acceptMessagesFromNotFollowProfiles"`
 	NotifyPosts bool `json:"notifyPosts"`
 	NotifyMessages bool `json:"notifyMessages"`

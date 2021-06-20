@@ -47,16 +47,20 @@ export class AuthService {
       );
   }
 
-  getToken() {
+  getToken = () => {
     return localStorage.getItem('access_token');
   }
 
-  sgetRole():string {
+  getRole = (): string => {
     return localStorage.getItem('role') as string;
   }
   getUsername = () => {
     return localStorage.getItem('username');
-  };
+  }
+
+  getId = () => {
+    return localStorage.getItem('id');
+  }
 
   get isLoggedIn(): boolean {
     let authToken = localStorage.getItem('access_token');

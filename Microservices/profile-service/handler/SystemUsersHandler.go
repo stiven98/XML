@@ -68,3 +68,8 @@ func (handler *SystemUsersHandler) GetById(w http.ResponseWriter, r *http.Reques
 	renderJSON(w, &user)
 }
 
+func (handler *SystemUsersHandler) UpdateVerification(writer http.ResponseWriter, request *http.Request) {
+	vars :=mux.Vars(request)
+	handler.Service.UpdateVerification(uuid.MustParse(vars["id"]))
+}
+

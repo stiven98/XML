@@ -55,4 +55,9 @@ func (repo *SystemUsersRepository) Update(user *model.SystemUser) error {
 	return nil
 }
 
+func (repo *SystemUsersRepository) UpdateVerification(id uuid.UUID) interface{} {
+	result := repo.Database.Model(model.User{}).Where("user_id = ?", id).Update("is_verified", true)
+	return result
+}
+
 

@@ -154,6 +154,7 @@ func initDB() *gorm.DB {
 				Biography:   "Nema je!",
 				AllowedTags: true,
 				IsBlocked:   false,
+				IsVerified: false,
 			},
 			{
 				UserID:      systemUsers[2].ID,
@@ -164,6 +165,7 @@ func initDB() *gorm.DB {
 				Biography:   "Zanimljiv decak!",
 				AllowedTags: true,
 				IsBlocked:   false,
+				IsVerified: false,
 			}, {
 				UserID:      systemUsers[3].ID,
 				SystemUser:  systemUsers[3],
@@ -173,6 +175,7 @@ func initDB() *gorm.DB {
 				Biography:   "Berem jagode!",
 				AllowedTags: true,
 				IsBlocked:   false,
+				IsVerified: false,
 			},{
 				UserID:      systemUsers[4].ID,
 				SystemUser:  systemUsers[4],
@@ -182,6 +185,7 @@ func initDB() *gorm.DB {
 				Biography:   "!",
 				AllowedTags: true,
 				IsBlocked:   false,
+				IsVerified: false,
 			},{
 				UserID:      systemUsers[5].ID,
 				SystemUser:  systemUsers[5],
@@ -191,6 +195,7 @@ func initDB() *gorm.DB {
 				Biography:   "Berem jagode!",
 				AllowedTags: true,
 				IsBlocked:   false,
+				IsVerified: false,
 			},{
 				UserID:      systemUsers[6].ID,
 				SystemUser:  systemUsers[6],
@@ -200,6 +205,7 @@ func initDB() *gorm.DB {
 				Biography:   "",
 				AllowedTags: true,
 				IsBlocked:   false,
+				IsVerified: false,
 			},{
 				UserID:      systemUsers[7].ID,
 				SystemUser:  systemUsers[7],
@@ -209,15 +215,16 @@ func initDB() *gorm.DB {
 				Biography:   "",
 				AllowedTags: true,
 				IsBlocked:   false,
+				IsVerified: false,
 			},
 		}
 
 		for i := range administrators {
-			fmt.Println(administrators[i])
+			//fmt.Println(administrators[i])
 			database.Create(&administrators[i])
 		}
 		for i := range users {
-			fmt.Println(users[i])
+			//fmt.Println(users[i])
 			database.Create(&users[i])
 			//_, err := http.Post("http://localhost:8088/users/addNode/" + users[i].UserID.String(), "", nil)
 			//if err != nil {
@@ -286,6 +293,7 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/users/getById/{id}",  usersHandler.GetById).Methods("GET")
 	router.HandleFunc("/users/changeWhetherIsPublic", usersHandler.ChangeWhetherIsPublic).Methods("POST")
 	router.HandleFunc("/users/changeAllowedTags", usersHandler.ChangeAllowedTags).Methods("POST")
+	router.HandleFunc("/users/updateVerification/{id}", SystemUsersHandler.UpdateVerification).Methods("PUT")
 	router.HandleFunc("/agents/update",  agentsHandler.Update).Methods("PUT")
 	router.HandleFunc("/agents/create",  agentsHandler.Create).Methods("POST")
 	router.HandleFunc("/agents/getAll",  agentsHandler.GetAll).Methods("GET")
@@ -303,7 +311,6 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 }
 
 func main() {
-	fmt.Println(uuid.New())
 	database := initDB()
 	sysusersRepo, administratorsRepo, usersRepo, agentsRepo := initRepo(database)
 	systemUsersService, administratorsService, usersService, agentsService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo)

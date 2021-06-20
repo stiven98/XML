@@ -4,14 +4,18 @@
             <img height="250px" width="250px" class="img-fluid" src="{{'http://localhost:8085/images/'+user.system_user.picturePath}}" alt="" />
         </div>
 
-        <div class="profile-user-settings">
-            <h1 class="profile-user-name">{{user.system_user.username}}</h1>
+    <div class="profile-user-settings mt-3">
+      <h1 class="profile-user-name" >{{user.system_user.username}}</h1>
 
-            <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
+      <i *ngIf="user.isVerified" class=" fa fa-check-circle fa-3x ml-4"> </i>
+
+      <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
+
 
             <button *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn" aria-label="profile settings">
         <i class="fa fa-cog" aria-hidden="true"></i>
       </button>
+
 
             <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
             <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
@@ -21,6 +25,32 @@
 
         </div>
 
+    <div class="profile-stats" style="margin-left: -40px;" >
+      <ul>
+        <li><span class="profile-stat-count"></span> objave</li>
+        <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span class="profile-stat-count" >{{this.following.length}}</span> prati</a></li>
+        <div class="modal fade" id="follow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                ...
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li>
+      </ul>
+    </div>
         <div class="profile-stats" style="margin-left: -40px;" *ngIf="this.followers != null && this.following != null">
             <ul>
                 <li><span class="profile-stat-count"></span> objave</li>

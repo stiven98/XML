@@ -28,8 +28,8 @@ export class UserService {
     );
   };
 
-  getUserById = (id:string) => {
-    return this.http.get('http://localhost:8085/users/getById/'+id ).pipe(
+  getUserById = (id: string) => {
+    return this.http.get('http://localhost:8085/users/getById/' + id).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -44,53 +44,58 @@ export class UserService {
     );
   };
 
-editUser = (editUser: UserEdit) => {
-  return this.http.put('http://localhost:8085/users/update', editUser).pipe(map((res)=> {return res;}));
+  editUser = (editUser: UserEdit) => {
+    return this.http.put('http://localhost:8085/users/update', editUser).pipe(map((res)=> {return res;}));
 
-}
+  }
 
-getUsersById = (id: any) => {
-  return this.http.get('http://localhost:8085/users/getById/' + id).pipe(
-    map((responseData) => {
-      return responseData;
-    })
-  );
-}
-getPublicTags = () => {
-  return this.http.get(' http://localhost:8086/posts/public-tags').pipe(
-    map((responseData) => {
-      return responseData;
-    })
-  );
-};
-getPublicLocations = () => {
-  return this.http.get('http://localhost:8086/posts/public-locations').pipe(
-    map((responseData) => {
-      return responseData;
-    })
-  );
-};
+  getUsersById = (id: any) => {
+    return this.http.get('http://localhost:8085/users/getById/' + id).pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
+  getPublicTags = () => {
+    return this.http.get(' http://localhost:8086/posts/public-tags').pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  };
+  getPublicLocations = () => {
+    return this.http.get('http://localhost:8086/posts/public-locations').pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  };
 
-getSingedInTags = (id:string) => {
-  return this.http.get('http://localhost:8086/posts/signed-in-tags/' +  id).pipe(
-    map((responseData) => {
-      return responseData;
-    })
-  );
-};
-getSingedInLocations = (id: string) => {
-  return this.http.get('http://localhost:8086/posts/signed-in-locations/' + id).pipe(
-    map((responseData) => {
-      return responseData;
-    })
-  );
-};
+  getSingedInTags = (id:string) => {
+    return this.http.get('http://localhost:8086/posts/signed-in-tags/' +  id).pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
+  getSingedInLocations = (id: string) => {
+    return this.http.get('http://localhost:8086/posts/signed-in-locations/' + id).pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
 
-uploadProfilePicture = (formData: FormData) => {
-  return this.http.post('http://localhost:8085/upload', formData).pipe(map(item => {
-      return item;
-  }));
-}
+  uploadProfilePicture = (formData: FormData) => {
+    return this.http.post('http://localhost:8085/upload', formData).pipe(map(item => {
+        return item;
+    }));
+  }
 
-
+  verify = (id: string) => {
+    return this.http.put('http://localhost:8085/users/updateVerification/' + id, null)
+      .pipe(map((res) => {
+        return res;
+      }));
+  }
 }

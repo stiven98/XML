@@ -21,11 +21,12 @@ export class ProfilePageComponent implements OnInit {
   requests: any | undefined;
   user: RegularUser = new RegularUser();
 
-  constructor(private route: ActivatedRoute, private userService: UserService, public authService: AuthService, private router: Router, private followService: FollowService) {
+  constructor(private route: ActivatedRoute, private userService: UserService,
+              public authService: AuthService, private router: Router, private followService: FollowService) {
     this.id = route.snapshot.params[`id`];
     this.myId = localStorage.getItem('id');
     this.route.paramMap.subscribe(params => {this.ngOnInit(); });
-   }
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params[`id`];
@@ -36,6 +37,7 @@ export class ProfilePageComponent implements OnInit {
 
     this.followService.getFollowers(this.id).subscribe(response => {
       this.followers = response;
+      console.log('FOLLOWERS:');
       console.log(this.followers);
       if (this.followers.includes(this.myId)) {
         this.status = 'FOLLOW';
