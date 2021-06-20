@@ -7,6 +7,7 @@ class EditUser {
     password: string;
     gender: string;
     dateOfBirth: string;
+    picturePath: string;
 
     constructor() {
       this.id = '';
@@ -17,19 +18,26 @@ class EditUser {
       this.password = '';
       this.gender = 'Pol';
       this.dateOfBirth = 'mm/dd/yyyy';
+      this.picturePath = 'Pol';
     }
   }
 
 export class UserEdit{
-    userId:string;
-    system_user:EditUser;
+    userId: string;
+    system_user: EditUser;
     isPublic:boolean;
     phoneNumber: string;
     webSite:string;
     biography:string;
     allowedTags:boolean;
     isBlocked:boolean
-    isVerified
+    isVerified:boolean;
+    acceptMessagesFromNotFollowProfiles:boolean;
+    notifyPosts:boolean;
+    notifyMessages:boolean;
+    notifyStory:boolean;
+    notifyComments:boolean;
+
     constructor() {
         this.userId = '';
         this.system_user = new EditUser();
@@ -40,5 +48,10 @@ export class UserEdit{
         this.allowedTags = false;
         this.isBlocked = false;
         this.isVerified = false;
+        this.acceptMessagesFromNotFollowProfiles = false;
+        this.notifyPosts = false;
+        this.notifyMessages = false;
+        this.notifyStory = false;
+        this.notifyComments = false;
     }
 }

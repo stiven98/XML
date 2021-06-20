@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators'
 import { Injectable } from '@angular/core';
 import { LikeReq, Post } from '../model/Post.model';
+import { ReportReq } from '../model/ReportReq';
 
 @Injectable({
     providedIn: 'root',
@@ -27,6 +28,23 @@ export class PostsService {
         }));
     }
 
+    getPublicPosts = () => {
+        return this.http.get('http://localhost:8086/posts/public').pipe(map(item => {
+            return item;
+        }));
+    }
+
+    getLikedPosts = (id:string) => {
+        return this.http.get('http://localhost:8086/posts/liked/' + id).pipe(map(item => {
+            return item;
+        }));
+    }
+    getDislikedPosts = (id:string) => {
+        return this.http.get('http://localhost:8086/posts/disliked/' + id).pipe(map(item => {
+            return item;
+        }));
+    }
+
     likePost = (likeReq : LikeReq) => {
         return this.http.post('http://localhost:8086/like-post', likeReq).pipe(res => res);
     }
@@ -34,5 +52,8 @@ export class PostsService {
     dislikePost = (likeReq : LikeReq) => {
         return this.http.post('http://localhost:8086/dislike-post', likeReq).pipe(res => res);
     }
+    reportPost = (reportReq: ReportReq) => {
+        return this.http.post('http://localhost:8086/report-post', reportReq).pipe(res => res);
 
+    }
 }

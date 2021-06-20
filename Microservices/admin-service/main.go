@@ -145,9 +145,10 @@ func handleFunc(verificationRequestHandler *handler.VerificationRequestHandler) 
 	router.HandleFunc("/verificationRequest/decline/{id}", verificationRequestHandler.Decline).Methods("PUT")
 	router.Handle("/images/{rest}", http.StripPrefix("/images/", http.FileServer(http.Dir("./documents/"))))
 
-	headers := handlers.AllowedHeaders([] string{"Content-Type"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
 	origins := handlers.AllowedOrigins([] string{"*"})
+	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
+
 
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8089"), handlers.CORS(headers, methods, origins) (router)))

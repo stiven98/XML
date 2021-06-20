@@ -27,6 +27,7 @@ type SystemUser struct {
 	Gender Gender 	`json:"gender" gorm:"not null"`
 	TypeOfUser TypeOfUser `json:"type_of_user" gorm:"not null"`
 	DateOfBirth time.Time  `json:"dateOfBirth" gorm:"not null"`
+	PicturePath string  `json:"picturePath" gorm:"not null"`
 }
 
 type User struct {
@@ -39,6 +40,11 @@ type User struct {
 	AllowedTags bool `json:"allowedTags"`
 	IsBlocked bool `json:"isBlocked"`
 	IsVerified bool `json:"isVerified"`
+	AcceptMessagesFromNotFollowProfile bool `json:"acceptMessagesFromNotFollowProfiles"`
+	NotifyPosts bool `json:"notifyPosts"`
+	NotifyMessages bool `json:"notifyMessages"`
+	NotifyStory bool `json:"notifyStory" `
+	NotifyComments bool `json:"notifyComments"`
 }
 type Administrator struct {
 	UserID   uuid.UUID `json:"id"`

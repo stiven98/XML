@@ -13,7 +13,21 @@ type UsersRepository struct {
 }
 
 func (repo *UsersRepository) Update(user *model.User) error {
-	result := repo.Database.Model(model.User{}).Where("user_id = ?", user.UserID).Updates(user)
+	fmt.Println(user)
+	result := repo.Database.Model(&model.User{}).Where("user_id = ?", user.UserID).Updates(map[string]interface{}{
+				"IsPublic": user.IsPublic,
+				"AllowedTags": user.AllowedTags,
+				"IsBlocked": user.IsBlocked,
+				"AcceptMessagesFromNotFollowProfile" : user.AcceptMessagesFromNotFollowProfile,
+				"SystemUser": user.SystemUser,
+				"PhoneNumber": user.PhoneNumber,
+				"WebSite": user.WebSite,
+				"Biography": user.Biography,
+				"NotifyPosts" : user.NotifyPosts,
+				"NotifyMessages": user.NotifyMessages,
+				"NotifyStory": user.NotifyStory,
+				"NotifyComments": user.NotifyComments,
+		})
 	return result.Error
 }
 func(repo *UsersRepository) GetAll() []model.User{
@@ -21,6 +35,13 @@ func(repo *UsersRepository) GetAll() []model.User{
 	repo.Database.Preload("SystemUser").Find(&users)
 	return users
 }
+
+func(repo *UsersRepository) GetAllPublic() []model.User{
+	var users []model.User
+	repo.Database.Preload("SystemUser").Where("is_public = 'true'").Find(&users)
+	return users
+}
+
 
 func (repo *UsersRepository) Create(user *model.User) error {
 	result := repo.Database.Create(user)

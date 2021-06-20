@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"profileservice/model"
 	"profileservice/model/Dto"
 	"profileservice/service"
@@ -23,6 +26,8 @@ func (handler UsersHandler) Update(writer http.ResponseWriter, request *http.Req
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	fmt.Println(user)
 
 	err = handler.Service.Update(&user)
 	if err != nil {
@@ -118,4 +123,67 @@ func (handler UsersHandler) IsPublic(writer http.ResponseWriter, request *http.R
 	}
 	renderJSON(writer, res)
 	writer.WriteHeader(http.StatusOK)
+}
+
+func (handler *UsersHandler) GetPublicUsersIds(w http.ResponseWriter, r *http.Request){
+	var ids Dto.PublicUsersIdsDto
+	users := handler.Service.GetAllPublic()
+	for i := range users {
+		ids.KEYS = append(ids.KEYS, users[i].UserID.String())
+	}
+	renderJSON(w, &ids)
+}
+
+
+
+func (handler *UsersHandler) UploadFile(w http.ResponseWriter, r *http.Request) {
+	// Maximum upload of 10 MB files
+	var name string
+	r.ParseMultipartForm(32 << 20) // 32MB is the default used by FormFile
+	fhs := r.MultipartForm.File["files"]
+	var i int
+	i = 0
+
+	for _, fh := range fhs {
+		i = i + 1
+		f, err := fh.Open()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		fmt.Printf("Uploaded File: %+v\n", fh.Filename)
+		fmt.Printf("File Size: %+v\n", fh.Size)
+		fmt.Printf("MIME Header: %+v\n", fh.Header)
+		fileName := strings.Split(fh.Filename, ".")
+		var filePath string
+		var resourceName string
+		if(len(fileName) >= 2){
+			resourceName = uuid.NewString() +  "." + fileName[1]
+			filePath = filepath.Join("profile_picture", resourceName)
+		}else{
+			filePath = filepath.Join("profile_picture", fh.Filename)
+		}
+		dst, err := os.Create(filePath)
+		defer dst.Close()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Copy the uploaded file to the created file on the filesystem
+		if _, err := io.Copy(dst, f); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		name = resourceName
+		//var postItem model.PostItem
+		//postItem.PATH = resourceName
+		//postItem.ID = uuid.New()
+		//postItems = append(postItems, postItem)
+		defer f.Close()
+
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	renderJSON(w,name)
 }

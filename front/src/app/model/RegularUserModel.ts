@@ -8,6 +8,7 @@ class SystemUser {
     gender: string;
     phoneNumber: string;
     dateOfBirth: string;
+    picturePath: string;
     constructor() {
         this.id = '';
         this.firstName = '';
@@ -18,6 +19,7 @@ class SystemUser {
         this.gender = '';
         this.phoneNumber = '';
         this.dateOfBirth = '';
+        this.picturePath = '';
       }
 }
 export class RegularUser {

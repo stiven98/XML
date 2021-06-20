@@ -12,29 +12,45 @@ import {VerificationRequestService} from '../service/verificationRequest.service
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
+
   edit: UserEdit = new UserEdit();
   confirm_password: string = '';
   new_password: string = '';
   date: Date = new Date('02/02/1998');
 
   document: any = undefined;
+  changeProfilePictureFlag = true;
+  url = '';
 
   constructor(private userService: UserService,
-              private authService: AuthService, private modalService: NgbModal,
+              public authService: AuthService, private modalService: NgbModal,
               private verificationRequestService: VerificationRequestService) { }
+
+
 
   ngOnInit(): void {
     let id: any = localStorage.getItem('id');
     this.userService.getUsersById(id).subscribe((res) => {
       this.edit = res as UserEdit;
+      this.edit.system_user.dateOfBirth = this.edit.system_user.dateOfBirth.split("T")[0];
     });
   }
 
+  changeDate = (event: any) => {
+    this.edit.system_user.dateOfBirth = event.target.value;
+    console.log(this.edit.system_user.dateOfBirth);
+  }
 
 
   upDate = () => {
     this.validePssword();
-    this.userService.editUser(this.edit).subscribe((res) => {console.log(res)})
+    this.edit.system_user.dateOfBirth = this.edit.system_user.dateOfBirth +'T01:00:00+01:00'
+    this.userService.editUser(this.edit)
+    .subscribe((res) => {
+      this.edit.system_user.dateOfBirth = this.edit.system_user.dateOfBirth.split("T")[0];
+       alert("Uspesno ste izmenili podatke")}
+       , error => {if(error.status === 400) alert("Podaci nisu validni")});
+
   }
 
   validePssword = () => {
@@ -73,10 +89,32 @@ export class EditProfileComponent implements OnInit {
 
   }
 
-  onChange = (event: any): void => {
+  onChangeVerify = (event: any): void => {
     this.document = event.target.files[0];
     console.log(this.document);
   }
 
+  changePictureFlag = () =>{
+    this.changeProfilePictureFlag = !this.changeProfilePictureFlag
+  }
+
+  changeProfilePicture = () => {
+    let formData = new FormData();
+    formData.append("files", this.url);
+
+    this.userService.uploadProfilePicture(formData).subscribe((res) => {
+      this.changeProfilePictureFlag = !this.changeProfilePictureFlag
+      this.edit.system_user.picturePath = res as string;
+      this.edit.system_user.dateOfBirth = this.edit.system_user.dateOfBirth +'T01:00:00+01:00'
+      this.userService.editUser(this.edit).subscribe((res) => {
+        this.edit.system_user.dateOfBirth = this.edit.system_user.dateOfBirth.split("T")[0];
+         alert("Uspesno ste izmenili sliku")});
+    },
+    error => {if(error.status == 500 || error.status ==400) alert("Neuspesna izmena slike")});
+  }
+
+  onChange(event: any): void {
+      this.url = event.target.files[0];
+  }
 
 }

@@ -45,6 +45,14 @@ func(repo *PostsRepository) GetByKey(key string) []model.Post {
 
 }
 
+func(repo *PostsRepository) GetPublic(keys []string) []model.Post {
+	var posts []model.Post
+	for i := range keys {
+		posts = append(posts, repo.GetByKey(keys[i])...)
+	}
+	return posts
+}
+
 func(repo *PostsRepository) LikePost(likeReq dto.LikeDto) error {
 	var posts []model.Post
 	result, _ :=  repo.Database.Get(likeReq.OWNERID.String()).Result()
@@ -118,6 +126,28 @@ func(repo *PostsRepository) DislikePost(dislikeReq dto.LikeDto) error {
 	}
 	return err
 }
+func(repo *PostsRepository) ReportPost(reportReq dto.ReportDto) error {
+	var posts []model.Post
+	result, _ :=  repo.Database.Get(reportReq.OWNERID.String()).Result()
+	bytes := []byte(result)
+	err := json.Unmarshal(bytes, &posts)
+	if err != nil {
+		return err
+	}
+
+	for i := range posts {
+		if posts[i].ID == reportReq.POSTID {
+			posts[i].REPORTS = append(posts[i].REPORTS, model.ReportedBy{reportReq.USERID})
+			break
+		}
+	}
+	jsonPosts, _ := json.Marshal(posts)
+	newErr := repo.Database.Set(reportReq.OWNERID.String(), jsonPosts, 0).Err()
+	if newErr != nil {
+		return newErr
+	}
+	return err
+}
 
 func removeDislike(slice []model.Dislike, s int) []model.Dislike {
 	return append(slice[:s], slice[s+1:]...)
@@ -142,6 +172,59 @@ func(repo *PostsRepository) GetFeed(id string) []model.Post {
 		for j := range  userPosts {
 			if userPosts[j].ID == feedInputs[i].PostId {
 				posts = append(posts, userPosts[j])
+				break
+			}
+		}
+	}
+	return posts
+
+}
+func(repo *PostsRepository) GetLiked(id string) []model.Post {
+	fmt.Println("Id je " + id)
+	var posts []model.Post
+	var feedInputs []model.Feed
+	result, _ :=  repo.Database.Get(id + "_feed").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &feedInputs)
+	for i := range feedInputs {
+		var userPosts []model.Post
+		result, _ :=  repo.Database.Get(feedInputs[i].UserId.String()).Result()
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &userPosts)
+		for j := range  userPosts {
+			if userPosts[j].ID == feedInputs[i].PostId {
+				for k := range userPosts[j].LIKES {
+					if userPosts[j].LIKES[k].UserID.String() == id {
+						posts = append(posts, userPosts[j])
+					}
+				}
+				break
+			}
+		}
+	}
+	return posts
+
+}
+
+func(repo *PostsRepository) GetDisliked(id string) []model.Post {
+	fmt.Println("Id je " + id)
+	var posts []model.Post
+	var feedInputs []model.Feed
+	result, _ :=  repo.Database.Get(id + "_feed").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &feedInputs)
+	for i := range feedInputs {
+		var userPosts []model.Post
+		result, _ :=  repo.Database.Get(feedInputs[i].UserId.String()).Result()
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &userPosts)
+		for j := range  userPosts {
+			if userPosts[j].ID == feedInputs[i].PostId {
+				for k := range userPosts[j].DISLIKES {
+					if userPosts[j].DISLIKES[k].UserID.String() == id {
+						posts = append(posts, userPosts[j])
+					}
+				}
 				break
 			}
 		}

@@ -23,12 +23,27 @@ func (service *PostsService) GetFeed(id string) []model.Post {
 	return  service.PostsRepo.GetFeed(id)
 }
 
+func (service *PostsService) GetLiked(id string) []model.Post {
+	return  service.PostsRepo.GetLiked(id)
+}
+func (service *PostsService) GetDisliked(id string) []model.Post {
+	return  service.PostsRepo.GetDisliked(id)
+}
+
+
+func (service *PostsService) GetPublic(keys []string) []model.Post {
+	return  service.PostsRepo.GetPublic(keys)
+}
+
 func (service *PostsService) LikePost(likeReq dto.LikeDto) error {
 	return service.PostsRepo.LikePost(likeReq)
 }
 
 func (service *PostsService) DislikePost(dislikeReq dto.LikeDto) error {
 	return service.PostsRepo.DislikePost(dislikeReq)
+}
+func (service *PostsService) ReportPost(reportReq dto.ReportDto) error {
+	return service.PostsRepo.ReportPost(reportReq)
 }
 
 func (service *PostsService) AddPostToFeed(keys []string, post *model.Post) error {

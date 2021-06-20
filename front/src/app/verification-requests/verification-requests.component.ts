@@ -10,7 +10,7 @@ import {UserService} from '../service/user.service';
 export class VerificationRequestsComponent implements OnInit {
 
   // tslint:disable-next-line:ban-types
-  verificationRequests: Object | undefined;
+  verificationRequests: any [] | undefined;
   constructor(private verificationRequestService: VerificationRequestService,
               private userService: UserService) { }
 
