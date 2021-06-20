@@ -161,6 +161,21 @@ func (handler *PostsHandler) ReportPost(w http.ResponseWriter, r *http.Request){
 }
 
 
+func (handler *PostsHandler) GetLiked(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	fmt.Println(vars["id"])
+	post :=handler.Service.GetLiked(vars["id"])
+	renderJSON(w, &post)
+}
+func (handler *PostsHandler) GetDisliked(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	fmt.Println(vars["id"])
+	post :=handler.Service.GetDisliked(vars["id"])
+	renderJSON(w, &post)
+}
+
+
+
 func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])

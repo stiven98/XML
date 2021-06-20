@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {RouterModule, Routes} from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
@@ -12,8 +12,11 @@ import { DirectMessagesComponent } from './direct-messages/direct-messages.compo
 import { NotificationsComponent } from './notifications/notifications.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PostsComponent } from './home-page/posts/posts.component';
+import { TokenInterceptor } from './interceptor/TokenInterceptor';
+import { LikedDislikedPostsComponent } from './home-page/liked-disliked-posts/liked-disliked-posts.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -22,6 +25,8 @@ const appRoutes: Routes = [
   {path: 'editProfile', component: EditProfileComponent },
   {path: 'directMessages', component: DirectMessagesComponent },
   {path: 'notifications', component: NotificationsComponent },
+  {path: 'liked', component: LikedDislikedPostsComponent},
+  {path: 'disliked', component: LikedDislikedPostsComponent},
   {path: 'homePage', component: HomePageComponent },
   {path: 'homePage/tag/:tag', component: HomePageComponent },
   {path: 'homePage/location/:location', component: HomePageComponent },
@@ -39,6 +44,8 @@ const appRoutes: Routes = [
     DirectMessagesComponent,
     NotificationsComponent,
     HomePageComponent,
+    PostsComponent,
+    LikedDislikedPostsComponent
   ],
   imports: [
     BrowserModule,
@@ -46,9 +53,15 @@ const appRoutes: Routes = [
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
     ],
-  providers: [],
+    providers: [
+      {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+      }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

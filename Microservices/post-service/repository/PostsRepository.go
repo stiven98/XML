@@ -179,6 +179,59 @@ func(repo *PostsRepository) GetFeed(id string) []model.Post {
 	return posts
 
 }
+func(repo *PostsRepository) GetLiked(id string) []model.Post {
+	fmt.Println("Id je " + id)
+	var posts []model.Post
+	var feedInputs []model.Feed
+	result, _ :=  repo.Database.Get(id + "_feed").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &feedInputs)
+	for i := range feedInputs {
+		var userPosts []model.Post
+		result, _ :=  repo.Database.Get(feedInputs[i].UserId.String()).Result()
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &userPosts)
+		for j := range  userPosts {
+			if userPosts[j].ID == feedInputs[i].PostId {
+				for k := range userPosts[j].LIKES {
+					if userPosts[j].LIKES[k].UserID.String() == id {
+						posts = append(posts, userPosts[j])
+					}
+				}
+				break
+			}
+		}
+	}
+	return posts
+
+}
+
+func(repo *PostsRepository) GetDisliked(id string) []model.Post {
+	fmt.Println("Id je " + id)
+	var posts []model.Post
+	var feedInputs []model.Feed
+	result, _ :=  repo.Database.Get(id + "_feed").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &feedInputs)
+	for i := range feedInputs {
+		var userPosts []model.Post
+		result, _ :=  repo.Database.Get(feedInputs[i].UserId.String()).Result()
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &userPosts)
+		for j := range  userPosts {
+			if userPosts[j].ID == feedInputs[i].PostId {
+				for k := range userPosts[j].DISLIKES {
+					if userPosts[j].DISLIKES[k].UserID.String() == id {
+						posts = append(posts, userPosts[j])
+					}
+				}
+				break
+			}
+		}
+	}
+	return posts
+
+}
 
 func(repo *PostsRepository) AddPostToFeed(keys []string, post *model.Post) error {
 	for i := range keys {

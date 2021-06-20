@@ -31,6 +31,8 @@ func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.
 	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
 	router.HandleFunc("/posts/feed/{id}", postsHandler.GetFeed).Methods("GET")
 	router.HandleFunc("/posts/public", postsHandler.GetPublic).Methods("GET")
+	router.HandleFunc("/posts/liked/{id}", postsHandler.GetLiked).Methods("GET")
+	router.HandleFunc("/posts/disliked/{id}", postsHandler.GetDisliked).Methods("GET")
 	router.HandleFunc("/posts/public-tags", postsHandler.GetAllTagsPublic).Methods("GET")
 	router.HandleFunc("/posts/public-locations", postsHandler.GetAllLocationsPublic).Methods("GET")
 	router.HandleFunc("/posts/signed-in-tags/{id}", postsHandler.GetAllTagsSignedIn).Methods("GET")
@@ -41,7 +43,7 @@ func handleFunc(commentsHandler *handler.CommentsHandler, postsHandler *handler.
 	router.HandleFunc("/report-post", postsHandler.ReportPost).Methods("POST")
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./user_posts/"))))
-	headers := handlers.AllowedHeaders([] string{"Content-Type"})
+	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
 	origins := handlers.AllowedOrigins([] string{"*"})
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8086"), handlers.CORS(headers, methods, origins) (router)))

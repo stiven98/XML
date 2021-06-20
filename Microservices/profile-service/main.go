@@ -295,7 +295,7 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./profile_picture/"))))
 
-	headers := handlers.AllowedHeaders([] string{"Content-Type"})
+	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
 	origins := handlers.AllowedOrigins([] string{"*"})
 
