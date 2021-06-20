@@ -14,6 +14,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
 import { PostsComponent } from './home-page/posts/posts.component';
 import { TokenInterceptor } from './interceptor/TokenInterceptor';
 import { LikedDislikedPostsComponent } from './home-page/liked-disliked-posts/liked-disliked-posts.component';
@@ -28,9 +29,10 @@ const appRoutes: Routes = [
   {path: 'liked', component: LikedDislikedPostsComponent},
   {path: 'disliked', component: LikedDislikedPostsComponent},
   {path: 'homePage', component: HomePageComponent },
+  {path: 'verificationRequests', component: VerificationRequestsComponent},
   {path: 'homePage/tag/:tag', component: HomePageComponent },
   {path: 'homePage/location/:location', component: HomePageComponent },
-{ path: '**', redirectTo: '/404'}
+  { path: '**', redirectTo: '/404'}
 ];
 
 @NgModule({
@@ -44,6 +46,7 @@ const appRoutes: Routes = [
     DirectMessagesComponent,
     NotificationsComponent,
     HomePageComponent,
+    VerificationRequestsComponent,
     PostsComponent,
     LikedDislikedPostsComponent
   ],

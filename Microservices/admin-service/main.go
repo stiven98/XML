@@ -8,6 +8,7 @@ import (
 	"admin-service/service"
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -45,10 +46,12 @@ func initDB() *gorm.DB {
 		database.Migrator().DropTable(&model.Administrator{})
 		database.Migrator().DropTable(&model.AgentRegistrationRequest{})
 		database.Migrator().DropTable(&model.AccountVerificationRequest{})
+		database.Migrator().DropTable(&model.VerificationRequest{})
 
 		database.AutoMigrate(&model.Administrator{})
 		database.AutoMigrate(&model.AgentRegistrationRequest{})
 		database.AutoMigrate(&model.AccountVerificationRequest{})
+		database.AutoMigrate(&model.VerificationRequest{})
 
 		administrators := [] model.Administrator{
 			{
@@ -81,6 +84,16 @@ func initDB() *gorm.DB {
 				STATUS: model.SUBMITTED,
 			},
 		}
+
+		verificationRequests := [] model.VerificationRequest {
+			{
+				ID:           uuid.MustParse("f6b7b1b1-49e7-476b-b895-88baf888a0f6"),
+				UserID:       uuid.MustParse(string("4579daae-1567-42d5-a25c-1a3818077c84")),
+				DocumentPath: "stiven.jpeg",
+				Status: model.SUBMITTED,
+			},
+		}
+
 		for i := range administrators {
 			database.Create(&administrators[i])
 		}
@@ -91,63 +104,61 @@ func initDB() *gorm.DB {
 			database.Create(&agentRegistrationRequests[i])
 		}
 
+		for i := range verificationRequests {
+			database.Create(&verificationRequests[i])
+		}
+
 	}
 	return database
 }
 
-func initRepo(database *gorm.DB) (*repository.AdministratorsRepository,
-	                              *repository.AccountVerificationsRepository,
-	                              *repository.AgentRegistrationsRepository, ) {
+func initRepo(database *gorm.DB) *repository.VerificationRequestRepository {
+	return &repository.VerificationRequestRepository{Database: database}
+}
 
-	return &repository.AdministratorsRepository{Database: database}, &repository.AccountVerificationsRepository{Database: database},
-		&repository.AgentRegistrationsRepository{Database: database}
+func initServices(verificationRequestRepository *repository.VerificationRequestRepository) *service.VerificationRequestService {
+	return &service.VerificationRequestService{VerificationRequestRepository: verificationRequestRepository}
+}
+
+
+func initHandler(verificationRequestService *service.VerificationRequestService) *handler.VerificationRequestHandler {
+	return &handler.VerificationRequestHandler{VerificationRequestService: verificationRequestService}
 }
 
 
 
-func initServices(adminsRepo *repository.AdministratorsRepository, accountVerificationsRepo *repository.AccountVerificationsRepository,
-	agentRegistrationRepo *repository.AgentRegistrationsRepository) (*service.AdministratorsService,
-																	 *service.AccountVerificationsService,
-																	 *service.AgentRegistrationsService){
-
-	return &service.AdministratorsService{AdministratorRepo: adminsRepo}, &service.AccountVerificationsService{AccountVerificationsRepo: accountVerificationsRepo},
-		&service.AgentRegistrationsService{AgentRegistrationsRepo: agentRegistrationRepo}
-}
-
-
-func initHandler(adminsService *service.AdministratorsService, accountVerificationService *service.AccountVerificationsService,
-	agentRegistrationsService *service.AgentRegistrationsService) ( *handler.AdministratorsHandler,
-																	*handler.AccountVerificationsHandler,
-																	*handler.AgentRegistrationsHandler) {
-	return &handler.AdministratorsHandler{Service: adminsService}, &handler.AccountVerificationsHandler{Service: accountVerificationService},
-		&handler.AgentRegistrationsHandler{Service: agentRegistrationsService}
-}
-
-
-
-func handleFunc(administratorsHandler *handler.AdministratorsHandler, accountVerificationHadnler *handler.AccountVerificationsHandler,
-	agentRegistrationsHandler *handler.AgentRegistrationsHandler) {
+func handleFunc(verificationRequestHandler *handler.VerificationRequestHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/administrators/update",  administratorsHandler.Update).Methods("PUT")
-	router.HandleFunc("/administrators/create",  administratorsHandler.Create).Methods("POST")
-	router.HandleFunc("/administrators/getAll",  administratorsHandler.GetAll).Methods("GET")
-	router.HandleFunc("/accountVerification/update",  accountVerificationHadnler.Update).Methods("PUT")
-	router.HandleFunc("/accountVerification/create",  accountVerificationHadnler.Create).Methods("POST")
-	router.HandleFunc("/accountVerification/getAll",  accountVerificationHadnler.GetAll).Methods("GET")
-	router.HandleFunc("/agentRegistration/update",  agentRegistrationsHandler.Update).Methods("PUT")
-	router.HandleFunc("/agentRegistration/create",  agentRegistrationsHandler.Create).Methods("POST")
-	router.HandleFunc("/agentRegistration/getAll",  agentRegistrationsHandler.GetAll).Methods("GET")
+	//router.HandleFunc("/administrators/update",  administratorsHandler.Update).Methods("PUT")
+	//router.HandleFunc("/administrators/create",  administratorsHandler.Create).Methods("POST")
+	//router.HandleFunc("/administrators/getAll",  administratorsHandler.GetAll).Methods("GET")
+	//router.HandleFunc("/accountVerification/update",  accountVerificationHadnler.Update).Methods("PUT")
+	//router.HandleFunc("/accountVerification/create",  accountVerificationHadnler.Create).Methods("POST")
+	//router.HandleFunc("/accountVerification/getAll",  accountVerificationHadnler.GetAll).Methods("GET")
+	//router.HandleFunc("/agentRegistration/update",  agentRegistrationsHandler.Update).Methods("PUT")
+	//router.HandleFunc("/agentRegistration/create",  agentRegistrationsHandler.Create).Methods("POST")
+	//router.HandleFunc("/agentRegistration/getAll",  agentRegistrationsHandler.GetAll).Methods("GET")
+	router.HandleFunc("/verificationRequest/getAll", verificationRequestHandler.GetAll).Methods("GET")
+	router.HandleFunc("/verificationRequest/{id}", verificationRequestHandler.CreateVerificationRequest).Methods("POST")
+	router.HandleFunc("/verificationRequest/accept/{id}", verificationRequestHandler.Accept).Methods("PUT")
+	router.HandleFunc("/verificationRequest/decline/{id}", verificationRequestHandler.Decline).Methods("PUT")
+	router.Handle("/images/{rest}", http.StripPrefix("/images/", http.FileServer(http.Dir("./documents/"))))
+
+	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([] string{"*"})
+	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
 
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8089"), router))
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8089"), handlers.CORS(headers, methods, origins) (router)))
 }
 
 func main() {
 	database := initDB()
-	adminsRepo, accountVerificationRepo, agentRegistrationRepo := initRepo(database)
-	adminsService, accountVerifciationService, agentRegistrationService := initServices(adminsRepo, accountVerificationRepo, agentRegistrationRepo)
-	adminsHandler, accountVerificationHandler, agentRegistrationHanlder := initHandler(adminsService, accountVerifciationService, agentRegistrationService)
-	handleFunc(adminsHandler, accountVerificationHandler, agentRegistrationHanlder)
+	verificationRequestRepository := initRepo(database)
+	verificationRequestService := initServices(verificationRequestRepository)
+	verificationRequestHandler := initHandler(verificationRequestService)
+	handleFunc(verificationRequestHandler)
 }
 

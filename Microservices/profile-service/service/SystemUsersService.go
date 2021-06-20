@@ -31,3 +31,7 @@ func (service *SystemUsersService) GetUserId(username string) uuid.UUID {
 func (service *SystemUsersService) GetById(id uuid.UUID) model.SystemUser {
 	return  service.Repo.GetById(id)
 }
+
+func (service *SystemUsersService) UpdateVerification(id uuid.UUID) interface{} {
+	return service.Repo.UpdateVerification(id)
+}

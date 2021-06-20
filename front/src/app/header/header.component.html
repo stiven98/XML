@@ -32,6 +32,13 @@
           </i> Dodaj objavu
                 </a>
             </li>
+            <li class="nav-item" *ngIf="this.authService.getRole() === 'ROLE_ADMIN'">
+              <a class="nav-link" href="/verificationRequests">
+              <i class="fa fa-address-card-o ">
+                <span class="badge badge-primary"></span>
+              </i> Zahtjevi za verifikaciju
+            </a>
+          </li>
             <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
                   <input class="form-control mr-sm-2"  style="width: 400px;" [(ngModel)]="searchParams"  [readonly] = "this.isInputDisalbed"  (focus) = "onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">

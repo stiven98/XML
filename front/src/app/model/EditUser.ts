@@ -7,8 +7,8 @@ class EditUser {
     password: string;
     gender: string;
     dateOfBirth: string;
-    picturePath: string
-  
+    picturePath: string;
+
     constructor() {
       this.id = '';
       this.firstName = '';
@@ -23,14 +23,15 @@ class EditUser {
   }
 
 export class UserEdit{
-    userId:string;
-    system_user:EditUser;
+    userId: string;
+    system_user: EditUser;
     isPublic:boolean;
     phoneNumber: string;
     webSite:string;
     biography:string;
     allowedTags:boolean;
-    isBlocked:boolean;
+    isBlocked:boolean
+    isVerified:boolean;
     acceptMessagesFromNotFollowProfiles:boolean;
     notifyPosts:boolean;
     notifyMessages:boolean;
@@ -46,6 +47,7 @@ export class UserEdit{
         this.biography = '';
         this.allowedTags = false;
         this.isBlocked = false;
+        this.isVerified = false;
         this.acceptMessagesFromNotFollowProfiles = false;
         this.notifyPosts = false;
         this.notifyMessages = false;
@@ -53,4 +55,3 @@ export class UserEdit{
         this.notifyComments = false;
     }
 }
-  
