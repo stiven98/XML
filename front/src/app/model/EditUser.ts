@@ -30,7 +30,13 @@ export class UserEdit{
     webSite:string;
     biography:string;
     allowedTags:boolean;
-    isBlocked:boolean
+    isBlocked:boolean;
+    acceptMessagesFromNotFollowProfiles:boolean;
+    notifyPosts:boolean;
+    notifyMessages:boolean;
+    notifyStory:boolean;
+    notifyComments:boolean;
+
     constructor() {
         this.userId = '';
         this.system_user = new EditUser();
@@ -40,6 +46,11 @@ export class UserEdit{
         this.biography = '';
         this.allowedTags = false;
         this.isBlocked = false;
+        this.acceptMessagesFromNotFollowProfiles = false;
+        this.notifyPosts = false;
+        this.notifyMessages = false;
+        this.notifyStory = false;
+        this.notifyComments = false;
     }
 }
   
