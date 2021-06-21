@@ -232,6 +232,50 @@ func(repo *PostsRepository) GetDisliked(id string) []model.Post {
 	return posts
 
 }
+func (repo *PostsRepository) Delete (deletePost *dto.DeletePostDto) bool {
+	var userPosts []model.Post
+	var newPosts []model.Post
+	result, err := repo.Database.Get(deletePost.OWNERID.String()).Result()
+	if err!=nil {
+		fmt.Println("error")
+		fmt.Println(err)
+		return false
+	}
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &userPosts)
+	for i := range userPosts {
+		if userPosts[i].ID != deletePost.POSTID {
+			newPosts = append(newPosts, userPosts[i])
+		}
+	}
+	err = repo.Database.Del(deletePost.OWNERID.String()).Err()
+	json, _ := json.Marshal(newPosts)
+	err = repo.Database.Set(deletePost.OWNERID.String(), json, 0).Err()
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
+}
+func(repo *PostsRepository) GetReported(ids []dto.UserId) ([]model.Post) {
+	var reportedPosts []model.Post
+	var userPosts []model.Post
+	for i := range  ids {
+		result, err := repo.Database.Get(ids[i].Id).Result()
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &userPosts)
+		for j:= range userPosts {
+			if len(userPosts[j].REPORTS) > 0 {
+				reportedPosts = append(reportedPosts, userPosts[j])
+			}
+		}
+	}
+	return reportedPosts
+}
 
 func(repo *PostsRepository) AddPostToFeed(keys []string, post *model.Post) error {
 	for i := range keys {

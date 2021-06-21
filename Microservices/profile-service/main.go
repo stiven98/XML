@@ -291,6 +291,7 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/users/create",  usersHandler.Create).Methods("POST")
 	router.HandleFunc("/users/getAll",  usersHandler.GetAll).Methods("GET")
 	router.HandleFunc("/users/getById/{id}",  usersHandler.GetById).Methods("GET")
+	router.HandleFunc("/getIds",  usersHandler.GetIds).Methods("GET")
 	router.HandleFunc("/users/changeWhetherIsPublic", usersHandler.ChangeWhetherIsPublic).Methods("POST")
 	router.HandleFunc("/users/changeAllowedTags", usersHandler.ChangeAllowedTags).Methods("POST")
 	router.HandleFunc("/users/updateVerification/{id}", SystemUsersHandler.UpdateVerification).Methods("PUT")

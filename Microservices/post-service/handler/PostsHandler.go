@@ -174,6 +174,46 @@ func (handler *PostsHandler) GetDisliked(w http.ResponseWriter, r *http.Request)
 	renderJSON(w, &post)
 }
 
+func (handler *PostsHandler) DeletePost(w http.ResponseWriter, r *http.Request) {
+
+	var deletePost dto.DeletePostDto
+	err := json.NewDecoder(r.Body).Decode(&deletePost)
+	if err != nil {
+		w.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	ret := handler.Service.Delete(&deletePost)
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	renderJSON(w, &ret)
+}
+
+
+
+func (handler *PostsHandler) GetReported(w http.ResponseWriter, r *http.Request){
+	rest, err := http.Get("http://localhost:8085/getIds")
+
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+
+	var ids []dto.UserId
+	err = json.NewDecoder(rest.Body).Decode(&ids)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(ids)
+
+	reportedPosts := handler.Service.GetReported(ids)
+	renderJSON(w, &reportedPosts)
+
+}
+
 
 
 func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){

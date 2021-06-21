@@ -29,6 +29,12 @@ func (service *PostsService) GetLiked(id string) []model.Post {
 func (service *PostsService) GetDisliked(id string) []model.Post {
 	return  service.PostsRepo.GetDisliked(id)
 }
+func (service *PostsService) Delete(deletePost *dto.DeletePostDto) bool {
+	return  service.PostsRepo.Delete(deletePost)
+}
+func (service *PostsService) GetReported(ids []dto.UserId) ([]model.Post)  {
+	  return service.PostsRepo.GetReported(ids)
+}
 
 
 func (service *PostsService) GetPublic(keys []string) []model.Post {

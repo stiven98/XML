@@ -60,6 +60,19 @@ func (repo *UsersRepository) ChangeAllowedTags(dto *Dto.ChangeAllowedTagsDto) er
 
 func (repo *UsersRepository) GetById(id string) (model.User, error) {
 	var user model.User
-	response:= repo.Database.Preload("SystemUser").Find(&user, "user_id = ?", id)
+	response := repo.Database.Preload("SystemUser").Find(&user, "user_id = ?", id)
 	return user, response.Error
+}
+func (repo *UsersRepository) GetIds() ([]Dto.UserId, error) {
+	var ids []Dto.UserId
+	var users []model.User
+	response:= repo.Database.Preload("SystemUser").Find(&users)
+
+	for i := range users {
+		var id Dto.UserId
+		id.Id = users[i].UserID.String()
+		ids = append(ids, id)
+	}
+
+	return ids, response.Error
 }

@@ -18,6 +18,7 @@ import { VerificationRequestsComponent } from './verification-requests/verificat
 import { PostsComponent } from './home-page/posts/posts.component';
 import { TokenInterceptor } from './interceptor/TokenInterceptor';
 import { LikedDislikedPostsComponent } from './home-page/liked-disliked-posts/liked-disliked-posts.component';
+import { ReportedPostsComponent } from './reported-posts/reported-posts.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -31,6 +32,7 @@ const appRoutes: Routes = [
   {path: 'homePage', component: HomePageComponent },
   {path: 'verificationRequests', component: VerificationRequestsComponent},
   {path: 'homePage/tag/:tag', component: HomePageComponent },
+  {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
   { path: '**', redirectTo: '/404'}
 ];
@@ -48,7 +50,8 @@ const appRoutes: Routes = [
     HomePageComponent,
     VerificationRequestsComponent,
     PostsComponent,
-    LikedDislikedPostsComponent
+    LikedDislikedPostsComponent,
+    ReportedPostsComponent
   ],
   imports: [
     BrowserModule,

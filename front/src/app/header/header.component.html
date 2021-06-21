@@ -63,6 +63,13 @@
             </li>
         </ul>
         <ul class="navbar-nav ">
+            <li class="nav-item" *ngIf="this.authService.getRole() === 'ROLE_ADMIN'">
+                <a class="nav-link" href="/reportedPosts">
+                <i class="fa fa-ban ">
+                  <span class="badge badge-primary"></span>
+                </i>Neprikladan sadržaj
+              </a>
+            </li>
             <li *ngIf="this.authService.isLoggedIn" class="nav-item">
                 <a class="nav-link" href="/liked">
                     <i class="fa fa-thumbs-up">

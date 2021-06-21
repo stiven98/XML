@@ -5,16 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.xws.team22.auth.model.AuthenticationData;
 import rs.ac.uns.ftn.xws.team22.auth.service.impl.AuthenticationDataService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/login-details", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,5 +36,4 @@ public class LoginDetailsController {
         boolean isValidLogin = loginDetailsService.isValidLogin(username, password);
         return new ResponseEntity<Boolean>(isValidLogin, HttpStatus.OK);
     }
-
 }
