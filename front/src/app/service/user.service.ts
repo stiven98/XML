@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../model/User.model';
 import { map } from 'rxjs/operators';
 import { UserEdit } from '../model/EditUser';
+import { BlockUserDTO } from '../model/BlockUser';
 
 @Injectable({
   providedIn: 'root',
@@ -97,5 +98,10 @@ export class UserService {
       .pipe(map((res) => {
         return res;
       }));
+  }
+  blockUser = (blockUserDto: BlockUserDTO) => {
+    return this.http.post('http://localhost:8080/api/blockUser', blockUserDto).pipe(map(item => {
+        return item;
+    }));
   }
 }

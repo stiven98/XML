@@ -12,4 +12,5 @@ public interface IAuthenticationDataService {
 
     boolean isValidLogin(String username, String password);
 
+    boolean blockUser(UUID userId);
 }

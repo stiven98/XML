@@ -32,7 +32,7 @@ public class AuthenticationData implements UserDetails {
     private String password;
 
     @Column(name = "active", nullable = false)
-    private boolean active;
+    public boolean active;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

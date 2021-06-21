@@ -68,6 +68,11 @@ func (handler *UsersHandler) GetById(w http.ResponseWriter, r *http.Request){
 	user, _ :=handler.Service.GetById(vars["id"])
 	renderJSON(w, &user)
 }
+func (handler *UsersHandler) GetIds(w http.ResponseWriter, r *http.Request){
+	fmt.Println("Pogodio ga ")
+	user, _ :=handler.Service.GetIds()
+	renderJSON(w, &user)
+}
 
 func (handler *UsersHandler) GetAll(w http.ResponseWriter, r *http.Request){
 	users:=handler.Service.GetAll()

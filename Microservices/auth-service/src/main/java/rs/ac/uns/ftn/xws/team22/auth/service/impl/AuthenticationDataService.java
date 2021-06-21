@@ -50,5 +50,15 @@ public class AuthenticationDataService implements IAuthenticationDataService, Us
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         return this.loginDetailsRepository.findByUsername(s);
     }
+    @Override
+    public boolean blockUser(UUID userId) {
+        AuthenticationData userDetails = this.loginDetailsRepository.getById(userId);
+        if ( userDetails == null) {
+            return false;
+        }
+        userDetails.setActive(false);
+        this.loginDetailsRepository.save(userDetails);
+        return true;
+    }
 
 }
