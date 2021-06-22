@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Post } from 'src/app/model/Post.model';
 import { ReportReq } from 'src/app/model/ReportReq';
 import { AuthService } from 'src/app/service/authorization/auth.service';
 import { PostsService } from 'src/app/service/posts.service';
@@ -18,8 +19,11 @@ export class PostsComponent implements OnInit {
   public postsToShow: any[] = [];
   public publicPosts: any[] = [];
   public userData: Map<string, any> = new Map<string, any>();
+  public commentData: Map<string, string> = new Map<string, string>();
   public reportReq: ReportReq = new ReportReq();
   public showPublic: boolean = false;
+  public currentUser: any;
+  public commentText : string = '';
 
   constructor(public postsService: PostsService,
     public userService: UserService,
@@ -91,23 +95,33 @@ export class PostsComponent implements OnInit {
     let id = localStorage.getItem('id');
     this.postsService.getPublicPosts().subscribe((res) => {
       this.publicPosts = res as any[];
-      for (let p of this.publicPosts) {
-        if (!this.userData.get(p.userid)) {
-          this.userService.getUsersById(p.userid).subscribe(res => {
-            this.userData.set(p.userid, res);
-          });
+      if(this.publicPosts){
+        for (let p of this.publicPosts) {
+          if (!this.userData.get(p.userid)) {
+            this.userService.getUsersById(p.userid).subscribe(res => {
+              this.userData.set(p.userid, res);
+            });
+          }
         }
       }
+      
       if (id) {
         this.postsService.getFeed(id).subscribe(res => {
           this.posts = res as any[];
-          for (let p of this.posts) {
-            if (!this.userData.get(p.userid)) {
-              this.userService.getUsersById(p.userid).subscribe(res => {
-                this.userData.set(p.userid, res);
-              });
+          if(this.posts){
+            for (let p of this.posts) {
+              if (!this.userData.get(p.userid)) {
+                this.userService.getUsersById(p.userid).subscribe(res => {
+                  this.userData.set(p.userid, res);
+                });
+              }
             }
           }
+
+          this.userService.getUsersById(id).subscribe(response => {
+            this.currentUser = response;
+          });
+
           this.setPostsToDisplay();
         });
       }
@@ -155,6 +169,29 @@ export class PostsComponent implements OnInit {
     }
     return retVal;
   }
+
+  getCurrentUserImage = () : string => {
+      return this.currentUser.system_user.picturePath;
+  }
+
+  leaveComment = (post : any) => {
+    let id = localStorage.getItem('id');
+    if(id){
+      var commentValue = this.commentData.get(post.id) as string;
+      this.postsService.leaveComment({ownerid : post.userid, postid : post.id, userid : id, comment : commentValue}).subscribe(res => {
+        this.initData();
+      });
+    }else{
+      alert('Morate biti ulogovani da bi komentarisali objavu')
+    }
+  }
+
+  changeCommentText = (event : Event, id : string) => {
+    const e = event.target as HTMLInputElement;
+    let value = e.value;
+    this.commentData.set(id, value);
+  }
+
 
   isImage = (name: string): boolean => {
     let imgFormats = ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'];
