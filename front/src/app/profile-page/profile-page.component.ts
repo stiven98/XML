@@ -67,7 +67,6 @@ export class ProfilePageComponent implements OnInit {
 
     this.managementService.isBlocked(this.myId,this.id).subscribe((res:any)=> this.isBlockedUsesr = res)
     this.managementService.isMuted(this.myId,this.id).subscribe((res:any)=> this.isMuted = res)
-
   }
 
   onFollow = () => {

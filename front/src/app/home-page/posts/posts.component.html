@@ -10,11 +10,11 @@
                         </div>
                         <div class="media m-0">
                             <div class="d-flex mr-3">
-                                <a href=""><img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userData.get(post.userid).system_user.picturePath}}" alt="User" /></a>
+                                <a href="/profile/{{post.userid}}"><img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userData.get(post.userid).system_user.picturePath}}" alt="User" /></a>
                             </div>
 
                             <div class="media-body">
-                                <p class="m-0">{{ userData.get(post.userid).system_user.firstName + ' ' + userData.get(post.userid).system_user.lastName }}</p>
+                                <p class="m-0"><a style="color: black; cursor: pointer;" href="/profile/{{post.userid}}">{{ userData.get(post.userid).system_user.firstName + ' ' + userData.get(post.userid).system_user.lastName }}</a></p>
                                 <small><span><i class="icon ion-md-pin"></i> {{ post.location }}</span></small>
                                 <small><span><i class="icon ion-md-time"></i> {{convertTimeToText(post.timestamp)}}
                                     </span></small>
