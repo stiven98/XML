@@ -85,7 +85,7 @@ export class PostsComponent implements OnInit {
     this.reportReq.PostId = postId;
     this.reportReq.UserId = localStorage.getItem('id') as string;
     this.reportReq.OwnerId = ownerId;
-    this.postsService.reportPost(this.reportReq).subscribe((res) => res);
+    this.postsService.reportPost(this.reportReq).subscribe((res) => {this.initData()});
   };
 
   ngOnInit(): void {
@@ -150,6 +150,19 @@ export class PostsComponent implements OnInit {
     }
     if (this.locationForSearch.trim().length > 0) {
       this.postsToShow = this.postsToShow.filter(p => (p.location === this.locationForSearch));
+    }
+    let id = localStorage.getItem('id');
+    if(id){
+      this.postsToShow = this.postsToShow.filter(p => {
+        let flag = true;
+        for(let rep of p.reports){
+          if(rep.userid === id){
+            flag = false;
+            break;
+          }
+        }
+        return flag;
+      });
     }
     this.fetchCommentData();
   }

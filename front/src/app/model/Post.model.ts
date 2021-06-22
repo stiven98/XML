@@ -1,5 +1,4 @@
 export class Post {
-  Id: string;
   UserId: string;
   Items: PostItem[];
   Type: string;
@@ -7,7 +6,6 @@ export class Post {
   Location: string;
   Hashtag: string;
   constructor() {
-    this.Id = '';
     this.UserId = '';
     this.Items = [];
     this.Type = 'post';
