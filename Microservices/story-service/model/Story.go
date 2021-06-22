@@ -16,6 +16,11 @@ type StoryItem struct {
 	PATH string `json:"path"`
 }
 
+type Feed struct {
+	UserId uuid.UUID `json:"userid"`
+	StoryId uuid.UUID `json:"storyid"`
+}
+
 type Story struct {
 	ID uuid.UUID `json:"id"`
 	USERID uuid.UUID `json:"userid"`
