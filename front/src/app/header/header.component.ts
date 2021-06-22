@@ -5,6 +5,7 @@ import { Post, PostItem } from '../model/Post.model';
 import { PostsService } from '../service/posts.service';
 import { AuthService } from '../service/authorization/auth.service';
 import { UserService } from '../service/user.service';
+import { StoryService } from '../service/story.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -37,7 +38,8 @@ export class HeaderComponent implements OnInit {
     public authService: AuthService,
     public usersService: UserService,
     private router:Router,private modalService: NgbModal, 
-    private postsService: PostsService
+    private postsService: PostsService,
+    private storyService : StoryService
   ) {}
 
  
@@ -89,6 +91,31 @@ export class HeaderComponent implements OnInit {
       post.Items = items as PostItem[];
       this.files.length == 1 ? post.Type = 'post' : post.Type = 'album';
       this.postsService.createPost(post).subscribe(item => item);
+      this.modalService.dismissAll();
+    });
+  }
+
+  uploadStory(): void {
+    let formData = new FormData();
+    for (let i = 0; i < this.files.length; i++) {
+      console.log(this.files[i])
+      formData.append("files", this.files[i]);
+    }
+    console.log(formData)
+    let post : Post = new Post();
+    post.Description = this.description;
+    post.Location = this.location;
+    post.Hashtag = this.hashtag;
+    this.storyService.uploadStory(formData).subscribe(items => {
+      console.log(items);
+      // TO-DO
+      let id = localStorage.getItem('id');
+      if(id){
+        post.UserId = id;
+      }
+      post.Items = items as PostItem[];
+      this.files.length == 1 ? post.Type = 'story' : post.Type = 'album';
+      this.storyService.createStory(post).subscribe(item => item);
       this.modalService.dismissAll();
     });
   }

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-redis/redis"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -23,11 +24,16 @@ func initHandler (storyService *service.StoriesService) *handler.StoriesHandler 
 func handleFunc(storiesHandler *handler.StoriesHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/stories/create", storiesHandler.Create).Methods("POST")
-	router.HandleFunc("/stories/getByKey/{key}", storiesHandler.GetByKey).Methods("GET")
-	router.HandleFunc("/stories/get", storiesHandler.GetAca).Methods("POST")
-
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8083"), router))
+	router.HandleFunc("/story", storiesHandler.Create).Methods("POST")
+	router.HandleFunc("/upload", storiesHandler.UploadFile).Methods("POST")
+	router.HandleFunc("/story/feed/{id}", storiesHandler.GetFeed).Methods("GET")
+	router.HandleFunc("/story/my/{id}", storiesHandler.GetMyStories).Methods("GET")
+	router.Handle("/images/{rest}",
+		http.StripPrefix("/images/", http.FileServer(http.Dir("./user_stories/"))))
+	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
+	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([] string{"*"})
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8083"), handlers.CORS(headers, methods, origins)(router)))
 
 }
 

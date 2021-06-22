@@ -131,7 +131,19 @@
     display: block;
 }
 
-.cardbox .cardbox-item img {}
+.cardbox .cardbox-item img {
+    display: block;
+    width: auto;
+    height: 50%;
+    max-height: 360px;
+}
+
+.cardbox .cardbox-item video {
+    display: block;
+    width: auto;
+    height: 50%;
+    max-height: 360px;
+}
 
 .img-responsive {
     display: block;
