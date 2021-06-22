@@ -27,26 +27,33 @@
             </li>
             <li class="nav-item" *ngIf="this.authService.isLoggedIn">
                 <a class="nav-link" (click)="openModal(modAddPost)">
-                    <i class="fa fa-plus-square">
+                    <i class="fa fa-photo">
             <span class="badge badge-primary"></span>
           </i> Dodaj objavu
                 </a>
             </li>
+            <li class="nav-item" *ngIf="this.authService.isLoggedIn">
+                <a class="nav-link" (click)="openModal(modAddStory)">
+                    <i class="fa fa-plus-square">
+            <span class="badge badge-primary"></span>
+          </i> Dodaj pricu
+                </a>
+            </li>
             <li class="nav-item" *ngIf="this.authService.getRole() === 'ROLE_ADMIN'">
-              <a class="nav-link" href="/verificationRequests">
-              <i class="fa fa-address-card-o ">
+                <a class="nav-link" href="/verificationRequests">
+                    <i class="fa fa-address-card-o ">
                 <span class="badge badge-primary"></span>
               </i> Zahtjevi za verifikaciju
-            </a>
-          </li>
+                </a>
+            </li>
             <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
-                  <input class="form-control mr-sm-2"  style="width: 400px;" [(ngModel)]="searchParams"  [readonly] = "this.isInputDisalbed"  (focus) = "onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
+                    <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams" [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
             <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 200px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" style="width: 400px;"  [(ngModel)]="searchParams" [readonly] = "this.isInputDisalbed" (focus) = "onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
+                    <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams" [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
             <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px;">
@@ -65,10 +72,10 @@
         <ul class="navbar-nav ">
             <li class="nav-item" *ngIf="this.authService.getRole() === 'ROLE_ADMIN'">
                 <a class="nav-link" href="/reportedPosts">
-                <i class="fa fa-ban ">
+                    <i class="fa fa-ban ">
                   <span class="badge badge-primary"></span>
                 </i>Neprikladan sadržaj
-              </a>
+                </a>
             </li>
             <li *ngIf="this.authService.isLoggedIn" class="nav-item">
                 <a class="nav-link" href="/liked">
@@ -89,7 +96,7 @@
           </i> Moj profil
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" style="cursor: pointer;" (click) = "myProfileClick()"> <i class="fa fa-user"></i> Profil</a>
+                    <a class="dropdown-item" style="cursor: pointer;" (click)="myProfileClick()"> <i class="fa fa-user"></i> Profil</a>
                     <a class="dropdown-item" href="/editProfile"> <i class="fa fa-cog"></i> Podešavanja</a>
                     <div class="dropdown-divider"> </div>
                     <a class="dropdown-item" href="/login" (click)="onLogout()"> <i class="fa fa-sign-out"></i> Odjava</a>
@@ -99,29 +106,64 @@
     </div>
 </nav>
 <div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px; margin-right: 575px;">
-  <div class="card mt-5 p-4">
-    <p *ngIf="usernamesToShow.length == 0 && isUsersSearchSelected">Nema rezultata</p>
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-        <button type="button" (click) = "setUsersSearchActive()" class="btn btn-outline-primary">Korisnici</button>
-        <button type="button" (click) = "setTagsSearchActive()" class="btn btn-outline-primary">Tagovi</button>
-        <button type="button" (click) = "setLocationsSearchActive()" class="btn btn-outline-primary">Lokacije</button>
-      </div>
-      <div *ngFor="let username of usernamesToShow" class="d-flex flex-row justify-content-between mb-3">
-          <div class="d-flex flex-column p-3">
-              <a (click) = "onLinkClick(username)" style="color: black; cursor: pointer; margin-top:10px" class="mb-1">{{username}}</a>
-          </div>
-          <div class="price pt-3 pl-3"> 
-              <img *ngIf="isUsersSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/aca.png">
-              <img *ngIf="isTagsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/hashtag.png">
-              <img *ngIf="isLocationsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/location.jpg">
+    <div class="card mt-5 p-4">
+        <p *ngIf="usernamesToShow.length == 0 && isUsersSearchSelected">Nema rezultata</p>
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            <button type="button" (click)="setUsersSearchActive()" class="btn btn-outline-primary">Korisnici</button>
+            <button type="button" (click)="setTagsSearchActive()" class="btn btn-outline-primary">Tagovi</button>
+            <button type="button" (click)="setLocationsSearchActive()" class="btn btn-outline-primary">Lokacije</button>
+        </div>
+        <div *ngFor="let username of usernamesToShow" class="d-flex flex-row justify-content-between mb-3">
+            <div class="d-flex flex-column p-3">
+                <a (click)="onLinkClick(username)" style="color: black; cursor: pointer; margin-top:10px" class="mb-1">{{username}}</a>
+            </div>
+            <div class="price pt-3 pl-3">
+                <img *ngIf="isUsersSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/aca.png">
+                <img *ngIf="isTagsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/hashtag.png">
+                <img *ngIf="isLocationsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/location.jpg">
             </div>
         </div>
-   </div>
+    </div>
 </div>
 
 <ng-template #modAddPost let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Podelite objavu</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body overflow-auto">
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="hashtag" class="font-weight-light text-muted">Hashtag:</label>
+            <input type="text" id="hashtag" class="form-control border-0" name="hashtag" [(ngModel)]="hashtag" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="location" class="font-weight-light text-muted">Lokacija:</label>
+            <input type="text" id="location" class="form-control border-0" name="location" [(ngModel)]="location" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="description" class="font-weight-light text-muted">Opis:</label>
+            <input type="text" id="description" class="form-control border-0" name="description" [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <input id="upload" class="form-control border-0" type="file" name="files" multiple (change)="onChange($event)">
+            <div class="input-group-append">
+                <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
+            class="fa fa-cloud-upload mr-2 text-muted"></i><small
+            class="text-uppercase font-weight-bold text-muted">Odaberite fajl</small></label>
+            </div>
+        </div>
+        <div *ngFor="let f of files">{{f.name}}</div>
+        <div class="float-right">
+            <button class="btn btn-outline-dark" (click)="uploadPost()">Objavi</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #modAddStory let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Podelite pricu</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('close')">
       <span aria-hidden="true">&times;</span>
     </button>
