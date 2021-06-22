@@ -51,14 +51,13 @@
                         </ul>
                         <ul>
                             <li>
-                                <a (click)="likeClick(post)"><i class="fa fa-thumbs-up"></i></a>
+                                <a><i class="fa fa-thumbs-up"></i><span style="margin-left: -10px;">{{post.likes.length}}</span></a>
                             </li>
-                            <li>
-                                <a (click)="dislikeClick(post)"><i class="fa fa-thumbs-down"></i></a>
-                            </li>
-                            <li>
-                                <a><span>{{post.likes.length - post.dislikes.length}}</span></a>
-                            </li>
+                        </ul>
+                        <ul>
+                        <li>
+                            <a><i class="fa fa-thumbs-down"></i><span style="margin-left: -10px;">{{post.dislikes.length}}</span></a>
+                        </li>
                         </ul>
                     </div>
                     <!--/ cardbox-base -->
