@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis"
+	"github.com/google/uuid"
 	"post_service/model"
 	"post_service/model/dto"
 )
@@ -300,4 +301,27 @@ func(repo *PostsRepository) AddPostToFeed(keys []string, post *model.Post) error
 		}
 	}
 	return nil
+}
+
+func (repo *PostsRepository) LeaveComment(postId uuid.UUID, ownerId uuid.UUID, comment *model.Comment) error {
+	var posts []model.Post
+	result, _ :=  repo.Database.Get(ownerId.String()).Result()
+	bytes := []byte(result)
+	err := json.Unmarshal(bytes, &posts)
+	if err != nil {
+		return err
+	}
+
+	for i := range posts {
+		if posts[i].ID == postId {
+			posts[i].COMMENTS = append(posts[i].COMMENTS, *comment)
+			break
+		}
+	}
+	jsonPosts, _ := json.Marshal(posts)
+	newErr := repo.Database.Set(ownerId.String(), jsonPosts, 0).Err()
+	if newErr != nil {
+		return newErr
+	}
+	return err
 }

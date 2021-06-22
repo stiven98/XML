@@ -16,7 +16,8 @@
                             <div class="media-body">
                                 <p class="m-0"><a style="color: black; cursor: pointer;" href="/profile/{{post.userid}}">{{ userData.get(post.userid).system_user.firstName + ' ' + userData.get(post.userid).system_user.lastName }}</a></p>
                                 <small><span><i class="icon ion-md-pin"></i> {{ post.location }}</span></small>
-                                <small><span><i class="icon ion-md-time"></i> {{convertTimeToText(post.timestamp)}} </span></small>
+                                <small><span><i class="icon ion-md-time"></i> {{convertTimeToText(post.timestamp)}}
+                                    </span></small>
                             </div>
                         </div>
                         <!--/ media -->
@@ -38,6 +39,14 @@
                             {{post.description}}
                         </p>
                         <p>#{{post.hashtag}} </p>
+                    </div>
+                    <div class="comments-section">
+                        <div *ngFor='let comment of post.comments'>
+                            <a href="#" (click)="onUsernameClick($event, comment.userid)">{{getUsername(comment.userid)}}</a>
+                            <span><i class="icon ion-md-pin"></i> {{comment.value}} </span>
+                            <small><span><i class="icon ion-md-pin"></i> {{convertTimeToText(comment.timestamp)}} </span></small>
+
+                        </div>
                     </div>
                     <!--/ cardbox-item -->
                     <div class="cardbox-base">
@@ -64,12 +73,12 @@
                     <!--/ cardbox-base -->
                     <div class="cardbox-comments">
                         <span class="comment-avatar float-left">
-              <a href=""><img class="rounded-circle"
-                  src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/6.jpg" alt="..." /></a>
-            </span>
+                            <a href=""><img class="rounded-circle"
+                                    src="{{'http://localhost:8085/images/' + getCurrentUserImage()}}" alt="..." /></a>
+                        </span>
                         <div class="search">
-                            <input placeholder="Write a comment" type="text" />
-                            <!--<button><i class="fa fa-camera"></i></button> -->
+                            <input (input)="changeCommentText($event, post.id)" placeholder="Write a comment" type="text" />
+                            <button (click)="leaveComment(post)"><i class="fa fa-pencil"></i></button>
                         </div>
                         <!--/. Search -->
                     </div>

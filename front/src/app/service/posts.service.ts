@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { LikeReq, Post } from '../model/Post.model';
+import { CommentReq, LikeReq, Post } from '../model/Post.model';
 import { ReportReq } from '../model/ReportReq';
 import { DeletePost } from '../model/DeletePost';
 
@@ -69,6 +69,12 @@ export class PostsService {
       .post('http://localhost:8086/like-post', likeReq)
       .pipe((res) => res);
   };
+
+  leaveComment = (commentReq : CommentReq) => {
+    return this.http
+    .post('http://localhost:8086/comments', commentReq)
+    .pipe((res) => res);
+};
 
   dislikePost = (likeReq: LikeReq) => {
     return this.http

@@ -381,3 +381,27 @@ func (handler *PostsHandler) GetAllLocationsSignedIn(w http.ResponseWriter, r *h
 
 	renderJSON(w, &locations)
 }
+
+func (handler *PostsHandler) LeaveComment(writer http.ResponseWriter, request *http.Request) {
+	var commentDto dto.CommentDto
+	err := json.NewDecoder(request.Body).Decode(&commentDto)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	comment := new(model.Comment)
+	comment.USERID = commentDto.USERID
+	comment.ID = uuid.New()
+	comment.TIMESTAMP = time.Now()
+	comment.VALUE = commentDto.COMMENT
+	err = handler.Service.LeaveComment(commentDto.POSTID, commentDto.OWNERID, comment)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	writer.WriteHeader(http.StatusCreated)
+	writer.Header().Set("Content-Type", "application/json")
+	return
+}
