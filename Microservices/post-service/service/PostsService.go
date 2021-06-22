@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/google/uuid"
 	"post_service/model"
 	"post_service/model/dto"
 	"post_service/repository"
@@ -54,4 +55,8 @@ func (service *PostsService) ReportPost(reportReq dto.ReportDto) error {
 
 func (service *PostsService) AddPostToFeed(keys []string, post *model.Post) error {
 	return service.PostsRepo.AddPostToFeed(keys, post)
+}
+
+func (service *PostsService) LeaveComment(postId uuid.UUID, ownerId uuid.UUID, comment *model.Comment) error {
+	return service.PostsRepo.LeaveComment(postId, ownerId, comment)
 }

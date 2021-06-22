@@ -234,6 +234,11 @@
     overflow: auto;
 }
 
+.comments-section {
+    max-height: 150px;
+    overflow: auto;
+}
+
 .search {
     position: relative;
     right: -60px;
