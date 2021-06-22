@@ -40,6 +40,14 @@
                         </p>
                         <p>#{{post.hashtag}} </p>
                     </div>
+                    <div class="comments-section">
+                        <div *ngFor='let comment of post.comments'>
+                            <a href="#" (click)="onUsernameClick($event, comment.userid)">{{getUsername(comment.userid)}}</a>
+                            <span><i class="icon ion-md-pin"></i> {{comment.value}} </span>
+                            <small><span><i class="icon ion-md-pin"></i> {{convertTimeToText(comment.timestamp)}} </span></small>
+
+                        </div>
+                    </div>
                     <!--/ cardbox-item -->
                     <div class="cardbox-base">
                         <ul class="float-right">

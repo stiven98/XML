@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Post } from 'src/app/model/Post.model';
+import { Router } from '@angular/router';
 import { ReportReq } from 'src/app/model/ReportReq';
 import { AuthService } from 'src/app/service/authorization/auth.service';
 import { PostsService } from 'src/app/service/posts.service';
@@ -23,11 +23,12 @@ export class PostsComponent implements OnInit {
   public reportReq: ReportReq = new ReportReq();
   public showPublic: boolean = false;
   public currentUser: any;
-  public commentText : string = '';
+  public commentText: string = '';
 
   constructor(public postsService: PostsService,
     public userService: UserService,
-    public authService: AuthService) {
+    public authService: AuthService,
+    public router: Router) {
     if (!this.authService.isLoggedIn) {
       this.showPublic = true;
     }
@@ -95,7 +96,7 @@ export class PostsComponent implements OnInit {
     let id = localStorage.getItem('id');
     this.postsService.getPublicPosts().subscribe((res) => {
       this.publicPosts = res as any[];
-      if(this.publicPosts){
+      if (this.publicPosts) {
         for (let p of this.publicPosts) {
           if (!this.userData.get(p.userid)) {
             this.userService.getUsersById(p.userid).subscribe(res => {
@@ -104,11 +105,11 @@ export class PostsComponent implements OnInit {
           }
         }
       }
-      
+
       if (id) {
         this.postsService.getFeed(id).subscribe(res => {
           this.posts = res as any[];
-          if(this.posts){
+          if (this.posts) {
             for (let p of this.posts) {
               if (!this.userData.get(p.userid)) {
                 this.userService.getUsersById(p.userid).subscribe(res => {
@@ -150,6 +151,21 @@ export class PostsComponent implements OnInit {
     if (this.locationForSearch.trim().length > 0) {
       this.postsToShow = this.postsToShow.filter(p => (p.location === this.locationForSearch));
     }
+    this.fetchCommentData();
+  }
+
+  fetchCommentData = () => {
+    if (this.postsToShow) {
+      for (let p of this.postsToShow) {
+        for (let c of p.comments) {
+          if (!this.userData.get(c.userid)) {
+            this.userService.getUsersById(c.userid).subscribe(res => {
+              this.userData.set(c.userid, res);
+            });
+          }
+        }
+      }
+    }
   }
 
   joinArraysWithNoCopies = (array1: any[], array2: any[]): any[] => {
@@ -170,34 +186,54 @@ export class PostsComponent implements OnInit {
     return retVal;
   }
 
-  getCurrentUserImage = () : string => {
-      return this.currentUser.system_user.picturePath;
+  getCurrentUserImage = (): string => {
+    return this.currentUser.system_user.picturePath;
   }
 
-  leaveComment = (post : any) => {
+  getUserImage = (comment: any): string => {
+    var user = this.userData.get(comment.userid);
+    return user.system_user.picturePath;
+  }
+
+  getUsername = (id: string): string => {
+    var user = this.userData.get(id);
+    if (user)
+      return user.system_user.username;
+    else
+      return '';
+  }
+
+  leaveComment = (post: any) => {
     let id = localStorage.getItem('id');
-    if(id){
+    if (id) {
       var commentValue = this.commentData.get(post.id) as string;
-      this.postsService.leaveComment({ownerid : post.userid, postid : post.id, userid : id, comment : commentValue}).subscribe(res => {
+      this.postsService.leaveComment({ ownerid: post.userid, postid: post.id, userid: id, comment: commentValue }).subscribe(res => {
         this.initData();
       });
-    }else{
+    } else {
       alert('Morate biti ulogovani da bi komentarisali objavu')
     }
   }
 
-  changeCommentText = (event : Event, id : string) => {
+  changeCommentText = (event: Event, id: string) => {
     const e = event.target as HTMLInputElement;
     let value = e.value;
     this.commentData.set(id, value);
+  }
+
+  onUsernameClick = (event: Event, id: string) => {
+    event.preventDefault();
+    var user = this.userData.get(id);
+    if (user)
+      this.router.navigate(['/profile', id]);
   }
 
 
   isImage = (name: string): boolean => {
     let imgFormats = ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'];
     let flag = false;
-    for(let i = 0; i < imgFormats.length; i++){
-      if(name.includes(imgFormats[i])){
+    for (let i = 0; i < imgFormats.length; i++) {
+      if (name.includes(imgFormats[i])) {
         flag = true;
         break;
       }
