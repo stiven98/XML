@@ -4,15 +4,16 @@ import { User } from '../model/User.model';
 import { map } from 'rxjs/operators';
 import { UserEdit } from '../model/EditUser';
 import { BlockUserDTO } from '../model/BlockUser';
+import { ConfigService } from './authorization/config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private config:ConfigService) {}
 
   registrationUser = (user: User) => {
-    return this.http.post('http://localhost:8085/users/create', {
+    return this.http.post(this.config.create_users, {
       system_user: {
         ...user,
         DateOfBirth: user.DateOfBirth + 'T01:00:00+01:00',
@@ -22,7 +23,7 @@ export class UserService {
   };
 
   getAllUsernames = () => {
-    return this.http.get('http://localhost:8085/sysusers/getAllUsernames').pipe(
+    return this.http.get(this.config.get_all_sys_usersName).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -30,7 +31,7 @@ export class UserService {
   };
 
   getUserById = (id: string) => {
-    return this.http.get('http://localhost:8085/users/getById/' + id).pipe(
+    return this.http.get(this.config.get_user_by_id + id).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -38,7 +39,7 @@ export class UserService {
   };
 
   getUserId = (username: string) => {
-    return this.http.get('http://localhost:8085/sysusers/getUserId/' + username).pipe(
+    return this.http.get(this.config.get_sys_user_by_id + username).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -46,26 +47,26 @@ export class UserService {
   };
 
   editUser = (editUser: UserEdit) => {
-    return this.http.put('http://localhost:8085/users/update', editUser).pipe(map((res)=> {return res;}));
+    return this.http.put(this.config.update_user, editUser).pipe(map((res)=> {return res;}));
 
   }
 
   getUsersById = (id: any) => {
-    return this.http.get('http://localhost:8085/users/getById/' + id).pipe(
+    return this.http.get(this.config.get_user_by_id + id).pipe(
       map((responseData) => {
         return responseData;
       })
     );
   }
   getPublicTags = () => {
-    return this.http.get(' http://localhost:8086/posts/public-tags').pipe(
+    return this.http.get(this.config.get_post_public_tag).pipe(
       map((responseData) => {
         return responseData;
       })
     );
   };
   getPublicLocations = () => {
-    return this.http.get('http://localhost:8086/posts/public-locations').pipe(
+    return this.http.get(this.config.get_post_public_location).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -73,14 +74,14 @@ export class UserService {
   };
 
   getSingedInTags = (id:string) => {
-    return this.http.get('http://localhost:8086/posts/signed-in-tags/' +  id).pipe(
+    return this.http.get(this.config.get_post_signed_in_tags +  id).pipe(
       map((responseData) => {
         return responseData;
       })
     );
   }
   getSingedInLocations = (id: string) => {
-    return this.http.get('http://localhost:8086/posts/signed-in-locations/' + id).pipe(
+    return this.http.get(this.config.get_post_signed_in_location + id).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -88,19 +89,19 @@ export class UserService {
   }
 
   uploadProfilePicture = (formData: FormData) => {
-    return this.http.post('http://localhost:8085/upload', formData).pipe(map(item => {
+    return this.http.post(this.config.upload_user_photo, formData).pipe(map(item => {
         return item;
     }));
   }
 
   verify = (id: string) => {
-    return this.http.put('http://localhost:8085/users/updateVerification/' + id, null)
+    return this.http.put(this.config.update_user_verification + id, null)
       .pipe(map((res) => {
         return res;
       }));
   }
   blockUser = (blockUserDto: BlockUserDTO) => {
-    return this.http.post('http://localhost:8080/api/blockUser', blockUserDto).pipe(map(item => {
+    return this.http.post(this.config.auth_block_user, blockUserDto).pipe(map(item => {
         return item;
     }));
   }

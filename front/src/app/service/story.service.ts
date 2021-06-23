@@ -1,17 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { config } from 'node:process';
 import { map } from 'rxjs/operators';
 import { Post } from '../model/Post.model';
+import { ConfigService } from './authorization/config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoryService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private config:ConfigService) { }
 
   uploadStory = (formData: FormData) => {
-    return this.http.post('http://localhost:8083/upload', formData).pipe(
+    return this.http.post(this.config.upload_story_picture, formData).pipe(
       map((item) => {
         return item;
       })
@@ -20,12 +22,12 @@ export class StoryService {
 
   createStory = (post: Post) => {
     return this.http
-      .post('http://localhost:8083/story', post)
+      .post(this.config.create_story, post)
       .pipe((res) => res);
   };
 
   getFeed = (id: string) => {
-    return this.http.get('http://localhost:8083/story/feed/' + id).pipe(
+    return this.http.get(this.config.get_story_feed + id).pipe(
       map((item) => {
         return item;
       })

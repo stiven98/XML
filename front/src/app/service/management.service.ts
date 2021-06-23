@@ -1,17 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-
+import { ConfigService } from './authorization/config.service';
 @Injectable({
   providedIn: 'root'
 })
 export class ManagementService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private config:ConfigService) {
    }
 
    isBlocked = (blockedById: any, blockedId: any) => {
-    return this.http.get('http://localhost:8087/users/isBlocked/' + blockedById + "/" + blockedId).pipe(
+    return this.http.get(this.config.is_blocked + blockedById + "/" + blockedId).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -19,7 +19,7 @@ export class ManagementService {
   };
 
   isMuted = (mutedById: any, mutedId: any) => {
-    return this.http.get('http://localhost:8087/users/isMuted/' + mutedById + "/" + mutedId).pipe(
+    return this.http.get(this.config.is_muted + mutedById + "/" + mutedId).pipe(
       map((responseData) => {
         return responseData;
       })
@@ -27,7 +27,7 @@ export class ManagementService {
   };
 
   blockUser  = (blockedById: any, blockedId: any) =>{
-    return this.http.post('http://localhost:8087/users/block/' + blockedById + "/" + blockedId,"").pipe(
+    return this.http.post(this.config.block + blockedById + "/" + blockedId,"").pipe(
       map((responseData) => {
         return responseData;
       })
@@ -35,7 +35,7 @@ export class ManagementService {
   }
 
   muteUser  = (mutedById: any, mutedId: any) =>{
-    return this.http.post('http://localhost:8087/users/mute/' + mutedById + "/" + mutedId,"").pipe(
+    return this.http.post(this.config.mute + mutedById + "/" + mutedId,"").pipe(
       map((responseData) => {
         return responseData;
       })
@@ -43,7 +43,7 @@ export class ManagementService {
   }
 
   unMuteUser  = (mutedById: any, mutedId: any) =>{
-    return this.http.post('http://localhost:8087/users/unmute/' + mutedById + "/" + mutedId,"").pipe(
+    return this.http.post(this.config.unmute + mutedById + "/" + mutedId,"").pipe(
       map((responseData) => {
         return responseData;
       })
@@ -52,7 +52,7 @@ export class ManagementService {
 
 
   unBlockUser  = (blockedById: any, blockedId: any) =>{
-    return this.http.post('http://localhost:8087/users/unblock/' + blockedById + "/" + blockedId,"").pipe(
+    return this.http.post(this.config.unblock + blockedById + "/" + blockedId,"").pipe(
       map((responseData) => {
         return responseData;
       })
