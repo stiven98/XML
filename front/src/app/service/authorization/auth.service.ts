@@ -28,7 +28,7 @@ export class AuthService {
 
   signIn(user: AccountInfoModel) {
     return this.apiService
-      .post('http://localhost:8080/auth', user)
+      .post(this.config.login_url, user)
       .subscribe((res: any) => {
         localStorage.setItem('access_token', res.token);
         let authority = res.role;

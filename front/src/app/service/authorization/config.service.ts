@@ -7,7 +7,7 @@ import { environment } from '../authorization/enviroment';
 export class ConfigService {
 
   private _api_url = environment.apiUrl + '/api';
-  private _auth_url = environment.apiUrl +'/auth';
+  private _auth_url = environment.apiUrl_auth_service +'/auth';
   private _refresh_token_url = this._api_url + '/refresh';
 
 
@@ -27,7 +27,7 @@ export class ConfigService {
     return this._refresh_token_url;
   }
 
-  private _login_url = this._auth_url + '/login';
+  private _login_url = this._auth_url ;
 
   get login_url(): string {
     return this._login_url;
@@ -122,6 +122,71 @@ export class ConfigService {
     return this._get_post_signed_in_location
   }
 
+  private _upload_post_img = environment.apiUrl_post_service + '/upload'
+  get upload_post_img ():string{
+    return this._upload_post_img;
+  }
+
+  private _create_post = this._post_url + '/create'
+  get create_post ():string{
+    return this._create_post
+  }
+
+  private _get_post_feed = this._post_url + '/feed/'
+  get get_post_feed ():string{
+    return this._get_post_feed
+  }
+
+  private _get_post_public = this._post_url + '/public'
+  get get_post_public ():string{
+    return this._get_post_public
+  }
+
+  private _get_post_liked = this._post_url + '/liked/'
+  get get_post_liked ():string{
+    return this._get_post_liked
+  }
+
+  private _get_post_disliked = this._post_url + '/disliked/'
+  get get_post_disliked ():string{
+    return this._get_post_disliked
+  }
+
+  private _get_post_reported = this._post_url + '/reported/'
+  get get_post_reported ():string{
+    return this._get_post_reported
+  }
+
+  private _like_post = environment.apiUrl_post_service + '/like-post'
+  get like_post ():string{
+    return this._like_post
+  }
+
+  private _comment_post = environment.apiUrl_post_service + '/comments'
+  get comment_post ():string{
+    return this._comment_post
+  }
+
+    
+  private _dislike_post = environment.apiUrl_post_service + '/dislike-post'
+  get dislike_post ():string{
+    return this._dislike_post
+  }
+
+
+  private _report_post = environment.apiUrl_post_service + '/report-post'
+  get report_post ():string{
+    return this._report_post
+  }
+
+  private _delete_post = this._post_url+ '/delete'
+  get delete_post ():string{
+    return this._delete_post
+  }
+  
+  
+  
+  
 
   //post end
 
