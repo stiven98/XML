@@ -21,13 +21,33 @@ func (service AgentsService) Update(agent *model.Agent) error {
 	}
 	return nil
 }
+func (service AgentsService) UpdateRequest(request *model.AgentRegistrationRequest) error {
+	err := service.AgentsRepo.UpdateRequest(request)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (service AgentsService) DeclineRegistrationRequest(request *model.AgentRegistrationRequest) error {
+	err := service.AgentsRepo.DeclineRegistrationRequest(request)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (service *AgentsService) Create(agent *model.Agent) error {
 	service.AgentsRepo.Create(agent)
 	return nil
 }
+func (service *AgentsService) CreateRegistrationRequest(request *model.AgentRegistrationRequest) error {
+	return service.AgentsRepo.CreateRegistrationRequest(request)
 
+}
 func (service *AgentsService) GetAll() []model.Agent {
 	return  service.AgentsRepo.GetAll()
+}
+func (service *AgentsService) GetAllRequests() []model.AgentRegistrationRequest {
+	return  service.AgentsRepo.GetAllRequests()
 }
 
 

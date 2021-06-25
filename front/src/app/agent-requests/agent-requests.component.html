@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <h2 class="text-dark font-weight-bold mt-3">
+            Zahtevi za registraciju agenata:
+        </h2>
+    </div>
+
+    <div *ngFor="let request of agentRegistrationRequests">
+        <div class="row border border-dark rounded" *ngIf="request.isApproved == false">
+            <div class="col-5">
+                <img style="width: 250px; height: 300px" src="../../assets/images/agent.png" class="img-fluid"
+                    alt="Card" />
+            </div>
+
+            <div class="col-6 mt-3 mb-3">
+                <!-- dodati profilnu sliku -->
+                <div>
+                    <div class="d-flex justify-content-center">
+                        <h4>
+                            Ime i prezime: {{ request.firstName + " " + request.lastName }}
+                        </h4>
+                    </div>
+                    <div class="d-flex justify-content-center mb-3">
+                        <h3>Email: {{ request.email }}</h3>
+                    </div>
+                    <div class="d-flex justify-content-center mb-3">
+                        <h3>Korisničko ime: {{ request.username }}</h3>
+                    </div>
+                    <div class="d-flex justify-content-center mb-3">
+                        <h3>Web sajt: {{ request.websiteLink }}</h3>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center">
+                    <button class="btn btn-success mr-3 w-25" (click)="accept(request)">
+                        Prihvati
+                    </button>
+                    <button class="btn btn-danger ml-3 w-25" (click)="decline(request)">
+                        Odbij
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
