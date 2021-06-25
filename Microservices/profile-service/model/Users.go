@@ -54,6 +54,7 @@ type Administrator struct {
 type Agent struct {
 	UserID   uuid.UUID `json:"id"`
 	SystemUser SystemUser `json:"system_user" gorm:"foreignKey:UserID"`
+	WebsiteLink string `json:"websiteLink" gorm:"not null"`
 }
 
 
