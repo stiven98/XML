@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { config } from 'node:process';
 import { map } from 'rxjs/operators';
 import { Post } from '../model/Post.model';
 import { ConfigService } from './authorization/config.service';

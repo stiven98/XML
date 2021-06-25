@@ -10,6 +10,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o post-service .
 ######## Start a new stage from scratch #######
 FROM alpine:latest  
 WORKDIR /root/
+RUN mkdir user_posts
 COPY --from=builder /app/post-service .
 #COPY --from=builder /app/wait_for_postgres.sh
 # Command to run the executable

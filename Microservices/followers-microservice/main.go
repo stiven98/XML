@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"os"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 	"log"
@@ -17,7 +18,12 @@ import (
 )
 
 func initDB() *neo4j.Driver {
-	dbUri := "neo4j://localhost:7687"
+	hostName := os.Getenv("HOST_NAME")
+	host := "localhost"
+	if len(hostName) != 0 {
+		host = hostName
+	}
+	dbUri := "neo4j://"+ host +":7687"
 	var driver neo4j.Driver
 	for 1 == 1 {
 		d, err := neo4j.NewDriver(dbUri, neo4j.BasicAuth("neo4j", "root", ""))
