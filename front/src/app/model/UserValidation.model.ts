@@ -79,7 +79,7 @@ export class UserValidationModel {
   }
 
   validatePassword = (Password: string) => {
-    const regex = /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{6,}/g;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g;
     const isPasswordValidFlag = regex.test(Password);
     if (isPasswordValidFlag) {
       this.validPassword = 'is-valid';

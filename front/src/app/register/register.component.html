@@ -82,7 +82,7 @@
                     <div class="input-group col-lg-12 mb-4">
                         <input id="password" type="password" name="password" placeholder="Lozinka" class="form-control bg-white  border-md" [ngClass]="validation.validPassword"  [(ngModel)]="user.Password" (keydown)="onKeyDown()">
                         <div class="invalid-feedback">
-                          Unesite lozinku sa velikim slovom i specijalnim karatretima!
+                          Unesite lozinku sa velikim slovom, malim slovom, brojem, specijalnim karakterima, lozinka mora imati barem 8 karaktera!
                         </div>
                     </div>
 
@@ -93,16 +93,36 @@
                          Lozinke se ne poklapaju
                         </div>
                     </div>
+                      <!-- Password Confirmation -->
+                      <div *ngIf="this.isAgentRegistration" class="input-group col-lg-12 mb-4">
+                        <input id="websiteLink" type="text" name="websiteLink" placeholder="Unesite link do websajta" class="form-control bg-white border-md"  [(ngModel)]="agentReq.WebsiteLink" (keydown)="onKeyDown()">
+                       
+                    </div>
 
                     <!-- Submit Button -->
-                    <div class="form-group col-lg-12 mx-auto mb-0">
+                    <div *ngIf="this.authService.getRole() !== 'ROLE_ADMIN' && !isAgentRegistration"  class="form-group col-lg-12 mx-auto mb-0">
                         <button class="btn btn-primary btn-block py-2" (click)="createAccount()">
                             <span class="font-weight-bold">Kreiraj profil</span>
                         </button>
                     </div>
+                    <div *ngIf="this.authService.getRole() !== 'ROLE_ADMIN' && isAgentRegistration"  class="form-group col-lg-12 mx-auto mb-0">
+                        <button class="btn btn-primary btn-block py-2" (click)="createAccount()">
+                            <span class="font-weight-bold">Kreiraj zahtev za registraciju agenta</span>
+                        </button>
+                    </div>
+                    <div  *ngIf="this.authService.getRole() === 'ROLE_ADMIN'" class="form-group col-lg-12 mx-auto mb-0">
+                        <button class="btn btn-primary btn-block py-2" (click)="createAccount()">
+                            <span class="font-weight-bold">Registrujte novog agenta</span>
+                        </button>
+                    </div>
+                    <div *ngIf="this.authService.getRole() !== 'ROLE_ADMIN' && !isAgentRegistration" style="margin-top: 10px;" class="form-group col-lg-12 mx-auto mb-0">
+                        <button class="btn btn-primary btn-block py-2" (click)="registerAsAgent()">
+                            <span class="font-weight-bold">Registrujte se kao agent</span>
+                        </button>
+                    </div>
 
                     <!-- Divider Text -->
-                    <div class="form-group col-lg-12 mx-auto d-flex align-items-center my-4">
+                    <div  *ngIf="this.authService.getRole() !== 'ROLE_ADMIN'" class="form-group col-lg-12 mx-auto d-flex align-items-center my-4">
                         <div class="border-bottom w-100 ml-5"></div>
                         <span class="px-2 small text-muted font-weight-bold text-muted">OR</span>
                         <div class="border-bottom w-100 mr-5"></div>
@@ -110,7 +130,7 @@
 
 
                     <!-- Already Registered -->
-                    <div class="text-center w-100">
+                    <div *ngIf="this.authService.getRole() !== 'ROLE_ADMIN'" class="text-center w-100">
                         <p class="text-muted font-weight-bold">Već ste registrovani? <a href="/login" class="text-primary ml-2">Prijavite se</a></p>
                     </div>
 

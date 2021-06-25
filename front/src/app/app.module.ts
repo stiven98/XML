@@ -19,6 +19,7 @@ import { PostsComponent } from './home-page/posts/posts.component';
 import { TokenInterceptor } from './interceptor/TokenInterceptor';
 import { LikedDislikedPostsComponent } from './home-page/liked-disliked-posts/liked-disliked-posts.component';
 import { ReportedPostsComponent } from './reported-posts/reported-posts.component';
+import { AgentRequestsComponent } from './agent-requests/agent-requests.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -31,6 +32,7 @@ const appRoutes: Routes = [
   {path: 'disliked', component: LikedDislikedPostsComponent},
   {path: 'homePage', component: HomePageComponent },
   {path: 'verificationRequests', component: VerificationRequestsComponent},
+  {path: 'agentRequests', component: AgentRequestsComponent},
   {path: 'homePage/tag/:tag', component: HomePageComponent },
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
@@ -51,7 +53,8 @@ const appRoutes: Routes = [
     VerificationRequestsComponent,
     PostsComponent,
     LikedDislikedPostsComponent,
-    ReportedPostsComponent
+    ReportedPostsComponent,
+    AgentRequestsComponent
   ],
   imports: [
     BrowserModule,
