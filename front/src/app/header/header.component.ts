@@ -6,6 +6,7 @@ import { PostsService } from '../service/posts.service';
 import { AuthService } from '../service/authorization/auth.service';
 import { UserService } from '../service/user.service';
 import { StoryService } from '../service/story.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -17,7 +18,6 @@ export class HeaderComponent implements OnInit {
   public hashtag: string = '';
   public location: string = '';
   public description: string = '';
-  
   searchParams: any;
   userId: any;
   usernames: string[] = [];

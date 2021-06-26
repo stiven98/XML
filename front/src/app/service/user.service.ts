@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../model/User.model';
+import { AgetnRegistrationRequest, User } from '../model/User.model';
 import { map } from 'rxjs/operators';
 import { UserEdit } from '../model/EditUser';
 import { BlockUserDTO } from '../model/BlockUser';
@@ -21,6 +21,21 @@ export class UserService {
       PhoneNumber: user.PhoneNumber,
     });
   };
+  registerAgent = (agentRegistrationRequest: AgetnRegistrationRequest) => {
+    agentRegistrationRequest.DateOfBirth += 'T01:00:00+01:00';
+    return this.http.post('http://localhost:8085/agents/createRequest', agentRegistrationRequest);
+  };
+  createAgent = (agentRegistrationRequest: AgetnRegistrationRequest) => {
+    return this.http.post('http://localhost:8085/agents/create', agentRegistrationRequest);
+  };
+  createAgentByAdmin = (agentRegistrationRequest: AgetnRegistrationRequest) => {
+    agentRegistrationRequest.DateOfBirth += 'T01:00:00+01:00';
+    return this.http.post('http://localhost:8085/agents/create', agentRegistrationRequest);
+  };
+  declineAgent = (agentRegistrationRequest: AgetnRegistrationRequest) => {
+    return this.http.post('http://localhost:8085/agents/declineRequest', agentRegistrationRequest);
+  };
+
 
   getAllUsernames = () => {
     return this.http.get(this.config.get_all_sys_usersName).pipe(
@@ -37,6 +52,13 @@ export class UserService {
       })
     );
   };
+  getAllAgentRequests = () => {
+    return this.http.get('http://localhost:8085/agents/getAllRequests').pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
 
   getUserId = (username: string) => {
     return this.http.get(this.config.get_sys_user_by_id + username).pipe(
