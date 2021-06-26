@@ -12,17 +12,13 @@
 
       <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn"
         href="/editProfile">Izmenite profil</a>
-      <a class="btn profile-edit-btn" *ngIf="isMyProfile && !isBlockedUsesr" (click)="block()">block</a>
-      <a class="btn profile-edit-btn" *ngIf="isMyProfile && !isMuted && !isBlockedUsesr" (click)="mute()">mute</a>
-      <a class="btn profile-edit-btn" *ngIf="isMyProfile && isBlockedUsesr" (click)="unBlock()">unBlock</a>
-      <a class="btn profile-edit-btn" *ngIf="isMyProfile && isMuted && !isBlockedUsesr" (click)="unMute()">unMute</a>
 
       <button *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn"
         aria-label="profile settings">
         <i class="fa fa-cog" aria-hidden="true"></i>
       </button>
       <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'"
-        class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
+         class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
       <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'"
         class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
       <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'"
@@ -30,6 +26,10 @@
     </div>
 
     <div class="profile-stats" style="margin-left: -40px;">
+      <a class="btn profile-edit-btn" *ngIf="!isMyProfile && !isBlockedUsesr" (click)="block()">block</a>
+      <a class="btn profile-edit-btn" *ngIf="!isMyProfile && !isMuted && !isBlockedUsesr" (click)="mute()">mute</a>
+      <a class="btn profile-edit-btn" *ngIf="!isMyProfile && isBlockedUsesr" (click)="unBlock()">unBlock</a>
+      <a class="btn profile-edit-btn" *ngIf="!isMyProfile && isMuted && !isBlockedUsesr" (click)="unMute()">unMute</a>
       <ul>
         <li><span class="profile-stat-count"></span> objave</li>
         <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span
@@ -73,7 +73,8 @@
   <!-- End of profile section -->
 </div>
 <!-- End of container -->
-<main *ngIf="!user.isPublic">
+
+<main *ngIf="!isMyProfile">
   <div class="container d-flex justify-content-center">
     <h1 class="text-dark">Profil je privatan!</h1>
   </div>
@@ -81,7 +82,7 @@
 
 
 
-<main *ngIf="user.isPublic">
+<main *ngIf="isMyProfile">
   <div class="container">
     <div class="gallery">
       <div class="gallery-item" tabindex="0">

@@ -18,6 +18,6 @@ type AgentRegistrationRequest struct {
 	TypeOfUser TypeOfUser `json:"type_of_user" gorm:"not null"`
 	DateOfBirth time.Time  `json:"dateOfBirth" gorm:"not null"`
 	PicturePath string  `json:"picturePath" gorm:"not null"`
-	WebsiteLink string `json:"websiteLink" gorm:"not null"`
+	WebSite string `json:"webSite" gorm:"not null"`
 	IsApproved bool `json:"isApproved" gorm:"not null"`
 }

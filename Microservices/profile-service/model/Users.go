@@ -54,7 +54,18 @@ type Administrator struct {
 type Agent struct {
 	UserID   uuid.UUID `json:"id"`
 	SystemUser SystemUser `json:"system_user" gorm:"foreignKey:UserID"`
-	WebsiteLink string `json:"websiteLink" gorm:"not null"`
+	IsPublic bool `json:"isPublic" gorm:"not null"`
+	PhoneNumber string `json:"phoneNumber" gorm:"not null"`
+	WebSite string `json:"webSite" gorm:"not null"`
+	Biography string `json:"biography"`
+	AllowedTags bool `json:"allowedTags"`
+	IsBlocked bool `json:"isBlocked"`
+	IsVerified bool `json:"isVerified"`
+	AcceptMessagesFromNotFollowProfile bool `json:"acceptMessagesFromNotFollowProfiles"`
+	NotifyPosts bool `json:"notifyPosts"`
+	NotifyMessages bool `json:"notifyMessages"`
+	NotifyStory bool `json:"notifyStory" `
+	NotifyComments bool `json:"notifyComments"`
 }
 
 

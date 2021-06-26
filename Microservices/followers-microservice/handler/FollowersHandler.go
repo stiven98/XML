@@ -21,12 +21,12 @@ func (h FollowersHandler) GetFollowers(writer http.ResponseWriter, request *http
 	// Check User exist in Profile service and return bad request if don't
 	fmt.Println(ID)
 
-	retVal := h.FollowersService.UserExists(ID)
+	//retVal := h.FollowersService.UserExists(ID)
 
-	if retVal == nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	//if retVal == nil {
+	//	writer.WriteHeader(http.StatusBadRequest)
+	//	return
+	//}
 
 	keys := h.FollowersService.GetFollowers(ID)
 
@@ -56,12 +56,12 @@ func (h FollowersHandler) GetFollowing(writer http.ResponseWriter, request *http
 	// Check User exist in Profile service and return bad request if don't
 	fmt.Println(ID)
 
-	retVal := h.FollowersService.UserExists(ID)
-
-	if retVal == nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	//retVal := h.FollowersService.UserExists(ID)
+	//
+	//if retVal == nil {
+	//	writer.WriteHeader(http.StatusBadRequest)
+	//	return
+	//}
 
 	keys := h.FollowersService.GetFollowing(ID)
 

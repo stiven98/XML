@@ -20,8 +20,6 @@ import java.util.*;
 @Table(name = "AUTHENTICATION_DATA")
 public class AuthenticationData implements UserDetails {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", nullable = false, unique = true)
     private UUID id;
 

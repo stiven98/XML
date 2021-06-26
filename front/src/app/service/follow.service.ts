@@ -10,21 +10,13 @@ export class FollowService {
   constructor(private http: HttpClient) {
   }
 
-  getFollowers(id: string): Observable<string []> {
+  getFollowers(id: string) {
     return this.http
-      .get<string[]>('http://localhost:8088/users/getFollowers/' + id);
-      // .pipe(
-        // tap((responseData) => {
-        //   console.log('dole');
-        //   console.log(responseData);
-        //   console.log(responseData.valueOf().hasOwnProperty('keys'));
-        //
-        //   if (responseData.valueOf().hasOwnProperty(`keys`)) {
-        //     console.log(responseData.valueOf());
-        //   }
-        //   return [];
-
-       // }));
+      .get<string[]>('http://localhost:8088/users/getFollowers/' + id).pipe(
+        map((responseData) => {
+          // @ts-ignore
+          return responseData.keys;
+        }));
   }
 
   getFollowing = (id: string) => {
