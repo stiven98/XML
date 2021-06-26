@@ -26,10 +26,10 @@
     </div>
 
     <div class="profile-stats" style="margin-left: -40px;">
-      <a class="btn profile-edit-btn" *ngIf="isMyProfile && !isBlockedUsesr" (click)="block()">block</a>
-      <a class="btn profile-edit-btn" *ngIf="isMyProfile && !isMuted && !isBlockedUsesr" (click)="mute()">mute</a>
-      <a class="btn profile-edit-btn" *ngIf="isMyProfile && isBlockedUsesr" (click)="unBlock()">unBlock</a>
-      <a class="btn profile-edit-btn" *ngIf="isMyProfile && isMuted && !isBlockedUsesr" (click)="unMute()">unMute</a>
+      <a class="btn profile-edit-btn" *ngIf="!isMyProfile && !isBlockedUsesr" (click)="block()">block</a>
+      <a class="btn profile-edit-btn" *ngIf="!isMyProfile && !isMuted && !isBlockedUsesr" (click)="mute()">mute</a>
+      <a class="btn profile-edit-btn" *ngIf="!isMyProfile && isBlockedUsesr" (click)="unBlock()">unBlock</a>
+      <a class="btn profile-edit-btn" *ngIf="!isMyProfile && isMuted && !isBlockedUsesr" (click)="unMute()">unMute</a>
       <ul>
         <li><span class="profile-stat-count"></span> objave</li>
         <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span
