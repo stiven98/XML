@@ -17,8 +17,8 @@ export class ProfilePageComponent implements OnInit {
   status = 'NO_STATUS';
   myId: string | null;
 
-  followers: any | undefined;
-  following: any | undefined;
+  followers: any | [];
+  following: any | [];
   requests: any | undefined;
   user: RegularUser = new RegularUser();
   isMyProfile:boolean = false;
@@ -67,6 +67,14 @@ export class ProfilePageComponent implements OnInit {
 
     this.managementService.isBlocked(this.myId,this.id).subscribe((res:any)=> this.isBlockedUsesr = res)
     this.managementService.isMuted(this.myId,this.id).subscribe((res:any)=> this.isMuted = res)
+    console.log('ACAPEDER')
+    console.log(this.followers)
+    if(this.followers == undefined) {
+      this.followers = []
+    }
+    if(this.following == undefined) {
+      this.following = []
+    }
   }
 
   onFollow = () => {

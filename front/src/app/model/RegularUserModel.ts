@@ -31,7 +31,7 @@ export class RegularUser {
     biography: string;
     allowedTags: boolean;
     isBlocked: boolean;
-  isVerified: boolean;
+    isVerified: boolean;
 
     constructor() {
       this.id = '';

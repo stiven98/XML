@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
         alert('Zahtev uspesno poslat');
         this.user = new User();
         this.validation = new UserValidationModel();
-        this.agentRegistrationRequest.WebsiteLink = "";
+        this.agentRegistrationRequest.WebSite = "";
       }, (error => {
         alert('Greska vec postoji agent!');
       }));

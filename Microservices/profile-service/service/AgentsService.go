@@ -35,7 +35,7 @@ func (service AgentsService) DeclineRegistrationRequest(request *model.AgentRegi
 	}
 	return nil
 }
-func (service *AgentsService) Create(agent *model.Agent) error {
+func (service *AgentsService) Create(agent *model.User) error {
 	service.AgentsRepo.Create(agent)
 	return nil
 }

@@ -28,7 +28,7 @@ func(repo *AgentsRepository) GetAll() []model.Agent{
 	return agents
 }
 
-func (repo *AgentsRepository) Create(agent *model.Agent) error {
+func (repo *AgentsRepository) Create(agent *model.User) error {
 	result := repo.Database.Create(agent)
 	var dto = Dto.CreateUserDTO{
 		ID:       agent.UserID,
