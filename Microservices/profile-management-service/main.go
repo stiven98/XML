@@ -51,11 +51,13 @@ func initDB() *gorm.DB {
 		database.Migrator().DropTable(&model.CloseFriends{})
 		database.Migrator().DropTable(&model.BlockedUsers{})
 		database.Migrator().DropTable(&model.MutedUsers{})
+		database.Migrator().DropTable(&model.SubscribeAcc{})
 
 
 		database.AutoMigrate(&model.CloseFriends{})
 		database.AutoMigrate(&model.BlockedUsers{})
 		database.AutoMigrate(&model.MutedUsers{})
+		database.AutoMigrate(&model.SubscribeAcc{})
 
 	
 		blockedUsersInit := [] model.BlockedUsers {
@@ -91,8 +93,8 @@ func initDB() *gorm.DB {
 				MutedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
 				MutedID:   uuid.MustParse("23b899e0-c09c-11eb-8529-0242ac130003"),
 			}, {
-				MutedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
-				MutedID:   uuid.MustParse("267f87d8-c09c-11eb-8529-0242ac130003"),
+				MutedByID: uuid.MustParse("1e35dc53-3743-4737-8463-4400418149ca"),
+				MutedID:   uuid.MustParse("89d660eb-9a79-4f11-97f1-0a7476af35ab"),
 			},
 		}
 
@@ -114,19 +116,33 @@ func initDB() *gorm.DB {
 	return database
 }
 
-func initRepo(database *gorm.DB) (*repository.BlockedUsersRepository, *repository.CloseFriendsRepository, *repository.MutedUsersRepository) {
-	return &repository.BlockedUsersRepository{DataBase: database}, &repository.CloseFriendsRepository{Database: database}, &repository.MutedUsersRepository{DataBase: database}
+func initRepo(database *gorm.DB) (*repository.BlockedUsersRepository, *repository.CloseFriendsRepository, *repository.MutedUsersRepository, *repository.SubscribeAccRepository) {
+	return &repository.BlockedUsersRepository{DataBase: database}, &repository.CloseFriendsRepository{Database: database}, &repository.MutedUsersRepository{DataBase: database},
+	&repository.SubscribeAccRepository{DataBase:database}
 }
 
-func initServices(blockedUsersRepository *repository.BlockedUsersRepository, closeFriendRepository *repository.CloseFriendsRepository, mutedUsersRepository * repository.MutedUsersRepository) (*service.BlockedUsersService, *service.CloseFriendsService, *service.MutedUsersService){
-	return &service.BlockedUsersService{BlockedUsersRepository: blockedUsersRepository}, &service.CloseFriendsService{CloseFriendsService: closeFriendRepository}, &service.MutedUsersService{MutedUsersRepository: mutedUsersRepository}
+func initServices(blockedUsersRepository *repository.BlockedUsersRepository, closeFriendRepository *repository.CloseFriendsRepository,
+	mutedUsersRepository * repository.MutedUsersRepository, subscribeAccRepository *repository.SubscribeAccRepository) (*service.BlockedUsersService,
+	*service.CloseFriendsService, *service.MutedUsersService, *service.SubscribeAccService){
+	return &service.BlockedUsersService{BlockedUsersRepository: blockedUsersRepository}, &service.CloseFriendsService{CloseFriendsService: closeFriendRepository},
+	&service.MutedUsersService{MutedUsersRepository: mutedUsersRepository}, &service.SubscribeAccService{SubscriberAccRepository: subscribeAccRepository}
 }
 
-func initHandler(blockedUserService *service.BlockedUsersService, closeFriendService *service.CloseFriendsService, mutedUsersService *service.MutedUsersService) (*handler.BlockedUsersHandler, *handler.CloseFriendHandler, *handler.MutedUsersHandler) {
-	return &handler.BlockedUsersHandler{BlockedUsersService: blockedUserService}, &handler.CloseFriendHandler{CloseFriendService: closeFriendService}, &handler.MutedUsersHandler{MutedUsersService: mutedUsersService}
+func initHandler(blockedUserService *service.BlockedUsersService, closeFriendService *service.CloseFriendsService,
+	mutedUsersService *service.MutedUsersService, subscribeAccService *service.SubscribeAccService) (*handler.BlockedUsersHandler,
+	*handler.CloseFriendHandler, *handler.MutedUsersHandler, *handler.SubscribeAccHandler) {
+	return &handler.BlockedUsersHandler{BlockedUsersService: blockedUserService},
+	&handler.CloseFriendHandler{CloseFriendService: closeFriendService},
+	&handler.MutedUsersHandler{MutedUsersService: mutedUsersService},
+	&handler.SubscribeAccHandler{SubscriberAccService: subscribeAccService}
 }
 
-func handleFunc(blockedUsersHandler *handler.BlockedUsersHandler, closeFriendsHandler *handler.CloseFriendHandler, mutedUsersHandler *handler.MutedUsersHandler) {
+func handleFunc(blockedUsersHandler *handler.BlockedUsersHandler,
+	closeFriendsHandler *handler.CloseFriendHandler,
+	mutedUsersHandler *handler.MutedUsersHandler, subscribeAccHandler *handler.SubscribeAccHandler) {
+
+
+
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/users/blocked/{id}", blockedUsersHandler.GetAllBlockedBy).Methods("GET")
@@ -136,6 +152,10 @@ func handleFunc(blockedUsersHandler *handler.BlockedUsersHandler, closeFriendsHa
 	router.HandleFunc("/users/isMuted/{mutedById}/{mutedId}", mutedUsersHandler.IsMuted).Methods("GET")
 	router.HandleFunc("/users/mute/{mutedById}/{mutedId}", mutedUsersHandler.MutedUserByUser).Methods("POST")
 	router.HandleFunc("/users/unmute/{mutedById}/{mutedId}", mutedUsersHandler.UnMutedUserByUser).Methods("POST")
+	router.HandleFunc("/users/muted/{id}", mutedUsersHandler.GetAllMutedBy).Methods("GET")
+	router.HandleFunc("/users/subscribe/{subscribedById}/{subscribedId}", subscribeAccHandler.Subscribe).Methods("POST")
+	router.HandleFunc("/users/unsubscribe/{subscribedById}/{subscribedId}", subscribeAccHandler.UnSubscribe).Methods("POST")
+	router.HandleFunc("/users/subscribers/{id}", subscribeAccHandler.GetAllSubscribers).Methods("GET")
 	//router.HandleFunc("/users/getAll",SystemUsersHandler.GetAll).Methods("GET")
 	//router.HandleFunc("/administrators/update",  administratorsHandler.Update).Methods("PUT")
 
@@ -149,8 +169,8 @@ func handleFunc(blockedUsersHandler *handler.BlockedUsersHandler, closeFriendsHa
 
 func main() {
 	database := initDB()
-	blockedUsersRepository, closeFriendRepository, mutedUsersRepository := initRepo(database)
-	blockedUsersService, closeFriendService, mutedUsersService := initServices(blockedUsersRepository, closeFriendRepository, mutedUsersRepository)
-	blockedUsersHandler, closeFriendHandler, mutedUsersHandler := initHandler(blockedUsersService, closeFriendService, mutedUsersService)
-	handleFunc(blockedUsersHandler, closeFriendHandler, mutedUsersHandler)
+	blockedUsersRepository, closeFriendRepository, mutedUsersRepository, subscribeAccRepository := initRepo(database)
+	blockedUsersService, closeFriendService, mutedUsersService, subscribeAccService := initServices(blockedUsersRepository, closeFriendRepository, mutedUsersRepository,subscribeAccRepository)
+	blockedUsersHandler, closeFriendHandler, mutedUsersHandler, subscribeAccHandler := initHandler(blockedUsersService, closeFriendService, mutedUsersService,subscribeAccService)
+	handleFunc(blockedUsersHandler, closeFriendHandler, mutedUsersHandler,subscribeAccHandler)
 }

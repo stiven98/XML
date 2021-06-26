@@ -20,5 +20,11 @@ type BlockedUsers struct {
 	BlockedID uuid.UUID `json:"blocked_id" gorm:"primaryKey"`
 }
 
+type SubscribeAcc struct {
+	//ID uuid.UUID `json:"id"`
+	SubscribeByID uuid.UUID `json:"subscribe_by_id" gorm:"primaryKey"`
+	SubscribeID uuid.UUID `json:"subscribe_id" gorm:"primaryKey"`
+}
+
 
 
