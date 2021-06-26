@@ -1,9 +1,12 @@
 package repository
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	_ "github.com/google/uuid"
 	"gorm.io/gorm"
+	"net/http"
 	"profileservice/model"
 	"profileservice/model/Dto"
 )
@@ -45,6 +48,20 @@ func(repo *UsersRepository) GetAllPublic() []model.User{
 
 func (repo *UsersRepository) Create(user *model.User) error {
 	result := repo.Database.Create(user)
+	var dto = Dto.CreateUserDTO{
+		ID:       user.UserID,
+		USERNAME: user.SystemUser.Username,
+		PASSWORD: user.SystemUser.Password,
+		ACTIVE:   true,
+		ROLE:     "ROLE_SYSTEM_USER",
+	}
+	payloadBuf := new(bytes.Buffer)
+	json.NewEncoder(payloadBuf).Encode(dto)
+	_, err := http.Post("http://localhost:8080/api/createUser","application/json", payloadBuf)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 	fmt.Println(result.RowsAffected)
 	return result.Error
 }

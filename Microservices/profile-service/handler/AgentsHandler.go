@@ -37,7 +37,7 @@ func (handler *AgentsHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	var agent model.Agent
+	var agent model.User
 	ID := uuid.New()
 	agent.SystemUser.ID = ID
 	agent.UserID = ID
@@ -49,7 +49,8 @@ func (handler *AgentsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	agent.SystemUser.Gender = request.Gender
 	agent.SystemUser.TypeOfUser = model.AGENT
 	agent.SystemUser.DateOfBirth = request.DateOfBirth
-	agent.WebsiteLink = request.WebsiteLink
+	agent.PhoneNumber = request.PhoneNumber
+	agent.WebSite = request.WebSite
 	request.IsApproved = true;
 	err = handler.Service.Create(&agent)
 	handler.Service.UpdateRequest(&request)

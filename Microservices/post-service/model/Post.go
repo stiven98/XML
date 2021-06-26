@@ -47,7 +47,16 @@ type Post struct {
 	DISLIKES []Dislike `json:"dislikes"`
 	REPORTS []ReportedBy `json:"reports"`
 }
-
+type Campaign struct {
+	ID uuid.UUID `json:"id"`
+	POSTS []Post `json:"posts"`
+	WEBSITE string `json:"website"`
+	ISMULTIPLE bool `json:"ismultiple"`
+	STARTDATE time.Time `json:"startdate"`
+	ENDDATE time.Time `json:"enddate"`
+	TIMESTOPLACE int `json:"timestoplace"`
+	TIMETOSHOW time.Time `json:"timetoshow"`
+}
 
 func (post *Post) BeforeCreate() error {
 	post.ID = uuid.New()
