@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.xws.team22.auth.dto.CreateUserDTO;
 import rs.ac.uns.ftn.xws.team22.auth.model.AuthenticationData;
 import rs.ac.uns.ftn.xws.team22.auth.model.Role;
 import rs.ac.uns.ftn.xws.team22.auth.repository.LoginDetailsRepository;
+import rs.ac.uns.ftn.xws.team22.auth.repository.RoleRepository;
 import rs.ac.uns.ftn.xws.team22.auth.service.IAuthenticationDataService;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class AuthenticationDataService implements IAuthenticationDataService, Us
 
     @Autowired
     private LoginDetailsRepository loginDetailsRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
@@ -70,10 +73,12 @@ public class AuthenticationDataService implements IAuthenticationDataService, Us
         data.setUsername(dto.username);
         data.setPassword(dto.password);
         data.setActive(dto.isActive);
+        data.setId(dto.id);
         List<Role> roles = new ArrayList<>();
-        roles.add
+        Role role = this.roleRepository.findRoleByRole(dto.getRole());
+        roles.add(role);
+        data.setRoles(roles);
         this.loginDetailsRepository.save(data);
-
         return data;
     }
 
