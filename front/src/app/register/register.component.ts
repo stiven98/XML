@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../model/User.model';
+import { Router } from '@angular/router';
+import { AgetnRegistrationRequest, User } from '../model/User.model';
 import {UserValidationModel} from '../model/UserValidation.model';
+import { AuthService } from '../service/authorization/auth.service';
 import { FollowService } from '../service/follow.service';
 import {UserService} from '../service/user.service';
 
@@ -12,14 +14,41 @@ import {UserService} from '../service/user.service';
 export class RegisterComponent implements OnInit {
 
   user: User = new User();
+  agentRegistrationRequest: AgetnRegistrationRequest = new AgetnRegistrationRequest();
   validation: UserValidationModel = new UserValidationModel();
-
-  constructor(private userService: UserService, private followerService: FollowService) { }
+  isAgentRegistration: boolean = false;
+  agentReq: AgetnRegistrationRequest = new AgetnRegistrationRequest();
+  constructor(private userService: UserService, private followerService: FollowService,
+    public authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+    if(this.authService.getRole() === 'ROLE_ADMIN') {
+      this.isAgentRegistration = true;
+    }
   }
 
   createAccount = () => {
+    if(this.authService.getRole() ==='ROLE_ADMIN' && this.isValidForm()) {
+      this.agentRegistrationRequest = this.mapUserToRequest(this.user)
+      this.userService.createAgentByAdmin(this.agentRegistrationRequest).subscribe(response =>{
+        response
+        alert("Agent uspesno registrovan!")
+        this.router.navigate(['/homePage']);
+      });
+      return;
+    }
+    if(this.isAgentRegistration && this.isValidForm()) {
+      this.agentRegistrationRequest = this.mapUserToRequest(this.user)
+      this.userService.registerAgent(this.agentRegistrationRequest).subscribe(response => {
+        alert('Zahtev uspesno poslat');
+        this.user = new User();
+        this.validation = new UserValidationModel();
+
+      }, (error => {
+        alert('Greska vec postoji agent!');
+      }));
+        return;
+    }
     if (this.isValidForm()) {
       // this.convertDate();
       this.userService.registrationUser(this.user).subscribe(response => {
@@ -33,7 +62,23 @@ export class RegisterComponent implements OnInit {
     }
 
   }
-
+  mapUserToRequest = (user: User) => {
+    this.agentReq.FirstName = user.FirstName;
+    this.agentReq.LastName = user.LastName;
+    this.agentReq.Username = user.Username;
+    this.agentReq.Email = user.Email;
+    this.agentReq.Password = user.Password;
+    this.agentReq.Gender = user.Gender;
+    this.agentReq.PhoneNumber = user.PhoneNumber;
+    this.agentReq.TypeOfUser = "";
+    this.agentReq.DateOfBirth = user.DateOfBirth;
+    this.agentReq.PicturePath = "";
+    this.agentReq.IsApproved = false;
+    return this.agentReq;
+  }
+  registerAsAgent = () => {
+    this.isAgentRegistration = !this.isAgentRegistration;
+  }
   convertDate = () => {
     const tokens = this.user.DateOfBirth.split('-');
     console.log(tokens);
