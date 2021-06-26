@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FollowService} from '../service/follow.service';
+import { NotifyService } from '../service/notify.service';
 import {UserService} from '../service/user.service';
 
 @Component({
@@ -12,29 +13,46 @@ export class NotificationsComponent implements OnInit {
   requests: any;
   myId: string | null = '';
   users: [] | undefined;
+  notify: [] | any
 
-  constructor(private followService: FollowService, private userService: UserService) { }
+  constructor(private followService: FollowService, private userService: UserService, private notifyService: NotifyService) { }
 
   ngOnInit(): void {
     this.myId = localStorage.getItem('id');
     this.followService.getRequests(this.myId).subscribe((response) => {
       this.requests = response;
-      console.log(response);
       this.users = [];
       for (const req of this.requests) {
-        console.log(req);
-
         this.userService.getUserById(req).subscribe((res) => {
-          console.log(res);
           // @ts-ignore
           this.users?.push(res);
-          console.log(this.users);
         });
 
       }
     });
-
+    //treba hendlati da li je objavljen stori post
+    this.notifyService.getAllNotifyByUserID("12f93d5d-8ef0-40d1-90b9-559285565dd8").subscribe((res:any) => {  
+      let list = res;
+      this.notify = []
+      for (let u of list) {
+        console.log(u.userId)
+        this.userService.getUserById(u.userId).subscribe((res:any) => {
+          console.log(res)
+          let user = {
+            "url": res.system_user.picturePath,
+            "name": res.system_user.firstName,
+            "id" : u.notify_id
+          }
+          // @ts-ignore
+          this.notify?.push(user);
+          console.log(this.notify)
+        });
+      }
+    })
   }
+
+
+ 
 
   declineRequest = (event: any, userElement: never) => {
     console.log(userElement);

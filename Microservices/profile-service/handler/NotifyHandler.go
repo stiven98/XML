@@ -40,7 +40,6 @@ func (handler NotifyHandler) GetAllNotifyByUserId(writer http.ResponseWriter, re
 	if err != nil {
 		writer.WriteHeader(http.StatusBadRequest)
 	}
-	fmt.Print(notify)
 
 	writer.WriteHeader(http.StatusOK)
 	writer.Header().Set("Content-Type", "application/json")
