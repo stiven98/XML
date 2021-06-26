@@ -34,11 +34,21 @@ export class ProfilePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params[`id`];
-    this.myId == this.id ? this.isMyProfile = false : this.isMyProfile = true;
+    this.initData();
+  }
+  initData = () => {
+    this.id === this.myId ? this.isMyProfile = true : this.isMyProfile = false;
     this.userService.getUserById(this.route.snapshot.params[`id`]).subscribe((response) => {
       this.user = response as RegularUser;
       console.log(this.user);
+      console.log(this.isMyProfile)
+      if(!this.isMyProfile && !this.user.isPublic) {
+        this.isMyProfile = false;
+      }
+      else if(this.user.isPublic) {
+        this.isMyProfile = true;
+      }
+     
     });
 
     this.followService.getFollowers(this.id).subscribe(response => {
@@ -67,16 +77,15 @@ export class ProfilePageComponent implements OnInit {
 
     this.managementService.isBlocked(this.myId,this.id).subscribe((res:any)=> this.isBlockedUsesr = res)
     this.managementService.isMuted(this.myId,this.id).subscribe((res:any)=> this.isMuted = res)
-    console.log('ACAPEDER')
-    console.log(this.followers)
     if(this.followers == undefined) {
       this.followers = []
     }
     if(this.following == undefined) {
       this.following = []
     }
-  }
+    console.log(this.status)
 
+  }
   onFollow = () => {
     this.followService.follow(this.myId, this.id).subscribe((response) => {
       console.log(response);
