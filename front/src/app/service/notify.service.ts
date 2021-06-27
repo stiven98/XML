@@ -20,7 +20,13 @@ export class NotifyService {
   }
 
 
-
+  notifyUser = (notifyRequest : any) => {
+    return this.http.post('http://localhost:8085/notify/create', notifyRequest).pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
 
 
 }

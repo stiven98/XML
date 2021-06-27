@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {FollowService} from '../service/follow.service';
+import { Router } from '@angular/router';
+import { FollowService } from '../service/follow.service';
 import { NotifyService } from '../service/notify.service';
-import {UserService} from '../service/user.service';
+import { UserService } from '../service/user.service';
 
 @Component({
   selector: 'app-notifications',
@@ -15,7 +16,7 @@ export class NotificationsComponent implements OnInit {
   users: [] | undefined;
   notify: [] | any
 
-  constructor(private followService: FollowService, private userService: UserService, private notifyService: NotifyService) { }
+  constructor(private followService: FollowService, private userService: UserService, private notifyService: NotifyService, private router: Router) { }
 
   ngOnInit(): void {
     this.myId = localStorage.getItem('id');
@@ -30,23 +31,26 @@ export class NotificationsComponent implements OnInit {
 
       }
     });
-    this.notifyService.getAllNotifyByUserID(this.myId).subscribe((res:any) => {  
+    this.notifyService.getAllNotifyByUserID(this.myId).subscribe((res: any) => {
       let list = res;
       this.notify = []
       for (let u of list) {
-        this.userService.getUserById(u.userId).subscribe((res:any) => {
+        this.userService.getUserById(u.userId).subscribe((res: any) => {
           var text = ""
-          if(u.type_of_notify === "like"){ text = "lajkovao fotografiju"; }
-          if(u.type_of_notify === "comment") {text = "komentarisao fotografiju"}
-          if(u.type_of_notify === "dislike") {text = "dislajkovao fotografiju"}
-          if(u.type_of_notify === "post") {text = "postavio fotografiju"}
-          if(u.type_of_notify === "story") {text = "objavio story"}
-          if(u.type_of_notify === "message") {text = "poslao poruku"}
+          let postFlag = true;
+          if (u.type_of_notify === "like") { text = "lajkovao fotografiju"; }
+          if (u.type_of_notify === "comment") { text = "komentarisao fotografiju" }
+          if (u.type_of_notify === "dislike") { text = "dislajkovao fotografiju" }
+          if (u.type_of_notify === "post") { text = "postavio fotografiju" }
+          if (u.type_of_notify === "story") { text = "objavio story"; postFlag = false; }
+          if (u.type_of_notify === "message") { text = "poslao poruku"; postFlag = false; }
           let user = {
             "url": res.system_user.picturePath,
             "name": res.system_user.firstName,
-            "id" : u.notify_id,
-            "text": text
+            "notifyid": u.notify_id,
+            "text": text,
+            "userid": u.notify_user_id,
+            "isPost": postFlag
           }
           // @ts-ignore
           this.notify?.push(user);
@@ -56,7 +60,9 @@ export class NotificationsComponent implements OnInit {
   }
 
 
- 
+  notificationClick = (userid: string, postid: string) => {
+    this.router.navigate(['single-post/' + userid + '/' + postid]);
+  }
 
   declineRequest = (event: any, userElement: never) => {
     console.log(userElement);
