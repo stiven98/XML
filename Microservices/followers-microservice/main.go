@@ -134,7 +134,7 @@ func handlerFunc(followersHandler *handler.FollowersHandler)  {
 	router.HandleFunc("/users/acceptRequest/{idUser}/{idTarget}", followersHandler.AcceptRequest).Methods("POST")
 	router.HandleFunc("/users/follow/{idUser}/{idTarget}", followersHandler.Follow).Methods("POST")
 	router.HandleFunc("/users/isFollowing/{idUser}/{idTarget}", followersHandler.IsFollowing).Methods("GET")
-
+	router.HandleFunc("/users/checkFollowing/{idUser}/{idTarget}", followersHandler.CheckFollowing).Methods("GET")
 	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
 	origins := handlers.AllowedOrigins([] string{"*"})

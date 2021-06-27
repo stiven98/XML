@@ -29,6 +29,12 @@ export class FollowService {
         }));
   }
 
+  checkFollowing = (userid: string, targetid : string) => {
+    return this.http
+      .get('http://localhost:8088/users/checkFollowing/' + userid + '/' + targetid)
+      .toPromise();
+  }
+
   getRequests = (id: string | null) => {
     return this.http
       .get('http://localhost:8088/users/getRequests/' + id)
