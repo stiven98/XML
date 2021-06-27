@@ -156,6 +156,9 @@ func handleFunc(blockedUsersHandler *handler.BlockedUsersHandler,
 	router.HandleFunc("/users/subscribe/{subscribedById}/{subscribedId}", subscribeAccHandler.Subscribe).Methods("POST")
 	router.HandleFunc("/users/unsubscribe/{subscribedById}/{subscribedId}", subscribeAccHandler.UnSubscribe).Methods("POST")
 	router.HandleFunc("/users/subscribers/{id}", subscribeAccHandler.GetAllSubscribers).Methods("GET")
+	router.HandleFunc("/users/addCloseFriend/{userId}/{friendId}", closeFriendsHandler.AddCloseFriend).Methods("POST")
+	router.HandleFunc("/users/removeCloseFriend/{userId}/{friendId}", closeFriendsHandler.RemoveCloseFriend).Methods("POST")
+	router.HandleFunc("/users/closeFriend/{id}", closeFriendsHandler.GetAllCloseFriend).Methods("GET")
 	//router.HandleFunc("/users/getAll",SystemUsersHandler.GetAll).Methods("GET")
 	//router.HandleFunc("/administrators/update",  administratorsHandler.Update).Methods("PUT")
 
