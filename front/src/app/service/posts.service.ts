@@ -9,6 +9,7 @@ import { DeletePost } from '../model/DeletePost';
   providedIn: 'root',
 })
 export class PostsService {
+  
   constructor(private http: HttpClient) {}
 
   uploadPosts = (formData: FormData) => {
@@ -18,6 +19,14 @@ export class PostsService {
       })
     );
   };
+
+  getByUserId = (id: string) => {
+    return this.http.get('http://localhost:8086/posts/getByUserId/' + id).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  }
 
   createPost = (post: Post) => {
     return this.http

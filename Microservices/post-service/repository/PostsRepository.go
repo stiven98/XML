@@ -340,3 +340,11 @@ func (repo *PostsRepository) GetByIds(userid string, postid string) interface{} 
 	}
 	return post
 }
+
+func (repo *PostsRepository) GetByUserId(userid string) interface{} {
+	var posts []model.Post
+	result, _ :=  repo.Database.Get(userid).Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &posts)
+	return posts
+}

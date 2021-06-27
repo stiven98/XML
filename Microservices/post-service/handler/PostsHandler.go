@@ -417,3 +417,13 @@ func (handler *PostsHandler) GetByIds(w http.ResponseWriter, r *http.Request) {
 	}
 	renderJSON(w, &post)
 }
+
+func (handler *PostsHandler) GetByUserId(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	posts :=handler.Service.GetByUserId(vars["userid"])
+	if posts == nil{
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	renderJSON(w, &posts)
+}

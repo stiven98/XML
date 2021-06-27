@@ -29,6 +29,7 @@ func handleFunc(postsHandler *handler.PostsHandler) {
 	router.HandleFunc("/posts/create", postsHandler.Create).Methods("POST")
 	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
 	router.HandleFunc("/posts/getById/{userid}/{postid}", postsHandler.GetByIds).Methods("GET")
+	router.HandleFunc("/posts/getByUserId/{userid}", postsHandler.GetByUserId).Methods("GET")
 	router.HandleFunc("/posts/feed/{id}", postsHandler.GetFeed).Methods("GET")
 	router.HandleFunc("/posts/public", postsHandler.GetPublic).Methods("GET")
 	router.HandleFunc("/posts/liked/{id}", postsHandler.GetLiked).Methods("GET")

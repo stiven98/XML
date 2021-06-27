@@ -64,3 +64,7 @@ func (service *PostsService) LeaveComment(postId uuid.UUID, ownerId uuid.UUID, c
 func (service *PostsService) GetByIds(userid string, postid string) interface{} {
 	return service.PostsRepo.GetByIds(userid, postid)
 }
+
+func (service *PostsService) GetByUserId(userid string) interface{} {
+	return service.PostsRepo.GetByUserId(userid)
+}
