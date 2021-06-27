@@ -127,7 +127,6 @@ func (handler UsersHandler) IsPublic(writer http.ResponseWriter, request *http.R
 		IsPublic: user.IsPublic,
 	}
 	renderJSON(writer, res)
-	writer.WriteHeader(http.StatusOK)
 }
 
 func (handler *UsersHandler) GetPublicUsersIds(w http.ResponseWriter, r *http.Request){

@@ -60,3 +60,11 @@ func (service *PostsService) AddPostToFeed(keys []string, post *model.Post) erro
 func (service *PostsService) LeaveComment(postId uuid.UUID, ownerId uuid.UUID, comment *model.Comment) error {
 	return service.PostsRepo.LeaveComment(postId, ownerId, comment)
 }
+
+func (service *PostsService) GetByIds(userid string, postid string) interface{} {
+	return service.PostsRepo.GetByIds(userid, postid)
+}
+
+func (service *PostsService) GetByUserId(userid string) interface{} {
+	return service.PostsRepo.GetByUserId(userid)
+}
