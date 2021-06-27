@@ -33,6 +33,14 @@ export class PostsService {
     );
   };
 
+  getByIds = (userid: string, postid : string) => {
+    return this.http.get('http://localhost:8086/posts/getById/' + userid + '/' + postid).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  };
+
   getPublicPosts = () => {
     return this.http.get('http://localhost:8086/posts/public').pipe(
       map((item) => {

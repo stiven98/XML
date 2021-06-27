@@ -405,3 +405,15 @@ func (handler *PostsHandler) LeaveComment(writer http.ResponseWriter, request *h
 	writer.Header().Set("Content-Type", "application/json")
 	return
 }
+
+func (handler *PostsHandler) GetByIds(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fmt.Println(vars["userid"])
+	fmt.Println(vars["postid"])
+	post :=handler.Service.GetByIds(vars["userid"], vars["postid"])
+	if post == nil{
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	renderJSON(w, &post)
+}

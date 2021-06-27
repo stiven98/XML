@@ -325,3 +325,18 @@ func (repo *PostsRepository) LeaveComment(postId uuid.UUID, ownerId uuid.UUID, c
 	}
 	return err
 }
+
+func (repo *PostsRepository) GetByIds(userid string, postid string) interface{} {
+	var posts []model.Post
+	var post model.Post
+	result, _ :=  repo.Database.Get(userid).Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &posts)
+	for i := range posts {
+		if posts[i].ID.String() == postid {
+			post = posts[i]
+			break
+		}
+	}
+	return post
+}
