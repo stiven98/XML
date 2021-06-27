@@ -47,12 +47,14 @@ func initDB() *gorm.DB {
 		database.Migrator().DropTable(&model.User{})
 		database.Migrator().DropTable(&model.Agent{})
 		database.Migrator().DropTable(&model.AgentRegistrationRequest{})
+		database.Migrator().DropTable(&model.Notify{})
 
 		database.AutoMigrate(&model.AgentRegistrationRequest{})
 		database.AutoMigrate(&model.SystemUser{})
 		database.AutoMigrate(&model.Administrator{})
 		database.AutoMigrate(&model.User{})
 		database.AutoMigrate(&model.Agent{})
+		database.AutoMigrate(&model.Notify{})
 
 		systemUsers := [] model.SystemUser {
 			{
@@ -241,43 +243,51 @@ func initDB() *gorm.DB {
 func initRepo(database *gorm.DB) (*repository.SystemUsersRepository,
 								  *repository.AdministratorsRepository,
 								  *repository.UsersRepository,
-								  *repository.AgentsRepository) {
+								  *repository.AgentsRepository,
+								  *repository.NotifyRepository) {
 
 	return &repository.SystemUsersRepository{Database: database}, &repository.AdministratorsRepository{Database: database},
 																  &repository.UsersRepository{Database: database},
-																  &repository.AgentsRepository{Database: database}
+																  &repository.AgentsRepository{Database: database},
+																  &repository.NotifyRepository{Database: database}
 }
 
 
 
 func initServices(systemUsersRepo *repository.SystemUsersRepository, administratorsRepo *repository.AdministratorsRepository,
 																	 usersRepo *repository.UsersRepository,
-																	 agentsRepo *repository.AgentsRepository) (*service.SystemUsersService,
+																	 agentsRepo *repository.AgentsRepository,
+																	 notifyRepo *repository.NotifyRepository) (*service.SystemUsersService,
 																	                                           *service.AdministratorsService,
 																	                                           *service.UsersService,
-																	                                           *service.AgentsService){
+																	                                           *service.AgentsService,
+																	                                           *service.NotifyService){
 
 	return &service.SystemUsersService{Repo: systemUsersRepo}, &service.AdministratorsService{AdministratorRepo: administratorsRepo, SystemUserRepo: systemUsersRepo},
 	                                                           &service.UsersService{UsersRepo: usersRepo, SystemUserRepo: systemUsersRepo},
-	                                                           &service.AgentsService{SystemUserRepo: systemUsersRepo, AgentsRepo: agentsRepo}
+	                                                           &service.AgentsService{SystemUserRepo: systemUsersRepo, AgentsRepo: agentsRepo},
+	                                                           &service.NotifyService{NotifyRepository: notifyRepo}
 }
 
 
 
 func initHandler(SystemUsersService *service.SystemUsersService, administratorsService *service.AdministratorsService,
 															     usersService *service.UsersService,
-															     agentsService *service.AgentsService) (*handler.SystemUsersHandler,
+															     agentsService *service.AgentsService,
+															     notifyService *service.NotifyService) (*handler.SystemUsersHandler,
 															     										*handler.AdministratorsHandler,
 															     										*handler.UsersHandler,
-															     										*handler.AgentsHandler) {
+															     										*handler.AgentsHandler,
+															     										*handler.NotifyHandler) {
 	return &handler.SystemUsersHandler{Service: SystemUsersService}, &handler.AdministratorsHandler{Service: administratorsService},
-		&handler.UsersHandler{Service: usersService}, &handler.AgentsHandler{Service: agentsService}
+		&handler.UsersHandler{Service: usersService}, &handler.AgentsHandler{Service: agentsService},
+		&handler.NotifyHandler{NotifyService: notifyService}
 }
 
 
 
 func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHandler *handler.AdministratorsHandler,
-	usersHandler *handler.UsersHandler,agentsHandler *handler.AgentsHandler) {
+	usersHandler *handler.UsersHandler,agentsHandler *handler.AgentsHandler,notifyHandler *handler.NotifyHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/sysusers/create", SystemUsersHandler.Create).Methods("POST")
@@ -308,6 +318,8 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/upload", usersHandler.UploadFile).Methods("POST")
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./profile_picture/"))))
+	router.HandleFunc("/notify/create", notifyHandler.Create).Methods("POST")
+	router.HandleFunc("/notify/getAll/{id}", notifyHandler.GetAllNotifyByUserId).Methods("GET")
 
 	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
@@ -318,9 +330,9 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 
 func main() {
 	database := initDB()
-	sysusersRepo, administratorsRepo, usersRepo, agentsRepo := initRepo(database)
-	systemUsersService, administratorsService, usersService, agentsService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo)
-	systemUsersHandler, administratorsHandler, usersHandler, agentsHandler := initHandler(systemUsersService, administratorsService, usersService, agentsService)
-	handleFunc(systemUsersHandler, administratorsHandler, usersHandler, agentsHandler)
+	sysusersRepo, administratorsRepo, usersRepo, agentsRepo, notifyRepo := initRepo(database)
+	systemUsersService, administratorsService, usersService, agentsService, notifyService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo,notifyRepo)
+	systemUsersHandler, administratorsHandler, usersHandler, agentsHandler,notifyHandler := initHandler(systemUsersService, administratorsService, usersService, agentsService,notifyService)
+	handleFunc(systemUsersHandler, administratorsHandler, usersHandler, agentsHandler,notifyHandler)
 }
 

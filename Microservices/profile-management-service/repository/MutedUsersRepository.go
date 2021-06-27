@@ -24,3 +24,9 @@ func (r MutedUsersRepository) UnMutedUserByUser(mutedUsers *model.MutedUsers) er
 	response := r.DataBase.Delete(mutedUsers)
 	return response.Error
 }
+
+func (r MutedUsersRepository) GetAllMutedByUserId(id string) ([]model.MutedUsers, error){
+	var muted []model.MutedUsers
+	response := r.DataBase.Model(model.MutedUsers{}).Where("muted_by_id = ?", id).Find(&muted)
+	return  muted, response.Error
+}
