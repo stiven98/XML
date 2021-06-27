@@ -26,10 +26,14 @@ func (repo *UsersRepository) Update(user *model.User) error {
 				"PhoneNumber": user.PhoneNumber,
 				"WebSite": user.WebSite,
 				"Biography": user.Biography,
-				"NotifyPosts" : user.NotifyPosts,
+				"NotifyLike" : user.NotifyLike,
 				"NotifyMessages": user.NotifyMessages,
-				"NotifyStory": user.NotifyStory,
+				"NotifyDislike": user.NotifyDislike,
 				"NotifyComments": user.NotifyComments,
+				"NotifyLikeFromNotFollowProfile": user.NotifyLikeFromNotFollowProfile,
+				"NotifyDislikeFromNotFollowProfile": user.NotifyDislikeFromNotFollowProfile,
+				"NotifyCommentFromNotFollowProfile": user.NotifyCommentFromNotFollowProfile,
+				"NotifyMessageFromNotFollowProfile": user.NotifyMessageFromNotFollowProfile,
 		})
 	return result.Error
 }
