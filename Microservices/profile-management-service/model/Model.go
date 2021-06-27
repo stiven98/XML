@@ -11,7 +11,7 @@ type MutedUsers struct {
 type CloseFriends struct {
 	//ID uuid.UUID `json:"id"`
 	UserID uuid.UUID `json:"user_id" gorm:"primaryKey"`
-	FriendID uuid.UUID `json:"muted_id" gorm:"primaryKey"`
+	FriendID uuid.UUID `json:"friend_id" gorm:"primaryKey"`
 }
 
 type BlockedUsers struct {
