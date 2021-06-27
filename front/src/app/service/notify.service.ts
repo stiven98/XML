@@ -11,7 +11,7 @@ export class NotifyService {
 
 
 
-  getAllNotifyByUserID = (id:string) => {
+  getAllNotifyByUserID = (id:any) => {
     return this.http.get('http://localhost:8085/notify/getAll/' + id).pipe(
       map((responseData) => {
         return responseData;

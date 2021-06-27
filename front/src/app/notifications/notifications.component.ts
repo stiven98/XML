@@ -31,17 +31,25 @@ export class NotificationsComponent implements OnInit {
       }
     });
     //treba hendlati da li je objavljen stori post
-    this.notifyService.getAllNotifyByUserID("12f93d5d-8ef0-40d1-90b9-559285565dd8").subscribe((res:any) => {  
+    this.notifyService.getAllNotifyByUserID(this.myId).subscribe((res:any) => {  
       let list = res;
       this.notify = []
       for (let u of list) {
+  
+     
         console.log(u.userId)
         this.userService.getUserById(u.userId).subscribe((res:any) => {
-          console.log(res)
+          var text = ""
+          if(u.type_of_notify === "like"){ text = "lajkova"; console.log("usao  " +  text)}
+          if(u.type_of_notify === "comment") {text = "komentarisao"}
+          if(u.type_of_notify === "dislike") {text = "dislajkovao"}
+          if(u.type_of_notify === "post") {text = "postavio"}
+          if(u.type_of_notify === "story") {text = "objavio story"}
           let user = {
             "url": res.system_user.picturePath,
             "name": res.system_user.firstName,
-            "id" : u.notify_id
+            "id" : u.notify_id,
+            "text": text
           }
           // @ts-ignore
           this.notify?.push(user);
