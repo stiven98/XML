@@ -18,6 +18,18 @@ export class HeaderComponent implements OnInit {
   public hashtag: string = '';
   public location: string = '';
   public description: string = '';
+  public website: string = '';
+  public males: boolean = false;
+  public females: boolean = false;
+  public under18: boolean = false;
+  public between18and24: boolean = false;
+  public between24and35: boolean = false;
+  public over35: boolean = false;
+  public timesPlaced: number = 1;
+  public timeToPlace: string = '';
+  public isMultiple: boolean = false;
+  public endDate: Date = new Date();
+
   searchParams: any;
   userId: any;
   usernames: string[] = [];

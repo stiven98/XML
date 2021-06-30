@@ -6,6 +6,7 @@ import (
 	"followers-microservice/model"
 	"followers-microservice/model/dto"
 	"followers-microservice/service"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
 )
@@ -168,9 +169,10 @@ func (h FollowersHandler) IsFollowing(writer http.ResponseWriter, request *http.
 }
 
 func (h FollowersHandler) AddNode(writer http.ResponseWriter, request *http.Request) {
-	tokens := strings.Split(request.URL.Path, "/")
-	ID := tokens[int(len(tokens))-1]
 
+	vars :=mux.Vars(request)
+	ID := vars["id"]
+	fmt.Println(ID)
 	if !IsValidUUID(ID) {
 		fmt.Println("ID is invalid!")
 		writer.WriteHeader(http.StatusBadRequest)

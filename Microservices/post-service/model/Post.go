@@ -49,13 +49,18 @@ type Post struct {
 }
 type Campaign struct {
 	ID uuid.UUID `json:"id"`
-	POSTS []Post `json:"posts"`
+	ITEMS []PostItem `json:"posts"`
+	DESCRIPTION string `json:"description"`
 	WEBSITE string `json:"website"`
 	ISMULTIPLE bool `json:"ismultiple"`
 	STARTDATE time.Time `json:"startdate"`
 	ENDDATE time.Time `json:"enddate"`
 	TIMESTOPLACE int `json:"timestoplace"`
-	TIMETOSHOW time.Time `json:"timetoshow"`
+	TIMETOSHOW string `json:"timetoshow"`
+	TARGETGROUP []string	`json:"targetgroup"`
+	LIKES []Like `json:"likes"`
+	DISLIKES []Dislike `json:"dislikes"`
+	COMMENTS []Comment `json:"comments"`
 }
 
 func (post *Post) BeforeCreate() error {
