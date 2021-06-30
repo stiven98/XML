@@ -140,10 +140,7 @@ func (h FollowersHandler) Follow(writer http.ResponseWriter, request *http.Reque
 		}
 	}
 
-
-
 	writer.WriteHeader(http.StatusOK)
-
 
 }
 

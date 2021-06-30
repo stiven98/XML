@@ -24,6 +24,7 @@ export class ProfilePageComponent implements OnInit {
   isMyProfile:boolean = false;
   isBlockedUsesr:boolean = false;
   isMuted:boolean = false;
+  showBlockMute: boolean = false;
 
   constructor(private route: ActivatedRoute, private userService: UserService,
               public authService: AuthService, private router: Router, 
@@ -31,13 +32,20 @@ export class ProfilePageComponent implements OnInit {
     this.id = route.snapshot.params[`id`];
     this.myId = localStorage.getItem('id');
     this.route.paramMap.subscribe(params => {this.ngOnInit(); });
+    this.id === this.myId ? this.showBlockMute = false : this.showBlockMute = true;
   }
 
   ngOnInit(): void {
+    this.id === this.myId ? this.showBlockMute = false : this.showBlockMute = true;
     this.initData();
+    
+  }
+  onClick = () => {
+    alert(this.showBlockMute);
   }
   initData = () => {
     this.id === this.myId ? this.isMyProfile = true : this.isMyProfile = false;
+    this.id === this.myId ? this.showBlockMute = false : this.showBlockMute = true;
     this.userService.getUserById(this.route.snapshot.params[`id`]).subscribe((response) => {
       this.user = response as RegularUser;
       console.log(this.user);
