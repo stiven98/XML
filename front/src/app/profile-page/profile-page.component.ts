@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegularUser } from '../model/RegularUserModel';
 import { AuthService } from '../service/authorization/auth.service';
@@ -10,10 +10,9 @@ import { PostsService } from '../service/posts.service';
 @Component({
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
-  styleUrls: ['./profile-page.component.css']
+  styleUrls: ['./profile-page.component.css'],
 })
 export class ProfilePageComponent implements OnInit {
-
   id = '';
   status = 'NO_STATUS';
   myId: string | null;
@@ -25,40 +24,65 @@ export class ProfilePageComponent implements OnInit {
   isMyProfile: boolean = false;
   isBlockedUsesr: boolean = false;
   isMuted: boolean = false;
+  showBlockMute: boolean = false;
 
   public posts: any[] = [];
 
-  constructor(private route: ActivatedRoute, private userService: UserService,
-    public authService: AuthService, private router: Router,
-    private followService: FollowService, private managementService: ManagementService, private postsService : PostsService) {
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
+    public authService: AuthService,
+    private router: Router,
+    private followService: FollowService,
+    private managementService: ManagementService,
+    private postsService: PostsService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.id = route.snapshot.params[`id`];
     this.myId = localStorage.getItem('id');
-    this.route.paramMap.subscribe(params => { this.ngOnInit(); });
+    this.route.paramMap.subscribe((params) => {
+      this.ngOnInit();
+    });
+    this.id === this.myId
+      ? (this.showBlockMute = false)
+      : (this.showBlockMute = true);
+    this.route.paramMap.subscribe((params) => {
+      this.ngOnInit();
+    });
   }
 
   ngOnInit(): void {
+    this.id === this.myId
+      ? (this.showBlockMute = false)
+      : (this.showBlockMute = true);
     this.initData();
   }
-  initData = () => {
-    this.id === this.myId ? this.isMyProfile = true : this.isMyProfile = false;
-    this.userService.getUserById(this.route.snapshot.params[`id`]).subscribe((response) => {
-      this.user = response as RegularUser;
-      console.log(this.user);
-      console.log(this.isMyProfile)
-      if (!this.isMyProfile && !this.user.isPublic) {
-        this.isMyProfile = false;
-      }
-      else if (this.user.isPublic) {
-        this.isMyProfile = true;
-      }
 
-      this.postsService.getByUserId(this.id).subscribe(res => {
-        this.posts = res as any[];
+  initData = () => {
+    this.id === this.myId
+      ? (this.isMyProfile = true)
+      : (this.isMyProfile = false);
+    this.id === this.myId
+      ? (this.showBlockMute = false)
+      : (this.showBlockMute = true);
+    this.userService
+      .getUserById(this.route.snapshot.params[`id`])
+      .subscribe((response) => {
+        this.user = response as RegularUser;
+        console.log(this.user);
+        console.log(this.isMyProfile);
+        if (!this.isMyProfile && !this.user.isPublic) {
+          this.isMyProfile = false;
+        } else if (this.user.isPublic) {
+          this.isMyProfile = true;
+        }
+
+        this.postsService.getByUserId(this.id).subscribe((res) => {
+          this.posts = res as any[];
+        });
       });
 
-    });
-
-    this.followService.getFollowers(this.id).subscribe(response => {
+    this.followService.getFollowers(this.id).subscribe((response) => {
       this.followers = response;
       console.log('FOLLOWERS:');
       console.log(this.followers);
@@ -69,12 +93,12 @@ export class ProfilePageComponent implements OnInit {
       }
     });
 
-    this.followService.getFollowing(this.id).subscribe(response => {
+    this.followService.getFollowing(this.id).subscribe((response) => {
       this.following = response;
       console.log(this.following);
     });
 
-    this.followService.getRequests(this.id).subscribe(response => {
+    this.followService.getRequests(this.id).subscribe((response) => {
       this.requests = response;
       console.log(this.following);
       if (this.requests.includes(this.myId)) {
@@ -82,50 +106,59 @@ export class ProfilePageComponent implements OnInit {
       }
     });
 
-    this.managementService.isBlocked(this.myId, this.id).subscribe((res: any) => this.isBlockedUsesr = res)
-    this.managementService.isMuted(this.myId, this.id).subscribe((res: any) => this.isMuted = res)
+    this.managementService
+      .isBlocked(this.myId, this.id)
+      .subscribe((res: any) => (this.isBlockedUsesr = res));
+    this.managementService
+      .isMuted(this.myId, this.id)
+      .subscribe((res: any) => (this.isMuted = res));
     if (this.followers == undefined) {
-      this.followers = []
+      this.followers = [];
     }
     if (this.following == undefined) {
-      this.following = []
+      this.following = [];
     }
-    console.log(this.status)
-
-  }
+    console.log(this.status);
+  };
   onFollow = () => {
     this.followService.follow(this.myId, this.id).subscribe((response) => {
       console.log(response);
-      this.ngOnInit();
+      this.initData();
     });
-  }
+  };
 
   onUnfollow = () => {
     this.followService.unfollow(this.myId, this.id).subscribe((response) => {
       console.log(response);
-      this.ngOnInit();
+      this.initData();
     });
-  }
+  };
 
-  imageClick = (post : any) =>{
-    this.router.navigate(['single-post/'+post.userid+'/'+post.id]);
-  }
+  imageClick = (post: any) => {
+    this.router.navigate(['single-post/' + post.userid + '/' + post.id]);
+  };
 
   block = () => {
-    this.managementService.blockUser(this.myId, this.id).subscribe((res: any) => this.isBlockedUsesr = !this.isBlockedUsesr)
-  }
+    this.managementService
+      .blockUser(this.myId, this.id)
+      .subscribe((res: any) => (this.isBlockedUsesr = !this.isBlockedUsesr));
+  };
 
   mute = () => {
-    this.managementService.muteUser(this.myId, this.id).subscribe((res: any) => this.isMuted = !this.isMuted)
-  }
+    this.managementService
+      .muteUser(this.myId, this.id)
+      .subscribe((res: any) => (this.isMuted = !this.isMuted));
+  };
 
   unBlock = () => {
-    this.managementService.unBlockUser(this.myId, this.id).subscribe((res: any) => this.isBlockedUsesr = !this.isBlockedUsesr)
-  }
+    this.managementService
+      .unBlockUser(this.myId, this.id)
+      .subscribe((res: any) => (this.isBlockedUsesr = !this.isBlockedUsesr));
+  };
 
   unMute = () => {
-    this.managementService.unMuteUser(this.myId, this.id).subscribe((res: any) => this.isMuted = !this.isMuted)
-  }
-
-
+    this.managementService
+      .unMuteUser(this.myId, this.id)
+      .subscribe((res: any) => (this.isMuted = !this.isMuted));
+  };
 }

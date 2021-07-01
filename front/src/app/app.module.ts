@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -11,8 +11,8 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { HomePageComponent } from './home-page/home-page.component';
-import {FormsModule} from '@angular/forms';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
 import { PostsComponent } from './home-page/posts/posts.component';
@@ -38,6 +38,7 @@ const appRoutes: Routes = [
   {path: 'single-post/:userid/:postid', component: SinglePostComponent },
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
+  
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -61,19 +62,19 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' }),
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
     NgbModule,
-    ],
-    providers: [
-      {
+  ],
+  providers: [
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
-      }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

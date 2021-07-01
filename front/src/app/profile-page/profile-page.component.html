@@ -1,101 +1,111 @@
 <div class="container">
-    <div class="profile">
-        <div class="profile-image">
-            <img height="250px" width="250px" class="img-fluid" src="{{'http://localhost:8085/images/'+user.system_user.picturePath}}" alt="" />
-        </div>
+  <div class="profile">
+    <div class="profile-image">
+      <img height="250px" width="250px" class="img-fluid"
+        src="{{'http://localhost:8085/images/'+user.system_user.picturePath}}" alt="" />
+    </div>
 
-        <div class="profile-user-settings mt-3">
-            <h1 class="profile-user-name">{{user.system_user.username}}</h1>
+    <div class="profile-user-settings mt-3">
+      <h1 class="profile-user-name">{{user.system_user.username}}</h1>
 
-            <i *ngIf="user.isVerified" class=" fa fa-check-circle fa-3x ml-4"> </i>
+      <i *ngIf="user.isVerified" class=" fa fa-check-circle fa-3x ml-4"> </i>
 
-            <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
+      <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn"
+        href="/editProfile">Izmenite profil</a>
 
-            <button *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn" aria-label="profile settings">
+      <button *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn"
+        aria-label="profile settings">
         <i class="fa fa-cog" aria-hidden="true"></i>
       </button>
-            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
-            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
-            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Cancel request</a>
-        </div>
+      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'"
+        class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
+      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'"
+        class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
+      <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'"
+        class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Cancel request</a>
+    </div>
 
-        <div class="profile-stats" style="margin-left: -40px;">
-            <a class="btn profile-edit-btn" *ngIf="!isMyProfile && !isBlockedUsesr" (click)="block()">block</a>
-            <a class="btn profile-edit-btn" *ngIf="!isMyProfile && !isMuted && !isBlockedUsesr" (click)="mute()">mute</a>
-            <a class="btn profile-edit-btn" *ngIf="!isMyProfile && isBlockedUsesr" (click)="unBlock()">unBlock</a>
-            <a class="btn profile-edit-btn" *ngIf="!isMyProfile && isMuted && !isBlockedUsesr" (click)="unMute()">unMute</a>
-            <ul>
-                <li><span class="profile-stat-count"></span> objave</li>
-                <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span
+    <div class="profile-stats" style="margin-left: -40px;">
+      <a class="btn profile-edit-btn" *ngIf="showBlockMute && !isBlockedUsesr" (click)="block()">block</a>
+      <a class="btn profile-edit-btn" *ngIf="showBlockMute && !isMuted && !isBlockedUsesr" (click)="mute()">mute</a>
+      <a class="btn profile-edit-btn" *ngIf="showBlockMute && isBlockedUsesr" (click)="unBlock()">unBlock</a>
+      <a class="btn profile-edit-btn" *ngIf="showBlockMute && isMuted && !isBlockedUsesr" (click)="unMute()">unMute</a>
+      <ul>
+        <li><span class="profile-stat-count"></span> objave</li>
+        <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span
               class="profile-stat-count">{{this.following.length}}</span> prati</a></li>
-                <div class="modal fade" id="follow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal fade" id="follow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                            </div>
-                            <div class="modal-body">
-                                ...
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li>
-            </ul>
+              </div>
+              <div class="modal-body">
+                ...
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="profile-bio">
-            <p>
-                <span class="profile-real-name">{{user.system_user.firstName}} {{user.system_user.lastName}} <br></span>
-                <span>{{user.biography}} <br> </span>
-            </p>
-
-        </div>
-
-
-
-
+        <li><span class="profile-stat-count">{{this.followers.length}}</span> pratioci</li>
+      </ul>
+    </div>
+    <div class="profile-bio">
+      <p>
+        <span class="profile-real-name">{{user.system_user.firstName}} {{user.system_user.lastName}} <br></span>
+        <span>{{user.biography}} <br> </span>
+      </p>
 
     </div>
-    <!-- End of profile section -->
+
+
+
+
+
+  </div>
+  <!-- End of profile section -->
 </div>
 <!-- End of container -->
 
 <main *ngIf="!isMyProfile">
-    <div class="container d-flex justify-content-center">
-        <h1 class="text-dark">Profil je privatan!</h1>
-    </div>
+  <div class="container d-flex justify-content-center">
+    <h1 class="text-dark">Profil je privatan!</h1>
+  </div>
 </main>
 
 
 
 <main *ngIf="isMyProfile">
-    <div class="container">
-        <div class="gallery">
-            <div class="gallery-item" *ngFor='let post of posts' (click)="imageClick(post)" tabindex="0" style="width: 300px; height: 300px;">
-                <img src="{{'http://localhost:8086/images/'+post.items[0].path}}" class="gallery-image" alt="" />
-                <div *ngIf="post.type === 'album'" class="gallery-item-type">
-                    <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
-                </div>
-                <div class="gallery-item-info">
-                    <ul>
-                        <li class="gallery-item-likes">
-                            <span class="visually-hidden">Likes:</span><i class="fa fa-heart" aria-hidden="true"></i> {{post.likes.length - post.dislikes.length}}
-                        </li>
-                        <li class="gallery-item-comments">
-                            <span class="visually-hidden">Comments:</span><i class="fa fa-comment" aria-hidden="true"></i> {{post.comments.length}}
-                        </li>
-                    </ul>
-                </div>
-            </div>
+  <div class="container">
+    <div class="gallery">
+      <div class="gallery-item" *ngFor='let post of posts' (click)="imageClick(post)" tabindex="0"
+        style="width: 300px; height: 300px;">
+        <img src="{{'http://localhost:8086/images/'+post.items[0].path}}" class="gallery-image" alt="" />
+        <div *ngIf="post.type === 'album'" class="gallery-item-type">
+          <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
+        </div>
+        <div class="gallery-item-info">
+          <ul>
+            <li class="gallery-item-likes">
+              <span class="visually-hidden">Likes:</span><i class="fa fa-heart" aria-hidden="true"></i>
+              {{post.likes.length - post.dislikes.length}}
+            </li>
+            <li class="gallery-item-comments">
+              <span class="visually-hidden">Comments:</span><i class="fa fa-comment" aria-hidden="true"></i>
+              {{post.comments.length}}
+            </li>
+          </ul>
+        </div>
+      </div>
 
-            <!-- <div class="gallery-item" tabindex="0">
+      <!-- <div class="gallery-item" tabindex="0">
                 <img src="https://images.unsplash.com/photo-1497445462247-4330a224fdb1?w=500&h=500&fit=crop" class="gallery-image" alt="" />
 
                 <div class="gallery-item-info">
@@ -283,10 +293,10 @@
                     </ul>
                 </div>
             </div> -->
-        </div>
-        <!-- End of gallery -->
-
-        <div class="loader"></div>
     </div>
-    <!-- End of container -->
+    <!-- End of gallery -->
+
+    <div class="loader"></div>
+  </div>
+  <!-- End of container -->
 </main>
