@@ -40,9 +40,7 @@ export class ProfilePageComponent implements OnInit {
     this.initData();
     
   }
-  onClick = () => {
-    alert(this.showBlockMute);
-  }
+
   initData = () => {
     this.id === this.myId ? this.isMyProfile = true : this.isMyProfile = false;
     this.id === this.myId ? this.showBlockMute = false : this.showBlockMute = true;
@@ -97,14 +95,14 @@ export class ProfilePageComponent implements OnInit {
   onFollow = () => {
     this.followService.follow(this.myId, this.id).subscribe((response) => {
       console.log(response);
-      this.ngOnInit();
+      this.initData();
     });
   }
 
   onUnfollow = () => {
     this.followService.unfollow(this.myId, this.id).subscribe((response) => {
       console.log(response);
-      this.ngOnInit();
+      this.initData();
     });
   }
 

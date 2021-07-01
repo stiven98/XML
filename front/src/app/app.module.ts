@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -11,8 +11,8 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { HomePageComponent } from './home-page/home-page.component';
-import {FormsModule} from '@angular/forms';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { VerificationRequestsComponent } from './verification-requests/verification-requests.component';
 import { PostsComponent } from './home-page/posts/posts.component';
@@ -22,21 +22,21 @@ import { ReportedPostsComponent } from './reported-posts/reported-posts.componen
 import { AgentRequestsComponent } from './agent-requests/agent-requests.component';
 
 const appRoutes: Routes = [
-  {path: 'registration', component: RegisterComponent },
-  {path: 'login', component: LoginComponent },
-  {path: 'profile/:id', component: ProfilePageComponent },
-  {path: 'editProfile', component: EditProfileComponent },
-  {path: 'directMessages', component: DirectMessagesComponent },
-  {path: 'notifications', component: NotificationsComponent },
-  {path: 'liked', component: LikedDislikedPostsComponent},
-  {path: 'disliked', component: LikedDislikedPostsComponent},
-  {path: 'homePage', component: HomePageComponent },
-  {path: 'verificationRequests', component: VerificationRequestsComponent},
-  {path: 'agentRequests', component: AgentRequestsComponent},
-  {path: 'homePage/tag/:tag', component: HomePageComponent },
-  {path: 'reportedPosts', component:ReportedPostsComponent},
-  {path: 'homePage/location/:location', component: HomePageComponent },
-  { path: '**', redirectTo: '/404'}
+  { path: 'registration', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'profile/:id', component: ProfilePageComponent },
+  { path: 'editProfile', component: EditProfileComponent },
+  { path: 'directMessages', component: DirectMessagesComponent },
+  { path: 'notifications', component: NotificationsComponent },
+  { path: 'liked', component: LikedDislikedPostsComponent },
+  { path: 'disliked', component: LikedDislikedPostsComponent },
+  { path: 'homePage', component: HomePageComponent },
+  { path: 'verificationRequests', component: VerificationRequestsComponent },
+  { path: 'agentRequests', component: AgentRequestsComponent },
+  { path: 'homePage/tag/:tag', component: HomePageComponent },
+  { path: 'reportedPosts', component: ReportedPostsComponent },
+  { path: 'homePage/location/:location', component: HomePageComponent },
+  { path: '**', redirectTo: '/404' },
 ];
 
 @NgModule({
@@ -54,23 +54,23 @@ const appRoutes: Routes = [
     PostsComponent,
     LikedDislikedPostsComponent,
     ReportedPostsComponent,
-    AgentRequestsComponent
+    AgentRequestsComponent,
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' }),
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
     NgbModule,
-    ],
-    providers: [
-      {
+  ],
+  providers: [
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
-      }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
