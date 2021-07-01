@@ -20,23 +20,26 @@ import { TokenInterceptor } from './interceptor/TokenInterceptor';
 import { LikedDislikedPostsComponent } from './home-page/liked-disliked-posts/liked-disliked-posts.component';
 import { ReportedPostsComponent } from './reported-posts/reported-posts.component';
 import { AgentRequestsComponent } from './agent-requests/agent-requests.component';
+import { SinglePostComponent } from './single-post/single-post.component';
 
 const appRoutes: Routes = [
-  { path: 'registration', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'profile/:id', component: ProfilePageComponent },
-  { path: 'editProfile', component: EditProfileComponent },
-  { path: 'directMessages', component: DirectMessagesComponent },
-  { path: 'notifications', component: NotificationsComponent },
-  { path: 'liked', component: LikedDislikedPostsComponent },
-  { path: 'disliked', component: LikedDislikedPostsComponent },
-  { path: 'homePage', component: HomePageComponent },
-  { path: 'verificationRequests', component: VerificationRequestsComponent },
-  { path: 'agentRequests', component: AgentRequestsComponent },
-  { path: 'homePage/tag/:tag', component: HomePageComponent },
-  { path: 'reportedPosts', component: ReportedPostsComponent },
-  { path: 'homePage/location/:location', component: HomePageComponent },
-  { path: '**', redirectTo: '/404' },
+  {path: 'registration', component: RegisterComponent },
+  {path: 'login', component: LoginComponent },
+  {path: 'profile/:id', component: ProfilePageComponent },
+  {path: 'editProfile', component: EditProfileComponent },
+  {path: 'directMessages', component: DirectMessagesComponent },
+  {path: 'notifications', component: NotificationsComponent },
+  {path: 'liked', component: LikedDislikedPostsComponent},
+  {path: 'disliked', component: LikedDislikedPostsComponent},
+  {path: 'homePage', component: HomePageComponent },
+  {path: 'verificationRequests', component: VerificationRequestsComponent},
+  {path: 'agentRequests', component: AgentRequestsComponent},
+  {path: 'homePage/tag/:tag', component: HomePageComponent },
+  {path: 'single-post/:userid/:postid', component: SinglePostComponent },
+  {path: 'reportedPosts', component:ReportedPostsComponent},
+  {path: 'homePage/location/:location', component: HomePageComponent },
+  
+  { path: '**', redirectTo: '/404'}
 ];
 
 @NgModule({
@@ -55,6 +58,7 @@ const appRoutes: Routes = [
     LikedDislikedPostsComponent,
     ReportedPostsComponent,
     AgentRequestsComponent,
+    SinglePostComponent
   ],
   imports: [
     BrowserModule,

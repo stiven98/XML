@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -72,4 +73,18 @@ func (h MutedUsersHandler) UnMutedUserByUser(writer http.ResponseWriter, request
 	writer.WriteHeader(http.StatusNoContent)
 	writer.Header().Set("Content-Type", "application/json")
 
+}
+
+func (h MutedUsersHandler) GetAllMutedBy(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	blocked, err := h.MutedUsersService.GetAllMutedByUserId(vars["id"])
+
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	writer.WriteHeader(http.StatusOK)
+	renderJSON(writer,&blocked)
 }

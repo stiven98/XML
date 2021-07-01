@@ -41,10 +41,14 @@ type User struct {
 	IsBlocked bool `json:"isBlocked"`
 	IsVerified bool `json:"isVerified"`
 	AcceptMessagesFromNotFollowProfile bool `json:"acceptMessagesFromNotFollowProfiles"`
-	NotifyPosts bool `json:"notifyPosts"`
+	NotifyLike bool `json:"notifyLike"`
 	NotifyMessages bool `json:"notifyMessages"`
-	NotifyStory bool `json:"notifyStory" `
+	NotifyDislike bool `json:"notifyDislike" `
 	NotifyComments bool `json:"notifyComments"`
+	NotifyLikeFromNotFollowProfile bool `json:"notifyLikeFromNotFollowProfile""`
+	NotifyDislikeFromNotFollowProfile bool `json:"notifyDislikeFromNotFollowProfile""`
+	NotifyCommentFromNotFollowProfile bool `json:"notifyCommentFromNotFollowProfile""`
+	NotifyMessageFromNotFollowProfile bool `json:"notifyMessageFromNotFollowProfile""`
 }
 type Administrator struct {
 	UserID   uuid.UUID `json:"id"`
@@ -62,10 +66,14 @@ type Agent struct {
 	IsBlocked bool `json:"isBlocked"`
 	IsVerified bool `json:"isVerified"`
 	AcceptMessagesFromNotFollowProfile bool `json:"acceptMessagesFromNotFollowProfiles"`
-	NotifyPosts bool `json:"notifyPosts"`
+	NotifyLike bool `json:"notifyLike"`
 	NotifyMessages bool `json:"notifyMessages"`
-	NotifyStory bool `json:"notifyStory" `
+	NotifyDislike bool `json:"notifyDislike" `
 	NotifyComments bool `json:"notifyComments"`
+	NotifyLikeFromNotFollowProfile bool `json:"notifyLikeFromNotFollowProfile""`
+	NotifyDislikeFromNotFollowProfile bool `json:"notifyDislikeFromNotFollowProfile""`
+	NotifyCommentFromNotFollowProfile bool `json:"notifyCommentFromNotFollowProfile""`
+	NotifyMessageFromNotFollowProfile bool `json:"notifyMessageFromNotFollowProfile""`
 }
 
 

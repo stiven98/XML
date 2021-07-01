@@ -310,4 +310,22 @@ func (h FollowersHandler) AcceptRequest(writer http.ResponseWriter, request *htt
 
 }
 
+func (h FollowersHandler) CheckFollowing(writer http.ResponseWriter, request *http.Request) {
+	tokens := strings.Split(request.URL.Path, "/")
+	userID := tokens[int(len(tokens))-2]
+	targetID := tokens[int(len(tokens))-1]
+	retVal:= h.FollowersService.CheckRelationship(userID, targetID)
+
+	followingDto := dto.CheckFollowingDTO{IsFollowing: retVal}
+	writer.WriteHeader(http.StatusOK)
+	writer.Header().Set("Content-Type", "application/json")
+	bytes, err := json.Marshal(followingDto)
+
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writer.Write(bytes)
+}
+
 

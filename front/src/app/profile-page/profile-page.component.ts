@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RegularUser } from '../model/RegularUserModel';
 import { AuthService } from '../service/authorization/auth.service';
 import { UserService } from '../service/user.service';
-import {FollowService} from '../service/follow.service';
+import { FollowService } from '../service/follow.service';
 import { ManagementService } from '../service/management.service';
+import { PostsService } from '../service/posts.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -26,13 +27,16 @@ export class ProfilePageComponent implements OnInit {
   isMuted:boolean = false;
   showBlockMute: boolean = false;
 
+  public posts: any[] = [];
+
   constructor(private route: ActivatedRoute, private userService: UserService,
-              public authService: AuthService, private router: Router, 
-              private followService: FollowService, private managementService:ManagementService) {
+    public authService: AuthService, private router: Router,
+    private followService: FollowService, private managementService: ManagementService, private postsService : PostsService) {
     this.id = route.snapshot.params[`id`];
     this.myId = localStorage.getItem('id');
     this.route.paramMap.subscribe(params => {this.ngOnInit(); });
     this.id === this.myId ? this.showBlockMute = false : this.showBlockMute = true;
+    this.route.paramMap.subscribe(params => { this.ngOnInit(); });
   }
 
   ngOnInit(): void {
@@ -48,13 +52,17 @@ export class ProfilePageComponent implements OnInit {
       this.user = response as RegularUser;
       console.log(this.user);
       console.log(this.isMyProfile)
-      if(!this.isMyProfile && !this.user.isPublic) {
+      if (!this.isMyProfile && !this.user.isPublic) {
         this.isMyProfile = false;
       }
-      else if(this.user.isPublic) {
+      else if (this.user.isPublic) {
         this.isMyProfile = true;
       }
-     
+
+      this.postsService.getByUserId(this.id).subscribe(res => {
+        this.posts = res as any[];
+      });
+
     });
 
     this.followService.getFollowers(this.id).subscribe(response => {
@@ -81,12 +89,12 @@ export class ProfilePageComponent implements OnInit {
       }
     });
 
-    this.managementService.isBlocked(this.myId,this.id).subscribe((res:any)=> this.isBlockedUsesr = res)
-    this.managementService.isMuted(this.myId,this.id).subscribe((res:any)=> this.isMuted = res)
-    if(this.followers == undefined) {
+    this.managementService.isBlocked(this.myId, this.id).subscribe((res: any) => this.isBlockedUsesr = res)
+    this.managementService.isMuted(this.myId, this.id).subscribe((res: any) => this.isMuted = res)
+    if (this.followers == undefined) {
       this.followers = []
     }
-    if(this.following == undefined) {
+    if (this.following == undefined) {
       this.following = []
     }
     console.log(this.status)
@@ -106,21 +114,24 @@ export class ProfilePageComponent implements OnInit {
     });
   }
 
-
-  block = () => {
-    this.managementService.blockUser(this.myId,this.id).subscribe((res:any)=> this.isBlockedUsesr = !this.isBlockedUsesr)
+  imageClick = (post : any) =>{
+    this.router.navigate(['single-post/'+post.userid+'/'+post.id]);
   }
 
-  mute = () =>{
-    this.managementService.muteUser(this.myId,this.id).subscribe((res:any)=> this.isMuted = !this.isMuted)
+  block = () => {
+    this.managementService.blockUser(this.myId, this.id).subscribe((res: any) => this.isBlockedUsesr = !this.isBlockedUsesr)
+  }
+
+  mute = () => {
+    this.managementService.muteUser(this.myId, this.id).subscribe((res: any) => this.isMuted = !this.isMuted)
   }
 
   unBlock = () => {
-    this.managementService.unBlockUser(this.myId,this.id).subscribe((res:any)=> this.isBlockedUsesr = !this.isBlockedUsesr)
+    this.managementService.unBlockUser(this.myId, this.id).subscribe((res: any) => this.isBlockedUsesr = !this.isBlockedUsesr)
   }
 
-  unMute = () =>{
-    this.managementService.unMuteUser(this.myId,this.id).subscribe((res:any)=> this.isMuted = !this.isMuted)
+  unMute = () => {
+    this.managementService.unMuteUser(this.myId, this.id).subscribe((res: any) => this.isMuted = !this.isMuted)
   }
 
 
