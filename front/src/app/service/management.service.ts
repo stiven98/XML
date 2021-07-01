@@ -59,4 +59,36 @@ export class ManagementService {
     );
   }
 
+
+  subscribe  = (subscribedById: any, subscribedId: any) =>{
+    return this.http.post('http://localhost:8087/users/subscribe/' + subscribedById + "/" + subscribedId,"").pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
+
+  unSubscribe  = (subscribedById: any, subscribedId: any) =>{
+    return this.http.post('http://localhost:8087/users/unsubscribe/' + subscribedById + "/" + subscribedId,"").pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
+
+  isSubscribed = (subscribedById: any, subscribedId: any) => {
+    return this.http.get('http://localhost:8087/users/isSubscribed/' + subscribedById + "/" + subscribedId).pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  };
+
+  getAllSubscribed = (id: any) => {
+    return this.http.get('http://localhost:8087/users/subscribers/' + id).pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  };
 }

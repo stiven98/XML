@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
@@ -60,56 +59,56 @@ func initDB() *gorm.DB {
 		database.AutoMigrate(&model.SubscribeAcc{})
 
 	
-		blockedUsersInit := [] model.BlockedUsers {
-			{
-				BlockedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
-				BlockedID:   uuid.MustParse("7c0d42ad-aedf-47c6-93d3-fc53dcc57099"),
-			}, {
-				BlockedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
-				BlockedID:   uuid.MustParse("a8c4752e-c09b-11eb-8529-0242ac130003"),
-			}, {
-				BlockedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
-				BlockedID:   uuid.MustParse("ad79e1bc-c09b-11eb-8529-0242ac130003"),
-			},
-			
-		}
-
-		closeFriendsInit := [] model.CloseFriends {
-			{
-				UserID:   uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
-				FriendID: uuid.MustParse("e748f162-c09b-11eb-8529-0242ac130003"),
-			}, {
-				UserID:   uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
-				FriendID: uuid.MustParse("eb1eafc0-c09b-11eb-8529-0242ac130003"),
-			}, {
-				UserID:   uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
-				FriendID: uuid.MustParse("ed77d88c-c09b-11eb-8529-0242ac130003"),
-			},
-
-		}
-
-		mutedUsersInit := [] model.MutedUsers {
-			{
-				MutedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
-				MutedID:   uuid.MustParse("23b899e0-c09c-11eb-8529-0242ac130003"),
-			}, {
-				MutedByID: uuid.MustParse("1e35dc53-3743-4737-8463-4400418149ca"),
-				MutedID:   uuid.MustParse("89d660eb-9a79-4f11-97f1-0a7476af35ab"),
-			},
-		}
-
-		
-		for i := range blockedUsersInit {
-			database.Create(&blockedUsersInit[i])
-		}
-
-		for i:= range closeFriendsInit {
-			database.Create(&closeFriendsInit[i])
-		}
-
-		for i := range mutedUsersInit {
-			database.Create(&mutedUsersInit[i])
-		}
+		//blockedUsersInit := [] model.BlockedUsers {
+		//	{
+		//		BlockedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
+		//		BlockedID:   uuid.MustParse("7c0d42ad-aedf-47c6-93d3-fc53dcc57099"),
+		//	}, {
+		//		BlockedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
+		//		BlockedID:   uuid.MustParse("a8c4752e-c09b-11eb-8529-0242ac130003"),
+		//	}, {
+		//		BlockedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
+		//		BlockedID:   uuid.MustParse("ad79e1bc-c09b-11eb-8529-0242ac130003"),
+		//	},
+		//
+		//}
+		//
+		//closeFriendsInit := [] model.CloseFriends {
+		//	{
+		//		UserID:   uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
+		//		FriendID: uuid.MustParse("e748f162-c09b-11eb-8529-0242ac130003"),
+		//	}, {
+		//		UserID:   uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
+		//		FriendID: uuid.MustParse("eb1eafc0-c09b-11eb-8529-0242ac130003"),
+		//	}, {
+		//		UserID:   uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
+		//		FriendID: uuid.MustParse("ed77d88c-c09b-11eb-8529-0242ac130003"),
+		//	},
+		//
+		//}
+		//
+		//mutedUsersInit := [] model.MutedUsers {
+		//	{
+		//		MutedByID: uuid.MustParse("9da543e6-0484-4dce-9cef-68ab8a291826"),
+		//		MutedID:   uuid.MustParse("23b899e0-c09c-11eb-8529-0242ac130003"),
+		//	}, {
+		//		MutedByID: uuid.MustParse("1e35dc53-3743-4737-8463-4400418149ca"),
+		//		MutedID:   uuid.MustParse("89d660eb-9a79-4f11-97f1-0a7476af35ab"),
+		//	},
+		//}
+		//
+		//
+		//for i := range blockedUsersInit {
+		//	database.Create(&blockedUsersInit[i])
+		//}
+		//
+		//for i:= range closeFriendsInit {
+		//	database.Create(&closeFriendsInit[i])
+		//}
+		//
+		//for i := range mutedUsersInit {
+		//	database.Create(&mutedUsersInit[i])
+		//}
 	}
 
 
@@ -156,6 +155,7 @@ func handleFunc(blockedUsersHandler *handler.BlockedUsersHandler,
 	router.HandleFunc("/users/subscribe/{subscribedById}/{subscribedId}", subscribeAccHandler.Subscribe).Methods("POST")
 	router.HandleFunc("/users/unsubscribe/{subscribedById}/{subscribedId}", subscribeAccHandler.UnSubscribe).Methods("POST")
 	router.HandleFunc("/users/subscribers/{id}", subscribeAccHandler.GetAllSubscribers).Methods("GET")
+	router.HandleFunc("/users/isSubscribed/{subscribedById}/{subscribedId}", subscribeAccHandler.IsSubscribed).Methods("GET")
 	router.HandleFunc("/users/addCloseFriend/{userId}/{friendId}", closeFriendsHandler.AddCloseFriend).Methods("POST")
 	router.HandleFunc("/users/removeCloseFriend/{userId}/{friendId}", closeFriendsHandler.RemoveCloseFriend).Methods("POST")
 	router.HandleFunc("/users/closeFriend/{id}", closeFriendsHandler.GetAllCloseFriend).Methods("GET")

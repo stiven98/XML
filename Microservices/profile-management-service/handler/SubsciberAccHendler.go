@@ -61,3 +61,21 @@ func (h SubscribeAccHandler) GetAllSubscribers(writer http.ResponseWriter, reque
 	writer.WriteHeader(http.StatusOK)
 	renderJSON(writer,&subscriber)
 }
+
+func (h SubscribeAccHandler) IsSubscribed(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	subscribeByID := vars["subscribedById"]
+	subscribeID := vars["subscribedId"]
+	sub := model.SubscribeAcc{
+		SubscribeByID: uuid.MustParse(subscribeByID),
+		SubscribeID:   uuid.MustParse(subscribeID),
+	}
+
+	isSub, err := h.SubscriberAccService.IsSubscribed(&sub)
+
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+	}
+
+	renderJSON(writer,isSub)
+}
