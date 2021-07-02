@@ -21,6 +21,7 @@ import { LikedDislikedPostsComponent } from './home-page/liked-disliked-posts/li
 import { ReportedPostsComponent } from './reported-posts/reported-posts.component';
 import { AgentRequestsComponent } from './agent-requests/agent-requests.component';
 import { SinglePostComponent } from './single-post/single-post.component';
+import { SavedPostsComponent } from './saved-posts/saved-posts.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -38,7 +39,7 @@ const appRoutes: Routes = [
   {path: 'single-post/:userid/:postid', component: SinglePostComponent },
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
-  
+  {path: 'favourites', component: SavedPostsComponent },
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -58,7 +59,8 @@ const appRoutes: Routes = [
     LikedDislikedPostsComponent,
     ReportedPostsComponent,
     AgentRequestsComponent,
-    SinglePostComponent
+    SinglePostComponent,
+    SavedPostsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="gallery">
+        <div (click)="doFilter(collection)" class="card text-center" *ngFor="let collection of collections" style="width: 18rem; margin: 20px;">
+            <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEIFOOyPw2lwYyYaq_izh5uyc10CWTY2YDxdnr4mRK11sLo86GA4gAPW4r3nhRigjeeOY&usqp=CAU" style="width: 64px; height: 64px; margin-left: 7rem;" alt="Card image cap">
+            <div class="card-body">
+                <span>{{collection}}</span>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="gallery">
+        <div class="gallery-item" tabindex="0" *ngFor="let post of postsToShow" style="width: 300px; height: 300px;">
+            <img src="{{'http://localhost:8086/images/'+post.items[0].path}}" class="gallery-image" alt="" />
+            <div class="gallery-item-type">
+                <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
+            </div>
+            <div class="gallery-item-info" (click)="imageClick(post)">
+                <ul>
+                    <li class="gallery-item-likes">
+                        <span class="visually-hidden">Likes:</span><i class="fa fa-heart" aria-hidden="true"></i> {{post.likes.length - post.dislikes.length}}
+                    </li>
+                    <li class="gallery-item-comments">
+                        <span class="visually-hidden">Coments:</span><i class="fa fa-comments" aria-hidden="true"></i> {{post.comments.length}}
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-primary" (click)="openModal(modChangeCollection, post)">Dodaj/promeni kolekciju</button>
+        </div>
+    </div>
+    <!-- End of gallery -->
+</div>
+
+<ng-template #modChangeCollection let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Dodajte objavu u kolekciju</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('close')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body overflow-auto">
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="hashtag" class="font-weight-light text-muted">Kolekcija:</label>
+            <input type="text" id="hashtag" class="form-control border-0" name="collectionInput" [(ngModel)]="collectionInput" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="float-right">
+            <button class="btn btn-outline-dark" (click)="changeCollection()">Dodaj u kolekciju</button>
+        </div>
+    </div>
+</ng-template>

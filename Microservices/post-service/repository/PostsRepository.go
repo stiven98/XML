@@ -2,6 +2,7 @@ package repository
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/go-redis/redis"
 	"github.com/google/uuid"
@@ -347,4 +348,63 @@ func (repo *PostsRepository) GetByUserId(userid string) interface{} {
 	bytes := []byte(result)
 	json.Unmarshal(bytes, &posts)
 	return posts
+}
+
+func (repo *PostsRepository) SavePost(post *model.SavedPost) error {
+	results, err := repo.Database.Get(post.USERID.String() + "_archive").Result()
+	var archivedPosts []model.SavedPost
+	if err != nil {
+		archivedPosts = append(archivedPosts, *post)
+	} else {
+		bytes := []byte(results)
+		err = json.Unmarshal(bytes, &archivedPosts)
+		flag := true
+		for i := range archivedPosts {
+			if archivedPosts[i].POSTID == post.POSTID {
+				flag = false
+			}
+		}
+		if flag {
+			archivedPosts = append(archivedPosts, *post)
+		} else {
+			return errors.New("Post already archived")
+		}
+	}
+	jsonPosts, _ := json.Marshal(archivedPosts)
+	newErr := repo.Database.Set(post.USERID.String() + "_archive", jsonPosts, 0).Err()
+	return newErr
+}
+
+func (repo *PostsRepository) GetAllArchived(id string) []model.SavedPost {
+	var archivedPosts []model.SavedPost
+	results, err := repo.Database.Get(id + "_archive").Result()
+	fmt.Println(results)
+	if err == nil {
+		bytes := []byte(results)
+		err = json.Unmarshal(bytes, &archivedPosts)
+	}
+	return archivedPosts
+}
+
+func (repo *PostsRepository) EditArchived(post model.SavedPost) error {
+	var archivedPosts []model.SavedPost
+	result, _ :=  repo.Database.Get(post.USERID.String() + "_archive").Result()
+	bytes := []byte(result)
+	err := json.Unmarshal(bytes, &archivedPosts)
+	if err != nil {
+		return err
+	}
+
+	for i := range archivedPosts {
+		if archivedPosts[i].POSTID == post.POSTID {
+			archivedPosts[i].COLLECTION = post.COLLECTION
+			break
+		}
+	}
+	jsonPosts, _ := json.Marshal(archivedPosts)
+	newErr := repo.Database.Set(post.USERID.String() + "_archive", jsonPosts, 0).Err()
+	if newErr != nil {
+		return newErr
+	}
+	return err
 }
