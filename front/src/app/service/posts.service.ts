@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { CommentReq, LikeReq, Post } from '../model/Post.model';
+import { CommentReq, FavPost, LikeReq, Post } from '../model/Post.model';
 import { ReportReq } from '../model/ReportReq';
 import { DeletePost } from '../model/DeletePost';
 
@@ -11,6 +11,12 @@ import { DeletePost } from '../model/DeletePost';
 export class PostsService {
   
   constructor(private http: HttpClient) {}
+
+  changeCollection = (changeCollectionReq: FavPost) => {
+    return this.http
+      .post('http://localhost:8086/posts/edit-archived', changeCollectionReq)
+      .pipe((res) => res);
+  };
 
   uploadPosts = (formData: FormData) => {
     return this.http.post('http://localhost:8086/upload', formData).pipe(
@@ -87,6 +93,11 @@ export class PostsService {
       .pipe((res) => res);
   };
 
+  getFavourite = (id : string) => {
+    return this.http
+      .get('http://localhost:8086/posts/all-archived/' + id)
+      .pipe((res) => res);
+  };
 
   likePost = (likeReq: LikeReq) => {
     return this.http
