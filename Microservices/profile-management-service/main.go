@@ -130,9 +130,9 @@ func initServices(blockedUsersRepository *repository.BlockedUsersRepository, clo
 func initHandler(blockedUserService *service.BlockedUsersService, closeFriendService *service.CloseFriendsService,
 	mutedUsersService *service.MutedUsersService, subscribeAccService *service.SubscribeAccService) (*handler.BlockedUsersHandler,
 	*handler.CloseFriendHandler, *handler.MutedUsersHandler, *handler.SubscribeAccHandler) {
-	return &handler.BlockedUsersHandler{BlockedUsersService: blockedUserService},
+	return &handler.BlockedUsersHandler{BlockedUsersService: blockedUserService, MutedUsersService: mutedUsersService, SubscriberAccService: subscribeAccService, CloseFriendService: closeFriendService},
 	&handler.CloseFriendHandler{CloseFriendService: closeFriendService},
-	&handler.MutedUsersHandler{MutedUsersService: mutedUsersService},
+	&handler.MutedUsersHandler{MutedUsersService: mutedUsersService, SubscriberAccService: subscribeAccService},
 	&handler.SubscribeAccHandler{SubscriberAccService: subscribeAccService}
 }
 

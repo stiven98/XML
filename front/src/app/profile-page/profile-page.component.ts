@@ -143,7 +143,7 @@ export class ProfilePageComponent implements OnInit {
   block = () => {
     this.managementService
       .blockUser(this.myId, this.id)
-      .subscribe((res: any) => (this.isBlockedUsesr = !this.isBlockedUsesr));
+      .subscribe((res: any) => {this.initData()});
   };
 
   mute = () => {
