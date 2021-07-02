@@ -81,6 +81,13 @@ export class PostsService {
     );
   };
 
+  addFavourite = (favouriteReq: LikeReq) => {
+    return this.http
+      .post('http://localhost:8086/posts/save', favouriteReq)
+      .pipe((res) => res);
+  };
+
+
   likePost = (likeReq: LikeReq) => {
     return this.http
       .post('http://localhost:8086/like-post', likeReq)

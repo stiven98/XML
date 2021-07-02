@@ -551,3 +551,55 @@ func (handler *PostsHandler) GetByUserId(w http.ResponseWriter, r *http.Request)
 	}
 	renderJSON(w, &posts)
 }
+
+func (handler *PostsHandler) Save(writer http.ResponseWriter, request *http.Request) {
+	var savePostDto dto.SavePostDto
+	err := json.NewDecoder(request.Body).Decode(&savePostDto)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	archivedPost := new(model.SavedPost)
+	archivedPost.USERID = savePostDto.USERID
+	archivedPost.OWNERID = savePostDto.OWNERID
+	archivedPost.POSTID = savePostDto.POSTID
+	collection := model.PostCollection{NAME: "Default"}
+	archivedPost.COLLECTION = collection
+	err = handler.Service.SavePost(archivedPost)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	writer.WriteHeader(http.StatusCreated)
+	writer.Header().Set("Content-Type", "application/json")
+	return
+}
+
+func (handler *PostsHandler) GetAllArchived(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fmt.Println(vars["id"])
+	var archivedPosts []model.SavedPost
+	archivedPosts = handler.Service.GetAllArchived(vars["id"])
+	renderJSON(w, &archivedPosts)
+}
+
+func (handler *PostsHandler) EditArchived(writer http.ResponseWriter, request *http.Request) {
+	var editPost model.SavedPost
+	err := json.NewDecoder(request.Body).Decode(&editPost)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.EditArchived(editPost)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	writer.Header().Set("Content-Type", "application/json")
+	return
+}

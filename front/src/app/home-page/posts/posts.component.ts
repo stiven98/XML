@@ -81,6 +81,24 @@ export class PostsComponent implements OnInit {
     }
   };
 
+  addToFavourites = (post: any) => {
+    let postId = post.id;
+    let ownerId = post.userid;
+    let id = localStorage.getItem('id');
+    if (id) {
+      this.postsService
+        .addFavourite({ userid: id, postid: postId, ownerid: ownerId })
+        .subscribe(res => {
+          alert('Uspesno ste sacuvali objavu')
+        }, err => {
+          alert('Objava je vec sacuvana')
+        }
+        );
+    } else {
+      alert('Morate biti ulogovani da bi sacuvali objavu');
+    }
+  };
+
   dislikeClick = (post: any) => {
     let postId = post.id;
     let ownerId = post.userid;
