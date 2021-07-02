@@ -11,6 +11,9 @@ import (
 
 type BlockedUsersHandler struct {
 	BlockedUsersService *service.BlockedUsersService
+	SubscriberAccService *service.SubscribeAccService
+	MutedUsersService *service.MutedUsersService
+	CloseFriendService *service.CloseFriendsService
 }
 
 func (h BlockedUsersHandler) GetAllBlockedBy(writer http.ResponseWriter, request *http.Request) {
@@ -44,6 +47,18 @@ func (h BlockedUsersHandler) BlockUserByUser(writer http.ResponseWriter, request
 	if err != nil {
 		writer.WriteHeader(http.StatusBadRequest)
 	}
+
+	subscribeUser := model.SubscribeAcc{SubscribeByID: uuid.MustParse(blockedByID), SubscribeID: uuid.MustParse(blockedID)}
+	_ = h.SubscriberAccService.UnSubscribe(&subscribeUser)
+
+	mutedUser := model.MutedUsers{MutedByID: uuid.MustParse(blockedByID), MutedID: uuid.MustParse(blockedID)}
+	_ = h.MutedUsersService.UnMutedUserByUser(&mutedUser)
+
+	closeFriend := model.CloseFriends{UserID: uuid.MustParse(blockedByID), FriendID: uuid.MustParse(blockedID)}
+	_ = h.CloseFriendService.RemoveCloseFriend(&closeFriend)
+
+	_, _ = http.Post("http://localhost:8088/users/unfollow/" + blockedByID + "/" + blockedID, "application/json", nil)
+
 	writer.WriteHeader(http.StatusCreated)
 	writer.Header().Set("Content-Type", "application/json")
 

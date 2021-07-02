@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
@@ -26,6 +27,9 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(json.NewDecoder(r.Body).Decode(&post))
 	err := json.NewDecoder(r.Body).Decode(&post)
 	post.ID = uuid.New()
+	fmt.Println("*************************************\n\n\n\n")
+	fmt.Println(post.ID.String())
+	fmt.Println("\n\n\n\n*************************************")
 	post.TIMESTAMP = time.Now()
 	post.COMMENTS = []model.Comment{}
 	post.LIKES = []model.Like{}
@@ -44,13 +48,28 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var dto dto.FollowersDto
-	err = json.NewDecoder(rest.Body).Decode(&dto)
-	fmt.Println(dto.KEYS)
-	err = handler.Service.AddPostToFeed(dto.KEYS, &post)
+	var followersDto dto.FollowersDto
+	err = json.NewDecoder(rest.Body).Decode(&followersDto)
+	fmt.Println(followersDto.KEYS)
+	err = handler.Service.AddPostToFeed(followersDto.KEYS, &post)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	respSubs, errSubs  := http.Get("http://localhost:8087/users/subscribers/" + post.USERID.String())
+
+	if errSubs == nil {
+		var subsIds [] string
+		err = json.NewDecoder(respSubs.Body).Decode(&subsIds)
+		if err == nil {
+			for i := range subsIds {
+				notReq := dto.NotificationRequestDto{USERID: post.USERID.String(), NOTIFYID: post.ID.String(), NOTIFYUSERID: subsIds[i], TYPEOFNOTIFY: "post"}
+				payloadBuf := new(bytes.Buffer)
+				json.NewEncoder(payloadBuf).Encode(notReq)
+				_, _ = http.Post("http://localhost:8085/notify/create", "application/json", payloadBuf)
+			}
+		}
 	}
 
 	w.WriteHeader(http.StatusCreated)
