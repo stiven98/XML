@@ -32,7 +32,7 @@ func handleFunc(postsHandler *handler.PostsHandler) {
 	router.HandleFunc("/posts/getById/{userid}/{postid}", postsHandler.GetByIds).Methods("GET")
 	router.HandleFunc("/posts/getByUserId/{userid}", postsHandler.GetByUserId).Methods("GET")
 	router.HandleFunc("/posts/feed/{id}", postsHandler.GetFeed).Methods("GET")
-	router.HandleFunc("/posts/public", postsHandler.GetPublic).Methods("GET")
+	router.HandleFunc("/posts/public/{id}", postsHandler.GetPublic).Methods("GET")
 	router.HandleFunc("/posts/liked/{id}", postsHandler.GetLiked).Methods("GET")
 	router.HandleFunc("/posts/disliked/{id}", postsHandler.GetDisliked).Methods("GET")
 	router.HandleFunc("/posts/reported", postsHandler.GetReported).Methods("GET")

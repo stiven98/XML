@@ -271,13 +271,61 @@ func (handler *PostsHandler) GetReported(w http.ResponseWriter, r *http.Request)
 func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetFeed(vars["id"])
-	renderJSON(w, &post)
+	var posts []model.Post
+	var firstFilter []model.Post
+	var finalFilter []model.Post
+	posts = handler.Service.GetFeed(vars["id"])
+
+	// Filtrira postove mutovanih korisnika
+
+	respMut, _  := http.Get("http://localhost:8087/users/muted/" + vars["id"])
+	var mutedIds [] string
+	errJson := json.NewDecoder(respMut.Body).Decode(&mutedIds)
+	if errJson == nil {
+		for i := range posts {
+			isNotByMutedUser := true
+			for j := range mutedIds {
+				if posts[i].USERID.String() == mutedIds[j] {
+					isNotByMutedUser = false
+				}
+			}
+			if isNotByMutedUser {
+				firstFilter = append(firstFilter, posts[i])
+			}
+		}
+	} else {
+		firstFilter = posts
+	}
+
+	// Filtrira postove mutovanih korisnika
+
+	respBlock, _  := http.Get("http://localhost:8087/users/blocked/" + vars["id"])
+
+	var blockedIds [] string
+	errJson2 := json.NewDecoder(respBlock.Body).Decode(&blockedIds)
+	if errJson2 == nil {
+		for i := range firstFilter {
+			isNotByBlockedUser := true
+			for j := range blockedIds {
+				if firstFilter[i].USERID.String() == blockedIds[j] {
+					isNotByBlockedUser = false
+				}
+			}
+			if isNotByBlockedUser {
+				finalFilter = append(finalFilter, firstFilter[i])
+			}
+		}
+	} else {
+		finalFilter = firstFilter
+	}
+
+	renderJSON(w, &finalFilter)
 }
 
 func (handler *PostsHandler) GetPublic(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
 	rest, err := http.Get("http://localhost:8085/users/public-ids")
-
+	var finalFilter []model.Post
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -291,7 +339,31 @@ func (handler *PostsHandler) GetPublic(w http.ResponseWriter, r *http.Request){
 	}
 	fmt.Println(dto.KEYS)
 	posts := handler.Service.GetPublic(dto.KEYS)
-	renderJSON(w, &posts)
+	if vars["id"] == "" {
+		renderJSON(w, &posts)
+		return
+	}
+	respBlock, _  := http.Get("http://localhost:8087/users/blocked/" + vars["id"])
+
+	var blockedIds [] string
+	errJson2 := json.NewDecoder(respBlock.Body).Decode(&blockedIds)
+	if errJson2 == nil {
+		for i := range posts {
+			isNotByBlockedUser := true
+			for j := range blockedIds {
+				if finalFilter[i].USERID.String() == blockedIds[j] {
+					isNotByBlockedUser = false
+				}
+			}
+			if isNotByBlockedUser {
+				finalFilter = append(finalFilter, posts[i])
+			}
+		}
+	} else {
+		finalFilter = posts
+	}
+	renderJSON(w, &finalFilter)
+	return
 }
 
 func (handler *PostsHandler) GetAllTagsPublic(w http.ResponseWriter, r *http.Request){

@@ -120,7 +120,7 @@ export class PostsComponent implements OnInit {
 
   initData = () => {
     let id = localStorage.getItem('id');
-    this.postsService.getPublicPosts().subscribe((res) => {
+    this.postsService.getPublicPosts(id as string).subscribe((res) => {
       this.publicPosts = res as any[];
       if (this.publicPosts) {
         for (let p of this.publicPosts) {

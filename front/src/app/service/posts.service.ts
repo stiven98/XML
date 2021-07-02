@@ -50,8 +50,8 @@ export class PostsService {
     );
   };
 
-  getPublicPosts = () => {
-    return this.http.get('http://localhost:8086/posts/public').pipe(
+  getPublicPosts = (id = "00000000-00000000-00000000-00000000") => {
+    return this.http.get('http://localhost:8086/posts/public/' + id).pipe(
       map((item) => {
         return item;
       })
