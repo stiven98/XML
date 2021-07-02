@@ -61,10 +61,18 @@ func (repo *UsersRepository) Create(user *model.User) error {
 	}
 	payloadBuf := new(bytes.Buffer)
 	json.NewEncoder(payloadBuf).Encode(dto)
+	payloadBuf1 := new(bytes.Buffer)
+	json.NewEncoder(payloadBuf1).Encode(dto.ID)
 	_, err := http.Post("http://localhost:8080/api/createUser","application/json", payloadBuf)
+	_, err1 := http.Post("http://localhost:8088/users/addNode/" + dto.ID.String(),"application/json", payloadBuf1)
+
 	if err != nil {
 		fmt.Println(err)
 		return err
+	}
+	if err1 != nil {
+		fmt.Println(err1)
+		return err1
 	}
 	fmt.Println(result.RowsAffected)
 	return result.Error

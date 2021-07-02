@@ -27,6 +27,7 @@ func handleFunc(postsHandler *handler.PostsHandler) {
 
 	router.HandleFunc("/comments", postsHandler.LeaveComment).Methods("POST")
 	router.HandleFunc("/posts/create", postsHandler.Create).Methods("POST")
+	router.HandleFunc("/posts/createCampaign", postsHandler.CreateCampaign).Methods("POST")
 	router.HandleFunc("/posts/getByKey/{key}", postsHandler.GetByKey).Methods("GET")
 	router.HandleFunc("/posts/getById/{userid}/{postid}", postsHandler.GetByIds).Methods("GET")
 	router.HandleFunc("/posts/getByUserId/{userid}", postsHandler.GetByUserId).Methods("GET")
