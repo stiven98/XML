@@ -256,6 +256,7 @@ export class PostsComponent implements OnInit {
   }
 
   getCurrentUserImage = (): string => {
+    if(!this.authService.isLoggedIn) return "";
     return this.currentUser.system_user.picturePath;
   }
 
