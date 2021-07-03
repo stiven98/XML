@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/go-redis/redis"
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -13,6 +15,7 @@ import (
 	"profileservice/handler"
 	"profileservice/model"
 	"profileservice/repository"
+	"profileservice/saga"
 	"profileservice/service"
 	"time"
 )
@@ -329,11 +332,98 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), handlers.CORS(headers, methods, origins) (router)))
 }
 
+func RedisConnection (usersService *service.UsersService) {
+	// create client and ping redis
+	var err error
+	client := redis.NewClient(&redis.Options{Addr: "localhost:6379", Password: "", DB: 0})
+	if _, err = client.Ping().Result(); err != nil {
+		log.Fatalf("error creating redis client %s", err)
+	}
+	usersService.GetAllPublic()
+	// subscribe to the required channels
+	pubsub := client.Subscribe(saga.ProfileChannel, saga.ReplyChannel)
+	if _, err = pubsub.Receive(); err != nil {
+		log.Fatalf("error subscribing %s", err)
+	}
+	defer func() { _ = pubsub.Close() }()
+	ch := pubsub.Channel()
+
+	log.Println("starting the order service")
+	for {
+		select {
+		case msg := <-ch:
+			m := saga.Message{}
+			err := json.Unmarshal([]byte(msg.Payload), &m)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			fmt.Println(m.Ok)
+			fmt.Println(m.UserId)
+			fmt.Println("***************************************************")
+			switch msg.Channel {
+			case saga.ProfileChannel:
+
+				// Happy Flow
+				if m.Action == saga.ActionStart {
+					if m.SenderService == saga.ServiceFollower {
+						if m.Ok {
+							fmt.Print("UDJES OVDEEEEE")
+							user := m.UserId
+							u, _ := usersService.GetById(user)
+
+							u.IsCreate = "create"
+							err = usersService.Update(&u)
+							if err != nil {
+								return
+							}
+							log.Println("FINISHED")
+						}
+					} else {
+						fmt.Print("OVO JE DELETEEEE")
+						user := m.UserId
+						u, _ := usersService.GetById(user)
+						u.IsCreate = "delete"
+						err = usersService.Update(&u)
+						if err != nil {
+							return
+						}
+						log.Println("CANCEL")
+					}
+				}
+
+				if m.Action == saga.ActionRollback {
+					fmt.Print("STA SE DESI OVDEEE")
+					user := m.UserId
+					u, _ := usersService.GetById(user)
+					u.IsCreate = "delete"
+					err = usersService.Update(&u)
+					if err != nil {
+						return
+					}
+					uuuu, _ := usersService.GetById(user)
+					log.Println("CANCELLED %d", uuuu.IsCreate)
+
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
 func main() {
 	database := initDB()
+	go saga.NewOrchestrator().Start()
 	sysusersRepo, administratorsRepo, usersRepo, agentsRepo, notifyRepo := initRepo(database)
 	systemUsersService, administratorsService, usersService, agentsService, notifyService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo,notifyRepo)
+	go RedisConnection(usersService)
 	systemUsersHandler, administratorsHandler, usersHandler, agentsHandler,notifyHandler := initHandler(systemUsersService, administratorsService, usersService, agentsService,notifyService)
 	handleFunc(systemUsersHandler, administratorsHandler, usersHandler, agentsHandler,notifyHandler)
+
+
 }
 

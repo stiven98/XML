@@ -49,6 +49,7 @@ type User struct {
 	NotifyDislikeFromNotFollowProfile bool `json:"notifyDislikeFromNotFollowProfile""`
 	NotifyCommentFromNotFollowProfile bool `json:"notifyCommentFromNotFollowProfile""`
 	NotifyMessageFromNotFollowProfile bool `json:"notifyMessageFromNotFollowProfile""`
+	IsCreate string `json:"isCreate"`
 }
 type Administrator struct {
 	UserID   uuid.UUID `json:"id"`
