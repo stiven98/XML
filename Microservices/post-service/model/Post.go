@@ -33,6 +33,18 @@ type Feed struct {
 type ReportedBy struct {
 	UserId uuid.UUID `json:"userid"`
 }
+
+type SavedPost struct {
+	USERID uuid.UUID `json:"userid"`
+	POSTID uuid.UUID `json:"postid"`
+	OWNERID uuid.UUID `json:"ownerid"`
+	COLLECTION PostCollection `json:"collection"`
+}
+
+type PostCollection struct {
+	NAME string `json:"name"`
+}
+
 type Post struct {
 	ID uuid.UUID 	`json:"id"`
 	USERID uuid.UUID `json:"userid"`

@@ -29,3 +29,16 @@ func (service SubscribeAccService) GetAllSubscribers(id string)([]uuid.UUID,erro
 	}
 	return list , err
 }
+
+func (service SubscribeAccService) IsSubscribed(s *model.SubscribeAcc) (bool,error) {
+	var sub model.SubscribeAcc
+	sub, err := service.SubscriberAccRepository.IsSubscribed(s)
+
+	if s.SubscribeID != sub.SubscribeID{
+		return false,err
+	}
+
+	return true,err
+}
+
+

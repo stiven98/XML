@@ -41,7 +41,7 @@ export class NotificationsComponent implements OnInit {
           if (u.type_of_notify === "like") { text = "lajkovao fotografiju"; }
           if (u.type_of_notify === "comment") { text = "komentarisao fotografiju" }
           if (u.type_of_notify === "dislike") { text = "dislajkovao fotografiju" }
-          if (u.type_of_notify === "post") { text = "postavio fotografiju" }
+          if (u.type_of_notify === "post") { text = "postavio fotografiju"; u.notify_user_id = u.userId; }
           if (u.type_of_notify === "story") { text = "objavio story"; postFlag = false; }
           if (u.type_of_notify === "message") { text = "poslao poruku"; postFlag = false; }
           let user = {

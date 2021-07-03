@@ -81,6 +81,24 @@ export class PostsComponent implements OnInit {
     }
   };
 
+  addToFavourites = (post: any) => {
+    let postId = post.id;
+    let ownerId = post.userid;
+    let id = localStorage.getItem('id');
+    if (id) {
+      this.postsService
+        .addFavourite({ userid: id, postid: postId, ownerid: ownerId })
+        .subscribe(res => {
+          alert('Uspesno ste sacuvali objavu')
+        }, err => {
+          alert('Objava je vec sacuvana')
+        }
+        );
+    } else {
+      alert('Morate biti ulogovani da bi sacuvali objavu');
+    }
+  };
+
   dislikeClick = (post: any) => {
     let postId = post.id;
     let ownerId = post.userid;
@@ -120,7 +138,7 @@ export class PostsComponent implements OnInit {
 
   initData = () => {
     let id = localStorage.getItem('id');
-    this.postsService.getPublicPosts().subscribe((res) => {
+    this.postsService.getPublicPosts(id as string).subscribe((res) => {
       this.publicPosts = res as any[];
       if (this.publicPosts) {
         for (let p of this.publicPosts) {
@@ -256,6 +274,7 @@ export class PostsComponent implements OnInit {
   }
 
   getCurrentUserImage = (): string => {
+    if(!this.authService.isLoggedIn) return "";
     return this.currentUser.system_user.picturePath;
   }
 

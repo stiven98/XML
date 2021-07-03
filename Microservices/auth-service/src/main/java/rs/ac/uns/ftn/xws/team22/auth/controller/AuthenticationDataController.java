@@ -33,6 +33,7 @@ public class AuthenticationDataController {
 
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@RequestBody CreateUserDTO dto) {
+        System.out.println(dto.id);
         AuthenticationData authData = authenticationDataService.createUser(dto);
         return  new ResponseEntity<>(authData, HttpStatus.CREATED);
     }

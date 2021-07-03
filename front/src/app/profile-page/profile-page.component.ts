@@ -25,6 +25,7 @@ export class ProfilePageComponent implements OnInit {
   isBlockedUsesr: boolean = false;
   isMuted: boolean = false;
   showBlockMute: boolean = false;
+  isSubscriber: boolean = false;
 
   public posts: any[] = [];
 
@@ -119,6 +120,7 @@ export class ProfilePageComponent implements OnInit {
       this.following = [];
     }
     console.log(this.status);
+    this.managementService.isSubscribed(this.myId,this.id).subscribe((res:any) => this.isSubscriber = res)
   };
   onFollow = () => {
     this.followService.follow(this.myId, this.id).subscribe((response) => {
@@ -141,7 +143,7 @@ export class ProfilePageComponent implements OnInit {
   block = () => {
     this.managementService
       .blockUser(this.myId, this.id)
-      .subscribe((res: any) => (this.isBlockedUsesr = !this.isBlockedUsesr));
+      .subscribe((res: any) => {this.initData()});
   };
 
   mute = () => {
@@ -161,4 +163,13 @@ export class ProfilePageComponent implements OnInit {
       .unMuteUser(this.myId, this.id)
       .subscribe((res: any) => (this.isMuted = !this.isMuted));
   };
+
+  subscribe = () => {
+    this.managementService.subscribe(this.myId, this.id).subscribe((res:any) => this.isSubscriber = !this.isSubscriber )
+  }
+
+  unSubscribe = () => {
+    this.managementService.unSubscribe(this.myId, this.id).subscribe((res:any) => this.isSubscriber = !this.isSubscriber )
+  }
+
 }

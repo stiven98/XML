@@ -260,6 +260,7 @@ func (h FollowersHandler) Unfollow(writer http.ResponseWriter, request *http.Req
 
 	e := h.FollowersService.Unfollow(userID, targetID)
 	if e == nil {
+		_, _ = http.Post("http://localhost:8087/users/unsubscribe/" + userID + "/" + targetID, "application/json", nil)
 		writer.WriteHeader(http.StatusOK)
 		return
 	}
