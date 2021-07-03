@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule, Routes } from '@angular/router';
+import { Router, RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -67,6 +67,9 @@ const appRoutes: Routes = [
     FormsModule,
     HttpClientModule,
     NgbModule,
+  ],
+  exports: [
+    RouterModule
   ],
   providers: [
     {
