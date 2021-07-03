@@ -4,6 +4,8 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$/../followers-microservice" />
     <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$/../profile-management-service" />
+    <content url="file://$MODULE_DIR$/../profile-service" />
     <content url="file://$MODULE_DIR$/../story-service" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

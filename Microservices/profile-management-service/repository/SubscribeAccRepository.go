@@ -25,3 +25,9 @@ func (r SubscribeAccRepository) GetAllSubscribers(id string) ([]model.SubscribeA
 	response := r.DataBase.Model(model.SubscribeAcc{}).Where("subscribe_id = ?", id).Find(&subscriber)
 	return  subscriber, response.Error
 }
+
+func (r SubscribeAccRepository) IsSubscribed(subscriber *model.SubscribeAcc) (model.SubscribeAcc, error){
+	var sub model.SubscribeAcc
+	response := r.DataBase.Model(model.SubscribeAcc{}).Where(" subscribe_by_id = ? AND subscribe_id = ?", subscriber.SubscribeByID,subscriber.SubscribeID).Find(&sub)
+	return  sub, response.Error
+}

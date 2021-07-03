@@ -1,15 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"followers-microservice/handler"
 	"followers-microservice/model"
 	"followers-microservice/repository"
+	"followers-microservice/saga"
 	"followers-microservice/service"
+	"github.com/go-redis/redis"
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 	"log"
 	"net/http"
@@ -144,10 +146,92 @@ func handlerFunc(followersHandler *handler.FollowersHandler)  {
 }
 
 
+func RedisConnection(followersService *service.FollowersService) {
+	// create client and ping redis
+	var err error
+	client := redis.NewClient(&redis.Options{Addr: "localhost:6379", Password: "", DB: 0})
+	if _, err = client.Ping().Result(); err != nil {
+		log.Fatalf("error creating redis client %s", err)
+	}
+
+	// subscribe to the required channels
+	pubsub := client.Subscribe(saga.FollowerChannel, saga.ReplyChannel)
+	if _, err = pubsub.Receive(); err != nil {
+		log.Fatalf("error subscribing %s", err)
+	}
+	defer func() { _ = pubsub.Close() }()
+	ch := pubsub.Channel()
+
+	log.Println("starting the stock service")
+	for {
+		select {
+		case msg := <-ch:
+			m := saga.Message{}
+			err := json.Unmarshal([]byte(msg.Payload), &m)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			switch msg.Channel {
+			case saga.FollowerChannel:
+
+				// Happy Flow
+				if m.Action == saga.ActionStart {
+					// Check quantity of products
+					userId := m.UserId
+					fmt.Println(userId)
+					fmt.Print("******************************************************************************************")
+					m.Ok = true
+					ret := followersService.UserExists(userId)
+
+					if ret != nil{
+						m.Ok = false
+					}
+
+					fmt.Println(ret)
+					if err != nil {
+						log.Println("error querying search:", err)
+						return
+					}
+					if m.Ok {
+						log.Println("Ovo je okejj")
+						followersService.AddNode(userId)
+						sendToReplyChannel(client, &m, saga.ActionDone, saga.ServiceProfile, saga.ServiceFollower)
+					}
+					if !m.Ok{
+						log.Println("Ovo nije okej")
+						sendToReplyChannel(client, &m, saga.ActionError, saga.ServiceProfile, saga.ServiceFollower)
+					}
+
+					// Simulate rollback from stock-service
+					// sendToReplyChannel(client, &m, saga.ActionError, saga.ServiceOrder, saga.ServiceStock)
+				}
+				// Rollback flow
+			}
+		}
+	}
+}
+
+func sendToReplyChannel(client *redis.Client, m *saga.Message, action string, service string, senderService string) {
+
+	var err error
+	m.Action = action
+	m.Service = service
+	m.SenderService = senderService
+	if err = client.Publish(saga.ReplyChannel, m).Err(); err != nil {
+		log.Printf("error publishing done-message to %s channel", saga.ReplyChannel)
+	}
+	log.Printf("done message published to channel :%s", saga.ReplyChannel)
+}
+
+
+
 func main() {
 	driver := initDB()
 	followersRepository := initRepo(driver)
 	followersService := initService(followersRepository)
+	go RedisConnection(followersService)
 	followersHandler := initHandler(followersService)
 	handlerFunc(followersHandler)
 

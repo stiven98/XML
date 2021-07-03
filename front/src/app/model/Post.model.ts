@@ -26,6 +26,17 @@ export interface LikeReq {
   ownerid: string;
 }
 
+export interface FavPost {
+  userid: string;
+  postid: string;
+  ownerid: string;
+  collection : PostCollection
+}
+
+export interface PostCollection {
+  name : string;
+}
+
 export interface CommentReq {
   userid: string;
   postid: string;

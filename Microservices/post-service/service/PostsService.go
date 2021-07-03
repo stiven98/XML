@@ -68,3 +68,15 @@ func (service *PostsService) GetByIds(userid string, postid string) interface{} 
 func (service *PostsService) GetByUserId(userid string) interface{} {
 	return service.PostsRepo.GetByUserId(userid)
 }
+
+func (service *PostsService) SavePost(post *model.SavedPost) error {
+	return service.PostsRepo.SavePost(post)
+}
+
+func (service *PostsService) GetAllArchived(id string) []model.SavedPost {
+	return service.PostsRepo.GetAllArchived(id)
+}
+
+func (service *PostsService) EditArchived(post model.SavedPost) error {
+	return service.PostsRepo.EditArchived(post)
+}
