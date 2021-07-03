@@ -1,14 +1,8 @@
 import React from "react";
 import ProductsApi from "../api/ProductsApi";
 import ProductCard from "./ProductCard";
-import {Button, Modal} from "react-bootstrap";
 import ProductModel from "../model/ProductModel";
 import ProductModelValidation from "../model/ProductModelValidation";
-import ImagesApi from "../api/ImagesApi";
-import axios from "axios";
-import usersApi from "../api/UsersApi";
-import UserModel from "../model/UserModel";
-import UserModelValidation from "../model/UserModelValidation";
 import ProductDetailModal from "./ProductDetailModal";
 
 class MyProducts extends React.Component {
@@ -54,6 +48,7 @@ class MyProducts extends React.Component {
             if (product.deleted === false) {
                 return (<ProductCard key={product.id} product={product}/>);
             }
+            return <div/>;
         })
     }
 

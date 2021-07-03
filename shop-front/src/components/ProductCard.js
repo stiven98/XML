@@ -1,6 +1,6 @@
 import React from "react";
-import  {Button, Card} from "react-bootstrap";
-import { withRouter } from "react-router-dom";
+import {Button, Card} from "react-bootstrap";
+import {withRouter} from "react-router-dom";
 import ImagesApi from "../api/ImagesApi";
 
 class ProductCard extends React.Component {
@@ -13,8 +13,8 @@ class ProductCard extends React.Component {
     render() {
         return (
             <div className={`col-4 mt-2 mb-2`}>
-                <Card style={{ width: '18rem' }}>
-                    <Card.Img variant="top" src={ImagesApi + this.props.product.picturePath} />
+                <Card style={{width: '18rem'}}>
+                    <Card.Img variant="top" src={ImagesApi + this.props.product.picturePath}/>
                     <Card.Body>
                         <Card.Title>
                             <div className={`row`}>
@@ -36,7 +36,6 @@ class ProductCard extends React.Component {
                     </Card.Body>
                 </Card>
             </div>
-
 
 
         );
