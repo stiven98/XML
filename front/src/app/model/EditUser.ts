@@ -41,6 +41,7 @@ export class UserEdit{
     notifyDislikeFromNotFollowProfile: boolean;
     notifyCommentFromNotFollowProfile: boolean;
     notifyMessageFromNotFollowProfile: boolean;
+    isCreate: string;
 
     constructor() {
         this.userId = '';
@@ -61,5 +62,6 @@ export class UserEdit{
         this.notifyDislikeFromNotFollowProfile = false;
         this.notifyCommentFromNotFollowProfile = false;
         this.notifyMessageFromNotFollowProfile = false;
+        this.isCreate = "";
     }
 }
