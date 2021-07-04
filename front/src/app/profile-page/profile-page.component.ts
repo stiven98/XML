@@ -28,7 +28,7 @@ export class ProfilePageComponent implements OnInit {
   isSubscriber: boolean = false;
 
   public posts: any[] = [];
-
+  public campaigns: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -81,6 +81,12 @@ export class ProfilePageComponent implements OnInit {
         this.postsService.getByUserId(this.id).subscribe((res) => {
           this.posts = res as any[];
         });
+
+        if (this.authService.getRole() === 'ROLE_AGENT') {
+            this.postsService.getCampaignsByUserId(this.id).subscribe((result: any) => {
+              this.campaigns = result as any[];
+            })
+        }
       });
 
     this.followService.getFollowers(this.id).subscribe((response) => {
@@ -120,7 +126,9 @@ export class ProfilePageComponent implements OnInit {
       this.following = [];
     }
     console.log(this.status);
-    this.managementService.isSubscribed(this.myId,this.id).subscribe((res:any) => this.isSubscriber = res)
+    this.managementService
+      .isSubscribed(this.myId, this.id)
+      .subscribe((res: any) => (this.isSubscriber = res));
   };
   onFollow = () => {
     this.followService.follow(this.myId, this.id).subscribe((response) => {
@@ -139,11 +147,17 @@ export class ProfilePageComponent implements OnInit {
   imageClick = (post: any) => {
     this.router.navigate(['single-post/' + post.userid + '/' + post.id]);
   };
+  
+  openCampaign = (campaign: any) =>{
+    this.router.navigate(['single-campaign/' + campaign.userid + '/' + campaign.id])
+  }
 
   block = () => {
     this.managementService
       .blockUser(this.myId, this.id)
-      .subscribe((res: any) => {this.initData()});
+      .subscribe((res: any) => {
+        this.initData();
+      });
   };
 
   mute = () => {
@@ -165,11 +179,14 @@ export class ProfilePageComponent implements OnInit {
   };
 
   subscribe = () => {
-    this.managementService.subscribe(this.myId, this.id).subscribe((res:any) => this.isSubscriber = !this.isSubscriber )
-  }
+    this.managementService
+      .subscribe(this.myId, this.id)
+      .subscribe((res: any) => (this.isSubscriber = !this.isSubscriber));
+  };
 
   unSubscribe = () => {
-    this.managementService.unSubscribe(this.myId, this.id).subscribe((res:any) => this.isSubscriber = !this.isSubscriber )
-  }
-
+    this.managementService
+      .unSubscribe(this.myId, this.id)
+      .subscribe((res: any) => (this.isSubscriber = !this.isSubscriber));
+  };
 }

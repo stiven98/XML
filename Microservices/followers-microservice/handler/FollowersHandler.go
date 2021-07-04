@@ -91,14 +91,16 @@ func (h FollowersHandler) Follow(writer http.ResponseWriter, request *http.Reque
 	userID := tokens[int(len(tokens))-2]
 	targetID := tokens[int(len(tokens))-1]
 	retVal := h.FollowersService.UserExists(userID)
-
+	fmt.Println(retVal)
+	fmt.Println("posotji")
 	if retVal == nil {
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	retVal = h.FollowersService.UserExists(targetID)
-
+	fmt.Println(retVal)
+	fmt.Println("postoji")
 	if retVal == nil {
 		writer.WriteHeader(http.StatusBadRequest)
 		return

@@ -1,31 +1,56 @@
 export class Campaign {
-  id: string;
-  items: PostItem[];
+  userId: string;
+  influencers: [];
+  ads: Ad[];
+  type: string;
   description: string;
-  website: string;
-  isMultiple: boolean;
-  startDate: Date;
-  endDate: Date;
+  ismultiple: boolean;
+  startday: string;
+  endday: string;
   timestoplace: number;
-  timetoshow: string;
-  targetgroup: string[];
+  whentoplace: string;
+  comments: Comment[];
   likes: Like[];
   dislikes: Dislike[];
-  comments: Comment[];
+  timesplaced: number;
+  timesclicked: number;
+  showtomen: boolean;
+  showtowomen: boolean;
+  showunder18: boolean;
+  show18to24: boolean;
+  show24to35: boolean;
+  showover35: boolean;
   constructor() {
-    this.id = '';
-    this.items = [];
+    this.userId = '';
+    this.influencers = [];
+    this.ads = [];
+    this.type = '';
     this.description = '';
-    this.website = '';
-    this.isMultiple = false;
-    this.startDate = new Date();
-    this.endDate = new Date();
+    this.ismultiple = false;
+    this.startday = '';
+    this.endday = '';
     this.timestoplace = 0;
-    this.timetoshow = '';
-    this.targetgroup = [];
+    this.whentoplace = '';
     this.likes = [];
     this.dislikes = [];
     this.comments = [];
+    this.timesplaced = 0;
+    this.timesclicked = 0;
+    this.showtomen = false;
+    this.showtowomen = false;
+    this.showunder18 = false;
+    this.show18to24 = false;
+    this.show24to35 = false;
+    this.showover35 = false;
+  }
+}
+
+export class Ad {
+  path: any;
+  link: string;
+  constructor() {
+    this.path = null;
+    this.link = '';
   }
 }
 

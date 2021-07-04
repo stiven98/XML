@@ -1,6 +1,7 @@
 <nav class="navbar navbar-icon-top navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#"><img src="../../assets/images/logo.png" width="180px" /></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -77,12 +78,16 @@
             </li>
             <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams" [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
+                    <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams"
+                        [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text"
+                        placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
             <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 200px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams" [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
+                    <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams"
+                        [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text"
+                        placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
             <li *ngIf="!this.authService.isLoggedIn" class="nav-item" style="margin-left: 550px;">
@@ -118,14 +123,17 @@
                     </i>Odjava
                 </a>
             </li>
-            <li *ngIf="this.authService.isLoggedIn && !this.authService.getRole().includes('ADMIN')" class="nav-item dropdown" style="margin-right: 50px;">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li *ngIf="this.authService.isLoggedIn && !this.authService.getRole().includes('ADMIN')"
+                class="nav-item dropdown" style="margin-right: 50px;">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-user">
                         <span class="badge badge-primary">11</span>
                     </i> Moj profil
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" style="cursor: pointer;" (click)="myProfileClick()"> <i class="fa fa-user"></i> Profil</a>
+                    <a class="dropdown-item" style="cursor: pointer;" (click)="myProfileClick()"> <i
+                            class="fa fa-user"></i> Profil</a>
                     <a class="dropdown-item" href="/editProfile"> <i class="fa fa-cog"></i> Podešavanja</a>
                     <div class="dropdown-divider"> </div>
                     <a class="dropdown-item" href="/favourites"> <i class="fa fa-star"></i> Sačuvane objave</a>
@@ -137,7 +145,8 @@
         </ul>
     </div>
 </nav>
-<div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px; margin-right: 515px;">
+<div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center"
+    style="margin-top: -30px; margin-right: 515px;">
     <div class="card mt-5 p-4">
         <p *ngIf="usernamesToShow.length == 0 && isUsersSearchSelected">Nema rezultata</p>
         <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -147,16 +156,33 @@
         </div>
         <div *ngFor="let username of usernamesToShow" class="d-flex flex-row justify-content-between mb-3">
             <div class="d-flex flex-column p-3">
-                <a (click)="onLinkClick(username)" style="color: black; cursor: pointer; margin-top:10px" class="mb-1">{{username}}</a>
+                <a (click)="onLinkClick(username)" style="color: black; cursor: pointer; margin-top:10px"
+                    class="mb-1">{{username}}</a>
             </div>
             <div class="price pt-3 pl-3">
-                <img *ngIf="isUsersSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/aca.png">
-                <img *ngIf="isTagsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/hashtag.png">
-                <img *ngIf="isLocationsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/location.jpg">
+                <img *ngIf="isUsersSearchSelected" img class="mb-2" style="width: 40px; height: 40px;"
+                    src="../../assets/images/aca.png">
+                <img *ngIf="isTagsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;"
+                    src="../../assets/images/hashtag.png">
+                <img *ngIf="isLocationsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;"
+                    src="../../assets/images/location.jpg">
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #modAddLink let-modal>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="form-check form-switch">
+        <label for="description" class="font-weight-light text-muted">Link za reklamu:</label>
+        <input type="text" id="description" class="form-control border-0" name="description" [(ngModel)]="adLink"
+            [ngModelOptions]="{standalone: true}">
+        <button class='btn btn-outline-primary' (click)="onAddLinkClick(); modal.dismiss('close')">Dodaj link na reklamu</button>
+    </div>
+</ng-template>
+
 
 <ng-template #modAddCampaign let-modal>
     <div class="modal-header">
@@ -171,29 +197,31 @@
             <label style="margin-left: 5px;" class="form-check-label" for="isMultiple">Da</label>
             <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="isMultiple" id="isMultiple">
         </div>
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="location" class="font-weight-light text-muted">Datum početka:</label>
+            <input type="date" id="location" class="form-control border-0" name="location" [(ngModel)]="startDate"
+                [ngModelOptions]="{standalone: true}">
+        </div>
         <div *ngIf="isMultiple" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <label for="location" class="font-weight-light text-muted">Datum isticanja:</label>
-            <input type="date" id="location" class="form-control border-0" name="location" [(ngModel)]="endDate" [ngModelOptions]="{standalone: true}">
-        </div>
-        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-            <label for="description" class="font-weight-light text-muted">Web sajt:</label>
-            <input type="text" id="description" class="form-control border-0" name="description" [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
-        </div>
-        <div *ngIf="!isMultiple" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-            <label for="description" class="font-weight-light text-muted">Kada plasirati kampanju:</label>
-            <select class="form-control custom-select bg-white border-md" [(ngModel)]="timeToPlace">
-                <option value="morning">Ujutru</option>
-                <option value="evening">Popodne</option>
-                <option value="night">Uvece</option>
-            </select>
-        </div>
-        <div *ngIf="isMultiple" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-            <label for="description" class="font-weight-light text-muted">Koliko puta plasirati:</label>
-            <input type="number" id="description" class="form-control border-0" name="description" [(ngModel)]="timesPlaced" [ngModelOptions]="{standalone: true}">
+            <input type="date" id="location" class="form-control border-0" name="location" [(ngModel)]="endDate"
+                [ngModelOptions]="{standalone: true}">
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <label for="description" class="font-weight-light text-muted">Opis:</label>
-            <input type="text" id="website" class="form-control border-0" name="website" [(ngModel)]="website" [ngModelOptions]="{standalone: true}">
+            <input type="text" id="description" class="form-control border-0" name="description"
+                [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div *ngIf="!isMultiple" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="description" class="font-weight-light text-muted">Kada plasirati kampanju:</label>
+            <input type="time" id="time" class="form-control border-0" name="time" [(ngModel)]="whenToPlace"
+                [ngModelOptions]="{standalone: true}">
+
+        </div>
+        <div *ngIf="isMultiple" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="description" class="font-weight-light text-muted">Koliko puta plasirati:</label>
+            <input type="number" id="description" class="form-control border-0" name="description"
+                [(ngModel)]="timesToPlace" [ngModelOptions]="{standalone: true}">
         </div>
         <div class="form-check form-switch">
             <label for="description" class="font-weight-light text-muted">Ciljna grupa:</label> <br>
@@ -219,16 +247,19 @@
 
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-            <input id="upload" class="form-control border-0" type="file" name="files" multiple (change)="onChange($event)">
+            <input id="upload" class="form-control border-0" type="file" name="files" multiple
+                (change)="onCampaignChange($event)">
             <div class="input-group-append">
                 <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
                         class="fa fa-cloud-upload mr-2 text-muted"></i><small
                         class="text-uppercase font-weight-bold text-muted">Odaberite fajl</small></label>
             </div>
         </div>
-        <div *ngFor="let f of files">{{f.name}}</div>
+        <div *ngFor="let f of campaignFiles">{{f.name}}
+            <button class='btn btn-outline-primary' (click)="openModal2(modAddLink,f)">Dodaj link</button>
+        </div>
         <div class="float-right">
-            <button class="btn btn-outline-dark" (click)="uploadPost()">Objavi</button>
+            <button class="btn btn-outline-dark" (click)="uploadCampaign()">Objavi</button>
         </div>
     </div>
 </ng-template>
@@ -244,18 +275,22 @@
     <div class="modal-body overflow-auto">
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <label for="hashtag" class="font-weight-light text-muted">Hashtag:</label>
-            <input type="text" id="hashtag" class="form-control border-0" name="hashtag" [(ngModel)]="hashtag" [ngModelOptions]="{standalone: true}">
+            <input type="text" id="hashtag" class="form-control border-0" name="hashtag" [(ngModel)]="hashtag"
+                [ngModelOptions]="{standalone: true}">
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <label for="location" class="font-weight-light text-muted">Lokacija:</label>
-            <input type="text" id="location" class="form-control border-0" name="location" [(ngModel)]="location" [ngModelOptions]="{standalone: true}">
+            <input type="text" id="location" class="form-control border-0" name="location" [(ngModel)]="location"
+                [ngModelOptions]="{standalone: true}">
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <label for="description" class="font-weight-light text-muted">Opis:</label>
-            <input type="text" id="description" class="form-control border-0" name="description" [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
+            <input type="text" id="description" class="form-control border-0" name="description"
+                [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-            <input id="upload" class="form-control border-0" type="file" name="files" multiple (change)="onChange($event)">
+            <input id="upload" class="form-control border-0" type="file" name="files" multiple
+                (change)="onChange($event)">
             <div class="input-group-append">
                 <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
                         class="fa fa-cloud-upload mr-2 text-muted"></i><small
@@ -279,18 +314,22 @@
     <div class="modal-body overflow-auto">
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <label for="hashtag" class="font-weight-light text-muted">Hashtag:</label>
-            <input type="text" id="hashtag" class="form-control border-0" name="hashtag" [(ngModel)]="hashtag" [ngModelOptions]="{standalone: true}">
+            <input type="text" id="hashtag" class="form-control border-0" name="hashtag" [(ngModel)]="hashtag"
+                [ngModelOptions]="{standalone: true}">
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <label for="location" class="font-weight-light text-muted">Lokacija:</label>
-            <input type="text" id="location" class="form-control border-0" name="location" [(ngModel)]="location" [ngModelOptions]="{standalone: true}">
+            <input type="text" id="location" class="form-control border-0" name="location" [(ngModel)]="location"
+                [ngModelOptions]="{standalone: true}">
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <label for="description" class="font-weight-light text-muted">Opis:</label>
-            <input type="text" id="description" class="form-control border-0" name="description" [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
+            <input type="text" id="description" class="form-control border-0" name="description"
+                [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-            <input id="upload" class="form-control border-0" type="file" name="files" multiple (change)="onChange($event)">
+            <input id="upload" class="form-control border-0" type="file" name="files" multiple
+                (change)="onChange($event)">
             <div class="input-group-append">
                 <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
                         class="fa fa-cloud-upload mr-2 text-muted"></i><small
