@@ -1,0 +1,62 @@
+<!--Container-->
+<div class="container border">
+    <!--Row-->
+    <div class="row">
+        <!--All followers-->
+        <div class="col-6 border-right" style="min-height: 90vh;">
+            <h3>Pratioci</h3>
+            <div *ngFor="let follower of allFollowersToShow">
+                <div class="card text-center" style="margin: 20px;">
+                    <div class="card-body">
+                        <div class="row">
+                            <div (click)="imageClick(follower.id)" class="col-3">
+                                <img class="card-img-top" src="{{'http://localhost:8085/images/' + follower.system_user.picturePath}}" style="width: 64px; height: 64px; margin: 10px;" alt="Card image cap">
+                            </div>
+                            <div (click)="imageClick(follower.id)" class="col-6">
+                                <div class="row">
+                                    <span> {{follower.system_user.firstName + ' ' + follower.system_user.lastName}}</span>
+                                </div>
+                                <div class="row">
+                                    <span> @{{follower.system_user.username}} </span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <button (click)="addClick(follower.id)" type="button" class="btn-close-friend-green">Dodaj</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End of all followers-->
+        <!--Close friend-->
+        <div class="col-6" style="min-height: 90vh;">
+            <h3>Bliski prijatelji</h3>
+            <div *ngFor="let friend of closeFriendsToShow">
+                <div class="card text-center" style="margin: 20px;">
+                    <div class="card-body">
+                        <div class="row">
+                            <div (click)="imageClick(friend.id)" class="col-3">
+                                <img class="card-img-top" src="{{'http://localhost:8085/images/' + friend.system_user.picturePath}}" style="width: 64px; height: 64px; margin: 10px;" alt="Card image cap">
+                            </div>
+                            <div (click)="imageClick(friend.id)" class="col-6">
+                                <div class="row">
+                                    <span> {{friend.system_user.firstName + ' ' + friend.system_user.lastName}}</span>
+                                </div>
+                                <div class="row">
+                                    <span> @{{friend.system_user.username}} </span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <button (click)="removeClick(friend.id)" type="button" class="btn-close-friend-red">Ukloni</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End of close friends-->
+    </div>
+    <!--End of row-->
+</div>
+<!--End of container-->
