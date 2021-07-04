@@ -4,12 +4,12 @@ import { Injectable } from '@angular/core';
 import { CommentReq, FavPost, LikeReq, Post } from '../model/Post.model';
 import { ReportReq } from '../model/ReportReq';
 import { DeletePost } from '../model/DeletePost';
+import { Campaign } from '../model/Campaign';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostsService {
-  
   constructor(private http: HttpClient) {}
 
   changeCollection = (changeCollectionReq: FavPost) => {
@@ -32,11 +32,29 @@ export class PostsService {
         return item;
       })
     );
-  }
+  };
+
+  getCampaignsByUserId = (id: string) => {
+    return this.http.get('http://localhost:8086/campaigns/getUserCampaigns/' + id).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  };
 
   createPost = (post: Post) => {
     return this.http
       .post('http://localhost:8086/posts/create', post)
+      .pipe((res) => res);
+  };
+  createCampaign = (campaign: Campaign) => {
+    return this.http
+      .post('http://localhost:8086/campaigns/createCampaign', campaign)
+      .pipe((res) => res);
+  };
+  updateCampaign = (campaign: Campaign) => {
+    return this.http
+      .post('http://localhost:8086/campaigns/updateCampaign', campaign)
       .pipe((res) => res);
   };
 
@@ -48,15 +66,28 @@ export class PostsService {
     );
   };
 
-  getByIds = (userid: string, postid : string) => {
-    return this.http.get('http://localhost:8086/posts/getById/' + userid + '/' + postid).pipe(
-      map((item) => {
-        return item;
-      })
-    );
+  getByIds = (userid: string, postid: string) => {
+    return this.http
+      .get('http://localhost:8086/posts/getById/' + userid + '/' + postid)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  };
+  getCampaignByIds = (userid: string, campaignid: string) => {
+    return this.http
+      .get(
+        'http://localhost:8086/campaigns/getById/' + userid + '/' + campaignid
+      )
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
   };
 
-  getPublicPosts = (id = "00000000-00000000-00000000-00000000") => {
+  getPublicPosts = (id = '00000000-00000000-00000000-00000000') => {
     return this.http.get('http://localhost:8086/posts/public/' + id).pipe(
       map((item) => {
         return item;
@@ -93,7 +124,7 @@ export class PostsService {
       .pipe((res) => res);
   };
 
-  getFavourite = (id : string) => {
+  getFavourite = (id: string) => {
     return this.http
       .get('http://localhost:8086/posts/all-archived/' + id)
       .pipe((res) => res);
@@ -105,11 +136,11 @@ export class PostsService {
       .pipe((res) => res);
   };
 
-  leaveComment = (commentReq : CommentReq) => {
+  leaveComment = (commentReq: CommentReq) => {
     return this.http
-    .post('http://localhost:8086/comments', commentReq)
-    .pipe((res) => res);
-};
+      .post('http://localhost:8086/comments', commentReq)
+      .pipe((res) => res);
+  };
 
   dislikePost = (likeReq: LikeReq) => {
     return this.http
@@ -122,10 +153,22 @@ export class PostsService {
       .pipe((res) => res);
   };
   deletePost(deletePost: DeletePost) {
-    return this.http.post('http://localhost:8086/posts/delete', deletePost).pipe(
-      map((item) => {
-        return item;
-      })
-    );
+    return this.http
+      .post('http://localhost:8086/posts/delete', deletePost)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  }
+
+  deleteCampaign(deletePost: DeletePost) {
+    return this.http
+      .post('http://localhost:8086/campaigns/delete', deletePost)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
   }
 }

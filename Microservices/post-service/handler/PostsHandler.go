@@ -76,20 +76,73 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 func (handler *PostsHandler) CreateCampaign(w http.ResponseWriter, r *http.Request) {
-	//var campaign model.Campaign
-	//fmt.Println(json.NewDecoder(r.Body).Decode(&campaign))
-	//err := json.NewDecoder(r.Body).Decode(&campaign)
-	//campaign.ID = uuid.New()
-	//campaign.POSTS = []model.Post{}
-	//campaign.STARTDATE = time.Now()
-	//err = handler.Service.Create(&post)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	w.WriteHeader(http.StatusBadRequest)
-	//}
+	var campaign model.Campaign
+	fmt.Println(json.NewDecoder(r.Body).Decode(&campaign))
+	err := json.NewDecoder(r.Body).Decode(&campaign)
+	fmt.Println(err)
+	campaign.ID = uuid.New()
+	campaign.INFLUENCERS = []uuid.UUID{}
+	campaign.COMMENTS = []model.Comment{}
+	campaign.LIKES = []model.Like{}
+	campaign.DISLIKES = []model.Dislike{}
+	for i := range campaign.ADS {
+		campaign.ADS[i].ID = uuid.New()
+	}
+	fmt.Println(campaign)
+	err = handler.Service.CreateCampaign(&campaign)
+	fmt.Println("handler")
+	fmt.Println(err)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *PostsHandler) UpdateCampaign(w http.ResponseWriter, r *http.Request) {
+	var campaign model.Campaign
+	fmt.Println(json.NewDecoder(r.Body).Decode(&campaign))
+	err := json.NewDecoder(r.Body).Decode(&campaign)
+	fmt.Println(err)
+
+	fmt.Println(campaign)
+	existingCampaign := handler.Service.GetCampaignsByIds(campaign.USERID.String(), campaign.ID.String())
+	newCampaign := existingCampaign
+
+	newCampaign.DESCRIPTION = campaign.DESCRIPTION
+	newCampaign.STARTDAY = campaign.STARTDAY
+	newCampaign.ENDDAY = campaign.ENDDAY
+	newCampaign.TIMESTOPLACE = campaign.TIMESTOPLACE
+	newCampaign.WHENTOPLACE = campaign.WHENTOPLACE
+	newCampaign.SHOWUNDER18 = campaign.SHOWUNDER18
+	newCampaign.SHOW18TO24 = campaign.SHOW18TO24
+	newCampaign.SHOW24TO35 = campaign.SHOW24TO35
+	newCampaign.SHOWOVER35 = campaign.SHOWOVER35
+	newCampaign.SHOWTOMEN = campaign.SHOWTOMEN
+	newCampaign.SHOWTOWOMEN = campaign.SHOWTOWOMEN
+	dto := dto.DeletePostDto{
+		OWNERID: existingCampaign.USERID,
+		POSTID:  existingCampaign.ID,
+	}
+	handler.Service.DeleteCampaign(&dto)
+	err = handler.Service.CreateCampaign(&newCampaign)
+	err1 := handler.Service.CreateTemporaryCampaign(&existingCampaign)
+
+	fmt.Println("handler")
+	fmt.Println(err)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	if err1 != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
 	//rest, err := http.Get("http://localhost:8088/users/getFollowers/" + post.USERID.String())
-	////rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
-	//
+	//rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
+
 	//if err != nil {
 	//	w.WriteHeader(http.StatusBadRequest)
 	//	return
@@ -103,10 +156,13 @@ func (handler *PostsHandler) CreateCampaign(w http.ResponseWriter, r *http.Reque
 	//	fmt.Println(err)
 	//	w.WriteHeader(http.StatusBadRequest)
 	//}
-	//
-	//w.WriteHeader(http.StatusCreated)
-	//w.Header().Set("Content-Type", "application/json")
+
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
 }
+
+
+
 
 
 func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Request) {
@@ -219,6 +275,20 @@ func (handler *PostsHandler) GetLiked(w http.ResponseWriter, r *http.Request){
 	post :=handler.Service.GetLiked(vars["id"])
 	renderJSON(w, &post)
 }
+
+func (handler *PostsHandler) GetCampaigns(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	fmt.Println(vars["id"])
+	post :=handler.Service.GetCampaigns(vars["id"])
+	renderJSON(w, &post)
+}
+
+func (handler *PostsHandler) GetTemporaryCampaigns(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	fmt.Println(vars["id"])
+	post :=handler.Service.GetTemporaryCampaigns(vars["id"])
+	renderJSON(w, &post)
+}
 func (handler *PostsHandler) GetDisliked(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
@@ -239,6 +309,24 @@ func (handler *PostsHandler) DeletePost(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Content-Type", "application/json")
 	renderJSON(w, &ret)
 }
+
+
+func (handler *PostsHandler) DeleteCampaign(w http.ResponseWriter, r *http.Request) {
+
+	var deletePost dto.DeletePostDto
+	err := json.NewDecoder(r.Body).Decode(&deletePost)
+	if err != nil {
+		w.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	ret := handler.Service.DeleteCampaign(&deletePost)
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	renderJSON(w, &ret)
+}
+
+
+
 
 
 
@@ -540,6 +628,17 @@ func (handler *PostsHandler) GetByIds(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	renderJSON(w, &post)
+}
+func (handler *PostsHandler) GetCampaignsByIds(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fmt.Println(vars["userid"])
+	fmt.Println(vars["campaignid"])
+	campaigns :=handler.Service.GetCampaignsByIds(vars["userid"], vars["campaignid"])
+	if len(campaigns.ADS) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	renderJSON(w, &campaigns)
 }
 
 func (handler *PostsHandler) GetByUserId(w http.ResponseWriter, r *http.Request) {

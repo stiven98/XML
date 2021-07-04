@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule, Routes } from '@angular/router';
+import { Router, RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -23,6 +23,7 @@ import { AgentRequestsComponent } from './agent-requests/agent-requests.componen
 import { SinglePostComponent } from './single-post/single-post.component';
 import { SavedPostsComponent } from './saved-posts/saved-posts.component';
 import { CloseFriendsComponent } from './close-friends/close-friends.component';
+import { SingleCampaignComponent } from './single-campaign/single-campaign.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
   {path: 'agentRequests', component: AgentRequestsComponent},
   {path: 'homePage/tag/:tag', component: HomePageComponent },
   {path: 'single-post/:userid/:postid', component: SinglePostComponent },
+  {path: 'single-campaign/:userid/:campaignid', component: SingleCampaignComponent },
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
   {path: 'favourites', component: SavedPostsComponent },
@@ -63,7 +65,8 @@ const appRoutes: Routes = [
     AgentRequestsComponent,
     SinglePostComponent,
     SavedPostsComponent,
-    CloseFriendsComponent
+    CloseFriendsComponent,
+    SingleCampaignComponent
   ],
   imports: [
     BrowserModule,
@@ -72,6 +75,9 @@ const appRoutes: Routes = [
     FormsModule,
     HttpClientModule,
     NgbModule,
+  ],
+  exports: [
+    RouterModule
   ],
   providers: [
     {

@@ -1,0 +1,174 @@
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3">
+                <div class="cardbox shadow-lg bg-white">
+                    <div class="cardbox-heading">
+                        <!--/ dropdown -->
+                        <div *ngIf="this.allowDelete" style="float: right;">
+                            <i class="fa fa-trash" title="Obrišite kampanju" (click)="onDeleteClick()" style="cursor: pointer;"></i>
+                        </div>
+                        <div *ngIf="this.allowDelete" style="float: right; margin-right: 10px;">
+                            <i class="fa fa-edit" title="Izmenite kampanju" (click)="openModal(modAddCampaign)" style="cursor: pointer;"></i>
+                        </div>
+                        <div class="media m-0">
+                            <div class="d-flex mr-3">
+                                <a href="/profile/{{this.campaign.userid}}"><img class="img-fluid rounded-circle"
+                                        src="{{'http://localhost:8085/images/' + userData.get(this.campaign.userid).system_user.picturePath}}"
+                                        alt="User" /></a>
+                            </div>
+
+                            <div class="media-body">
+                                <p class="m-0"><a style="color: black; cursor: pointer;"
+                                        href="/profile/{{this.campaign.userid}}">{{
+                                        userData.get(this.campaign.userid).system_user.firstName + ' ' +
+                                        userData.get(this.campaign.userid).system_user.lastName }}</a></p>
+
+                            </div>
+                        </div>
+                        <!--/ media -->
+                    </div>
+                    <!--/ cardbox-heading -->
+
+                    <div class="cardbox-item">
+                        <ngb-carousel>
+                            <ng-template ngbSlide *ngFor="let item of this.campaign.ads">
+                                <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
+                                    <img class="img-fluid" src="{{'http://localhost:8086/images/'+item.path}}" />
+                                </div>
+                                <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
+                                    <video class="active" src="{{'http://localhost:8086/images/'+item.path}}"
+                                        controls></video>
+                                </div>
+                                <div style=" margin-top: 20px; display: flex; justify-content: flex-start;">
+                                    <p >Saznajte više na: {{item.link}}</p>
+                                </div>
+                            </ng-template>
+                        </ngb-carousel>
+                      
+
+                        <p style="margin-left: 10px; margin-top: 5px">
+                            {{this.campaign.description}}
+                        </p>
+                    </div>
+                    <div class="comments-section">
+                        <div *ngFor='let comment of this.campaign.comments'>
+                            <a href="#"
+                                (click)="onUsernameClick($event, comment.userid)">{{getUsername(comment.userid)}}</a>
+                            <span><i class="icon ion-md-pin"></i> {{comment.value}} </span>
+                            <!-- <small><span><i class="icon ion-md-pin"></i> {{convertTimeToText(comment.timestamp)}}
+                                </span></small> -->
+
+                        </div>
+                    </div>
+                    <!--/ cardbox-item -->
+                    <div class="cardbox-base">
+                        <ul class="float-right">
+                            <li>
+                                <a><i class="fa fa-comments"></i></a>
+                            </li>
+                            <li>
+                                <a><em class="mr-5">{{this.campaign.comments.length}}</em></a>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <a (click)="likeClick(campaign)"><i class="fa fa-thumbs-up"></i></a>
+                            </li>
+                            <li>
+                                <a (click)="dislikeClick(campaign)"><i class="fa fa-thumbs-down"></i></a>
+                            </li>
+                            <li>
+                                <a><span>{{this.campaign.likes.length - this.campaign.dislikes.length}}</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/ cardbox-base -->
+                    <div class="cardbox-comments">
+                        <span class="comment-avatar float-left">
+                            <a href=""><img class="rounded-circle"
+                                    src="{{'http://localhost:8085/images/' + getCurrentUserImage()}}" alt="..." /></a>
+                        </span>
+                        <div class="search">
+                            <!-- <input (input)="changeCommentText($event, this.campaign.id)" placeholder="Ostavite komentar" -->
+                                <!-- type="text" /> -->
+                            <!-- <button (click)="leaveComment(campaign)"><i class="fa fa-pencil"></i></button> -->
+                        </div>
+                        <!--/. Search -->
+                    </div>
+                    <!--/ cardbox-like -->
+                </div>
+                <!--/ cardbox -->
+            </div>
+            <!--/ col-lg-6 -->
+
+        </div>
+        <!--/ row -->
+    </div>
+    <!--/ container -->
+</section>
+
+
+
+<ng-template #modAddCampaign let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Podelite kampanju</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('close')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body overflow-auto">
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="location" class="font-weight-light text-muted">Datum početka:</label>
+            <input type="date" id="location" class="form-control border-0" name="location" [(ngModel)]="startday"
+                [ngModelOptions]="{standalone: true}">
+        </div>
+        <div *ngIf="isMultiple" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="location" class="font-weight-light text-muted">Datum isticanja:</label>
+            <input type="date" id="location" class="form-control border-0" name="location" [(ngModel)]="endday"
+                [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="description" class="font-weight-light text-muted">Opis:</label>
+            <input type="text" id="description" class="form-control border-0" name="description"
+                [(ngModel)]="campaign.description" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div *ngIf="!isMultiple" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="description" class="font-weight-light text-muted">Kada plasirati kampanju:</label>
+            <input type="time" id="time" class="form-control border-0" name="time" [(ngModel)]="campaign.whentoplace"
+                [ngModelOptions]="{standalone: true}">
+
+        </div>
+        <div *ngIf="isMultiple" class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="description" class="font-weight-light text-muted">Koliko puta plasirati:</label>
+            <input type="number" id="description" class="form-control border-0" name="description"
+                [(ngModel)]="campaign.timestoplace" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="form-check form-switch">
+            <label for="description" class="font-weight-light text-muted">Ciljna grupa:</label> <br>
+            <label style="margin-left: 5px;" class="form-check-label" for="males">Muškarci</label>
+            <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="campaign.showtomen" id="males">
+            <br>
+            <label style="margin-left: 5px;" class="form-check-label" for="males">Žene</label>
+            <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="campaign.showtowomen" id="females">
+            <br>
+            <label style="margin-left: 5px;" class="form-check-label" for="under18">Mlađi od 18 godina</label>
+            <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="campaign.showunder18" id="under18">
+            <br>
+            <label style="margin-left: 5px;" class="form-check-label" for="between18and24">Između 18 i 24 godine</label>
+            <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="campaign.show18to24" id="between18and24">
+            <br>
+            <label style="margin-left: 5px;" class="form-check-label" for="between24and35">Između 24 i 35</label>
+            <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="campaign.show24to35" id="between24and35">
+            <br>
+            <label style="margin-left: 5px;" class="form-check-label" for="over35">Preko 35 godina</label>
+            <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="campaign.showover35" id="over35">
+
+
+
+        </div>
+        <div class="float-right">
+            <button class="btn btn-outline-dark" (click)="onUpdateClick()">izmeni</button>
+        </div>
+    </div>
+</ng-template>
