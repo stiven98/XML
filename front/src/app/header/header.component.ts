@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Post, PostItem } from '../model/Post.model';
+import { NewPostDto, Post, PostItem } from '../model/Post.model';
 import { PostsService } from '../service/posts.service';
 import { AuthService } from '../service/authorization/auth.service';
 import { UserService } from '../service/user.service';
@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
   public timeToPlace: string = '';
   public isMultiple: boolean = false;
   public endDate: Date = new Date();
-
+  public closefriends: boolean = false;
   searchParams: any;
   userId: any;
   usernames: string[] = [];
@@ -114,10 +114,11 @@ export class HeaderComponent implements OnInit {
       formData.append("files", this.files[i]);
     }
     console.log(formData)
-    let post : Post = new Post();
+    let post : NewPostDto = new NewPostDto();
     post.Description = this.description;
     post.Location = this.location;
     post.Hashtag = this.hashtag;
+    post.Closefriends = this.closefriends;
     this.storyService.uploadStory(formData).subscribe(items => {
       console.log(items);
       // TO-DO

@@ -15,6 +15,25 @@ export class Post {
   }
 }
 
+export class NewPostDto {
+  UserId: string;
+  Items: PostItem[];
+  Type: string;
+  Description: string;
+  Location: string;
+  Hashtag: string;
+  Closefriends: boolean;
+  constructor() {
+    this.UserId = '';
+    this.Items = [];
+    this.Type = 'post';
+    this.Description = '';
+    this.Location = '';
+    this.Hashtag = '';
+    this.Closefriends = false;
+  }
+}
+
 export interface PostItem {
   Id: string;
   Path: string;

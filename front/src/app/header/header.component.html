@@ -290,6 +290,10 @@
             <input type="text" id="description" class="form-control border-0" name="description" [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
         </div>
         <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+            <label for="closefriends" class="font-weight-light text-muted">Samo bliski prijatelji?</label>
+            <input type="checkbox" class="form-control border-0" id="closefriends" name="closefriends" [(ngModel)]="closefriends" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <input id="upload" class="form-control border-0" type="file" name="files" multiple (change)="onChange($event)">
             <div class="input-group-append">
                 <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
