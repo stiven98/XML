@@ -12,6 +12,7 @@ import (
 	"storyservice/model"
 	"storyservice/model/dto"
 	"storyservice/service"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -122,4 +123,31 @@ func (handler *StoriesHandler) GetMyStories(w http.ResponseWriter, r *http.Reque
 	fmt.Println(vars["id"])
 	post :=handler.Service.GetMyStories(vars["id"])
 	renderJSON(w, &post)
+}
+
+func (handler *StoriesHandler) GetPagedFeed(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	id, _ := query["id"]
+	pageNumber, _ := query["pageNumber"]
+	neededResults, _ := query["neededResults"]
+	var stories []model.Story
+	neededResultsInt := 0
+	pageNumberInt := 0
+	if len(id) > 0 && len(pageNumber) > 0 && len(neededResults) > 0 {
+		 stories = handler.Service.GetFeed(id[0])
+		neededResultsInt, _ = strconv.Atoi(neededResults[0])
+		pageNumberInt, _ = strconv.Atoi(pageNumber[0])
+	}
+	var page model.Page
+	var neededStories []model.Story
+	firstIndex := (pageNumberInt - 1) * neededResultsInt
+	lastIndex := firstIndex + neededResultsInt
+	for i := firstIndex; i < lastIndex; i++{
+		if len(stories) > i {
+			neededStories = append(neededStories, stories[i])
+		}
+	}
+	page.Stories = neededStories
+	page.TotalCount = len(stories)
+	renderJSON(w, &page)
 }

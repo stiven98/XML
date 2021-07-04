@@ -71,7 +71,7 @@ func (repo *StoriesRepository) AddStoryToFeed(keys []string, story *model.Story)
 	return nil
 }
 
-func (repo *StoriesRepository) GetFeed(id string) interface{} {
+func (repo *StoriesRepository) GetFeed(id string) []model.Story {
 	fmt.Println("Id je " + id)
 	var stories []model.Story
 	var feedInputs []model.Feed

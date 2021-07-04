@@ -37,6 +37,11 @@ export interface PostCollection {
   name : string;
 }
 
+export interface Page {
+  stories : any[];
+  total_count : number;
+}
+
 export interface CommentReq {
   userid: string;
   postid: string;
