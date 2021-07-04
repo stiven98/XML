@@ -46,14 +46,15 @@ func initDB() *gorm.DB {
 	if database != nil {
 		database.Migrator().DropTable(&model.User{})
 		database.Migrator().DropTable(&model.Product{})
+		database.Migrator().DropTable(&model.Order{})
 
 		database.AutoMigrate(&model.User{})
 		database.AutoMigrate(&model.Product{})
+		database.AutoMigrate(&model.Order{})
 
-
-		users := [] model.User {
+		users := []model.User{
 			{
-				UserID:     uuid.MustParse("3d202f62-0d31-4f36-a965-0e4792eb32f3"),
+				UserID:    uuid.MustParse("3d202f62-0d31-4f36-a965-0e4792eb32f3"),
 				FirstName: "Ranko",
 				LastName:  "Rankovic",
 				Username:  "ranko",
@@ -67,17 +68,16 @@ func initDB() *gorm.DB {
 				Email:     "marija@gmail.com",
 				Password:  "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 			}, {
-				UserID:     uuid.MustParse("aee5cdda-2937-4d35-adf3-47cf8a19a239"),
+				UserID:    uuid.MustParse("aee5cdda-2937-4d35-adf3-47cf8a19a239"),
 				FirstName: "Isidora",
 				LastName:  "Popovic",
 				Username:  "isi",
 				Email:     "isi@gmail.com",
 				Password:  "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 			},
-
 		}
 
-		products := [] model.Product {
+		products := []model.Product{
 			{
 				ID:          uuid.New(),
 				User:        users[0],
@@ -85,7 +85,7 @@ func initDB() *gorm.DB {
 				PicturePath: "chair.jpeg",
 				Quantity:    400,
 				Name:        "Stolica",
-				Deleted: 	false,
+				Deleted:     false,
 			}, {
 				ID:          uuid.New(),
 				User:        users[0],
@@ -93,8 +93,7 @@ func initDB() *gorm.DB {
 				Price:       200.00,
 				PicturePath: "table.jpeg",
 				Quantity:    100,
-				Deleted: 	false,
-
+				Deleted:     false,
 			}, {
 				ID:          uuid.New(),
 				User:        users[1],
@@ -102,8 +101,7 @@ func initDB() *gorm.DB {
 				Price:       1000,
 				PicturePath: "computer.jpeg",
 				Quantity:    10,
-				Deleted: 	false,
-
+				Deleted:     false,
 			}, {
 				ID:          uuid.New(),
 				User:        users[2],
@@ -111,8 +109,7 @@ func initDB() *gorm.DB {
 				Price:       10,
 				PicturePath: "cup.jpeg",
 				Quantity:    150,
-				Deleted: 	false,
-
+				Deleted:     false,
 			}, {
 				ID:          uuid.New(),
 				User:        users[0],
@@ -120,12 +117,23 @@ func initDB() *gorm.DB {
 				Price:       350,
 				PicturePath: "watch.jpeg",
 				Quantity:    11,
-				Deleted: 	false,
-
+				Deleted:     false,
 			},
+		}
 
-
-
+		orders := []model.Order{
+			{
+				OrderID:  uuid.New(),
+				User:     users[2],
+				Product:  products[1],
+				Quantity: 10,
+			},
+			{
+				OrderID:  uuid.New(),
+				User:     users[0],
+				Product:  products[3],
+				Quantity: 2,
+			},
 		}
 
 		for i := range users {
@@ -135,41 +143,41 @@ func initDB() *gorm.DB {
 		for i := range products {
 			database.Create(&products[i])
 		}
+
+		for i := range orders {
+			database.Create(&orders[i])
+		}
 	}
 
-
-
-
-		//for i := range administrators {
-		//	//fmt.Println(administrators[i])
-		//	database.Create(&administrators[i])
-		//}
-
+	//for i := range administrators {
+	//	//fmt.Println(administrators[i])
+	//	database.Create(&administrators[i])
+	//}
 
 	return database
 }
 
-func initRepo(database *gorm.DB) (*repository.UsersRepository, *repository.ProductsRepository) {
-	return &repository.UsersRepository{Database: database}, &repository.ProductsRepository{Database: database}
+func initRepo(database *gorm.DB) (*repository.UsersRepository, *repository.ProductsRepository, *repository.OrdersRepository) {
+	return &repository.UsersRepository{Database: database},
+	&repository.ProductsRepository{Database: database},
+	&repository.OrdersRepository{Database: database}
 }
 
+func initServices(usersRepository *repository.UsersRepository, productsRepository *repository.ProductsRepository, ordersRepository *repository.OrdersRepository) (*service.UsersService, *service.ProductsService, *service.OrdersService) {
 
-func initServices(usersRepository *repository.UsersRepository, productsRepository *repository.ProductsRepository) (*service.UsersService, *service.ProductsService){
-
-	return &service.UsersService{UsersRepository: usersRepository}, &service.ProductsService{ProductsRepository: productsRepository}
+	return &service.UsersService{UsersRepository: usersRepository},
+	&service.ProductsService{ProductsRepository: productsRepository},
+	&service.OrdersService{OrdersRepository: ordersRepository}
 }
 
-
-
-func initHandler(userService *service.UsersService, productsService *service.ProductsService) (*handler.UsersHandler, *handler.ProductsHandler) {
-	return &handler.UsersHandler{UsersService: userService}, &handler.ProductsHandler{ProductsService: productsService}
+func initHandler(userService *service.UsersService, productsService *service.ProductsService, ordersService *service.OrdersService) (*handler.UsersHandler, *handler.ProductsHandler, *handler.OrdersHandler) {
+	return &handler.UsersHandler{UsersService: userService},
+	&handler.ProductsHandler{ProductsService: productsService},
+	&handler.OrdersHandler{OrdersService: ordersService, ProductsService: productsService}
 }
 
-
-
-func handleFunc(usersHandler *handler.UsersHandler, productsHandler *handler.ProductsHandler) {
+func handleFunc(usersHandler *handler.UsersHandler, productsHandler *handler.ProductsHandler, ordersHandler *handler.OrdersHandler) {
 	router := mux.NewRouter().StrictSlash(true)
-
 
 	router.HandleFunc("/users/create", usersHandler.Create).Methods("POST")
 	router.HandleFunc("/users/login", usersHandler.Login).Methods("POST")
@@ -180,21 +188,22 @@ func handleFunc(usersHandler *handler.UsersHandler, productsHandler *handler.Pro
 	router.HandleFunc("/products/all", productsHandler.GetAllProducts).Methods("GET")
 	router.HandleFunc("/products/create", productsHandler.Create).Methods("POST")
 	router.HandleFunc("/images/upload", productsHandler.ImageUpload).Methods("POST")
+	router.HandleFunc("/orders/create", ordersHandler.Create).Methods("POST")
+	router.HandleFunc("/orders/get/{id}", ordersHandler.GetOrdersByUserId).Methods("GET")
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./products_images/"))))
 
-	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
-	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT", "DELETE"})
-	origins := handlers.AllowedOrigins([] string{"*"})
+	headers := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
+	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})
+	origins := handlers.AllowedOrigins([]string{"*"})
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8081"), handlers.CORS(headers, methods, origins) (router)))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8081"), handlers.CORS(headers, methods, origins)(router)))
 }
 
 func main() {
 	database := initDB()
-	usersRepository, productsRepository := initRepo(database)
-	usersService, productsService := initServices(usersRepository, productsRepository)
-	usersHandler, productsHandler := initHandler(usersService, productsService)
-	handleFunc(usersHandler, productsHandler)
+	usersRepository, productsRepository, ordersRepository := initRepo(database)
+	usersService, productsService, ordersService := initServices(usersRepository, productsRepository, ordersRepository)
+	usersHandler, productsHandler, ordersHandler := initHandler(usersService, productsService, ordersService)
+	handleFunc(usersHandler, productsHandler, ordersHandler)
 }
-

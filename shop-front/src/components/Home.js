@@ -27,6 +27,7 @@ class Home extends React.Component {
             if (product.deleted === false) {
                 return (<ProductCard key={product.id} product={product}/>);
             }
+            return <div/>;
         })
     }
 
