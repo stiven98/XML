@@ -22,6 +22,7 @@ import { ReportedPostsComponent } from './reported-posts/reported-posts.componen
 import { AgentRequestsComponent } from './agent-requests/agent-requests.component';
 import { SinglePostComponent } from './single-post/single-post.component';
 import { SavedPostsComponent } from './saved-posts/saved-posts.component';
+import { SingleCampaignComponent } from './single-campaign/single-campaign.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -37,6 +38,7 @@ const appRoutes: Routes = [
   {path: 'agentRequests', component: AgentRequestsComponent},
   {path: 'homePage/tag/:tag', component: HomePageComponent },
   {path: 'single-post/:userid/:postid', component: SinglePostComponent },
+  {path: 'single-campaign/:userid/:campaignid', component: SingleCampaignComponent },
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
   {path: 'favourites', component: SavedPostsComponent },
@@ -60,7 +62,8 @@ const appRoutes: Routes = [
     ReportedPostsComponent,
     AgentRequestsComponent,
     SinglePostComponent,
-    SavedPostsComponent
+    SavedPostsComponent,
+    SingleCampaignComponent
   ],
   imports: [
     BrowserModule,
