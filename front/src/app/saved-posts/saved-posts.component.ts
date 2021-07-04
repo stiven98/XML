@@ -67,9 +67,22 @@ export class SavedPostsComponent implements OnInit {
     });
   }
 
+  isImage = (name: string): boolean => {
+    let imgFormats = ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'];
+    let flag = false;
+    for (let i = 0; i < imgFormats.length; i++) {
+      if (name.includes(imgFormats[i])) {
+        flag = true;
+        break;
+      }
+    }
+    return flag;
+  }
+
   changeCollection(): void {
     if(this.collectionInput.trim().length == 0){
       alert("Morate uneti ime kolekcije")
+      return;
     }
     let id = localStorage.getItem("id") as string;
     let collection : PostCollection = {name : this.collectionInput};

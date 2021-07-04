@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Post, PostItem } from '../model/Post.model';
+import { NewPostDto, Post, PostItem } from '../model/Post.model';
 import { PostsService } from '../service/posts.service';
 import { AuthService } from '../service/authorization/auth.service';
 import { UserService } from '../service/user.service';
@@ -37,7 +37,8 @@ export class HeaderComponent implements OnInit {
   public adLink: string = '';
   public currentFile: string = '';
   public ads: Ad[] = [];
-
+  public closefriends: boolean = false;
+  
   searchParams: any;
   userId: any;
   usernames: string[] = [];
@@ -195,12 +196,13 @@ export class HeaderComponent implements OnInit {
       console.log(this.files[i]);
       formData.append('files', this.files[i]);
     }
-    console.log(formData);
-    let post: Post = new Post();
+    console.log(formData)
+    let post : NewPostDto = new NewPostDto();
     post.Description = this.description;
     post.Location = this.location;
     post.Hashtag = this.hashtag;
-    this.storyService.uploadStory(formData).subscribe((items) => {
+    post.Closefriends = this.closefriends;
+    this.storyService.uploadStory(formData).subscribe(items => {
       console.log(items);
       // TO-DO
       let id = localStorage.getItem('id');
