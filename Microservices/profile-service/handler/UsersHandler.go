@@ -127,7 +127,6 @@ func (handler UsersHandler) IsPublic(writer http.ResponseWriter, request *http.R
 		IsPublic: user.IsPublic,
 	}
 	renderJSON(writer, res)
-	writer.WriteHeader(http.StatusOK)
 }
 
 func (handler *UsersHandler) GetPublicUsersIds(w http.ResponseWriter, r *http.Request){
@@ -191,4 +190,12 @@ func (handler *UsersHandler) UploadFile(w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 	renderJSON(w,name)
+}
+
+func (handler UsersHandler) GetNotificationStatusesById(w http.ResponseWriter, r *http.Request) {
+	vars :=mux.Vars(r)
+	user, _ :=handler.Service.GetById(vars["id"])
+	// TO-DO Raspakovati samo obavestenja notifikacija
+	renderJSON(w, &user)
+
 }

@@ -11,21 +11,13 @@ export class FollowService {
   constructor(private http: HttpClient, private config:ConfigService) {
   }
 
-  getFollowers(id: string): Observable<string []> {
+  getFollowers(id: string) {
     return this.http
-      .get<string[]>(this.config.get_followers + id);
-      // .pipe(
-        // tap((responseData) => {
-        //   console.log('dole');
-        //   console.log(responseData);
-        //   console.log(responseData.valueOf().hasOwnProperty('keys'));
-        //
-        //   if (responseData.valueOf().hasOwnProperty(`keys`)) {
-        //     console.log(responseData.valueOf());
-        //   }
-        //   return [];
-
-       // }));
+      .get<string[]>(this.config.get_followers + id).pipe(
+        map((responseData) => {
+          // @ts-ignore
+          return responseData.keys;
+        }));
   }
 
   getFollowing = (id: string) => {
@@ -36,6 +28,12 @@ export class FollowService {
           // @ts-ignore
           return responseData.keys;
         }));
+  }
+
+  checkFollowing = (userid: string, targetid : string) => {
+    return this.http
+      .get(this.config.check_following + userid + '/' + targetid)
+      .toPromise();
   }
 
   getRequests = (id: string | null) => {

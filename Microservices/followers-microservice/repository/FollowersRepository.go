@@ -24,6 +24,7 @@ func (r FollowersRepository) UserExist(id string) interface{} {
 
 	response, err := responses.Single()
 	if err != nil {
+		fmt.Println(err)
 		return nil
 	}
 	return response

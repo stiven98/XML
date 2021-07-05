@@ -1,7 +1,7 @@
 <section class="hero">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6 offset-lg-3" *ngFor='let post of postsToShow'>
+            <div class="col-lg-6 offset-lg-3" *ngFor='let post of publicPosts'>
                 <div class="cardbox shadow-lg bg-white">
                     <div class="cardbox-heading">
                         <!--/ dropdown -->
@@ -56,6 +56,9 @@
                             </li>
                             <li>
                                 <a><em class="mr-5">{{post.comments.length}}</em></a>
+                            </li>
+                            <li>
+                                <a (click)="addToFavourites(post)"><i class="fa fa-star"></i></a>
                             </li>
                         </ul>
                         <ul>

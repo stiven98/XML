@@ -1,9 +1,13 @@
 package repository
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"gorm.io/gorm"
+	"net/http"
 	"profileservice/model"
+	"profileservice/model/Dto"
 )
 
 type AgentsRepository struct {
@@ -24,8 +28,30 @@ func(repo *AgentsRepository) GetAll() []model.Agent{
 	return agents
 }
 
-func (repo *AgentsRepository) Create(agent *model.Agent) error {
+func (repo *AgentsRepository) Create(agent *model.User) error {
 	result := repo.Database.Create(agent)
+	var dto = Dto.CreateUserDTO{
+		ID:       agent.UserID,
+		USERNAME: agent.SystemUser.Username,
+		PASSWORD: agent.SystemUser.Password,
+		ACTIVE:   true,
+		ROLE:     "ROLE_AGENT",
+	}
+	payloadBuf := new(bytes.Buffer)
+	json.NewEncoder(payloadBuf).Encode(dto)
+	payloadBuf1 := new(bytes.Buffer)
+	json.NewEncoder(payloadBuf1).Encode(dto.ID)
+	_, err := http.Post("http://localhost:8080/api/createUser","application/json", payloadBuf)
+	_, err1 := http.Post("http://localhost:8088/users/addNode/" + dto.ID.String(),"application/json", payloadBuf1)
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	if err1 != nil {
+		fmt.Println(err1)
+		return err1
+	}
 	fmt.Println(result.RowsAffected)
 	return nil
 }

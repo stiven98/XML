@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 
 type MutedUsersHandler struct {
 	MutedUsersService *service.MutedUsersService
+	SubscriberAccService *service.SubscribeAccService
 }
 
 func (h MutedUsersHandler) IsMuted(writer http.ResponseWriter, request *http.Request) {
@@ -47,6 +49,10 @@ func (h MutedUsersHandler) MutedUserByUser(writer http.ResponseWriter, request *
 	if err != nil {
 		writer.WriteHeader(http.StatusBadRequest)
 	}
+
+	subscribeUser := model.SubscribeAcc{SubscribeByID: uuid.MustParse(mutedById), SubscribeID: uuid.MustParse(mutedId)}
+	_ = h.SubscriberAccService.UnSubscribe(&subscribeUser)
+
 	writer.WriteHeader(http.StatusCreated)
 	writer.Header().Set("Content-Type", "application/json")
 
@@ -72,4 +78,18 @@ func (h MutedUsersHandler) UnMutedUserByUser(writer http.ResponseWriter, request
 	writer.WriteHeader(http.StatusNoContent)
 	writer.Header().Set("Content-Type", "application/json")
 
+}
+
+func (h MutedUsersHandler) GetAllMutedBy(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	blocked, err := h.MutedUsersService.GetAllMutedByUserId(vars["id"])
+
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	writer.WriteHeader(http.StatusOK)
+	renderJSON(writer,&blocked)
 }

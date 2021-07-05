@@ -23,17 +23,17 @@ export class UserService {
   };
   registerAgent = (agentRegistrationRequest: AgetnRegistrationRequest) => {
     agentRegistrationRequest.DateOfBirth += 'T01:00:00+01:00';
-    return this.http.post('http://localhost:8085/agents/createRequest', agentRegistrationRequest);
+    return this.http.post(this.config.create_agents_request, agentRegistrationRequest);
   };
   createAgent = (agentRegistrationRequest: AgetnRegistrationRequest) => {
-    return this.http.post('http://localhost:8085/agents/create', agentRegistrationRequest);
+    return this.http.post(this.config.create_agents, agentRegistrationRequest);
   };
   createAgentByAdmin = (agentRegistrationRequest: AgetnRegistrationRequest) => {
     agentRegistrationRequest.DateOfBirth += 'T01:00:00+01:00';
-    return this.http.post('http://localhost:8085/agents/create', agentRegistrationRequest);
+    return this.http.post(this.config.create_agents, agentRegistrationRequest);
   };
   declineAgent = (agentRegistrationRequest: AgetnRegistrationRequest) => {
-    return this.http.post('http://localhost:8085/agents/declineRequest', agentRegistrationRequest);
+    return this.http.post(this.config.decline_request_agents, agentRegistrationRequest);
   };
 
 
@@ -53,7 +53,7 @@ export class UserService {
     );
   };
   getAllAgentRequests = () => {
-    return this.http.get('http://localhost:8085/agents/getAllRequests').pipe(
+    return this.http.get(this.config.get_all_request_agents).pipe(
       map((responseData) => {
         return responseData;
       })

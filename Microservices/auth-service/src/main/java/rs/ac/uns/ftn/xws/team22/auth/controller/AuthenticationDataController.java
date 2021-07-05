@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.xws.team22.auth.dto.BlockUserDTO;
+import rs.ac.uns.ftn.xws.team22.auth.dto.CreateUserDTO;
+import rs.ac.uns.ftn.xws.team22.auth.model.AuthenticationData;
 import rs.ac.uns.ftn.xws.team22.auth.service.impl.AuthenticationDataService;
 
 import java.util.UUID;
@@ -27,6 +29,13 @@ public class AuthenticationDataController {
     public ResponseEntity<?> blockUser(@RequestBody BlockUserDTO blockUserDTO) {
         boolean isBlocked = authenticationDataService.blockUser(blockUserDTO.userId);
         return  new ResponseEntity<>(isBlocked, HttpStatus.OK);
+    }
+
+    @PostMapping("/createUser")
+    public ResponseEntity<?> createUser(@RequestBody CreateUserDTO dto) {
+        System.out.println(dto.id);
+        AuthenticationData authData = authenticationDataService.createUser(dto);
+        return  new ResponseEntity<>(authData, HttpStatus.CREATED);
     }
 
 }

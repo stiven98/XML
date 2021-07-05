@@ -33,10 +33,15 @@ export class UserEdit{
     isBlocked:boolean
     isVerified:boolean;
     acceptMessagesFromNotFollowProfiles:boolean;
-    notifyPosts:boolean;
+    notifyLike:boolean;
     notifyMessages:boolean;
-    notifyStory:boolean;
+    notifyDislike:boolean;
     notifyComments:boolean;
+    notifyLikeFromNotFollowProfile: boolean;
+    notifyDislikeFromNotFollowProfile: boolean;
+    notifyCommentFromNotFollowProfile: boolean;
+    notifyMessageFromNotFollowProfile: boolean;
+    isCreate: string;
 
     constructor() {
         this.userId = '';
@@ -49,9 +54,14 @@ export class UserEdit{
         this.isBlocked = false;
         this.isVerified = false;
         this.acceptMessagesFromNotFollowProfiles = false;
-        this.notifyPosts = false;
+        this.notifyLike = false;
         this.notifyMessages = false;
-        this.notifyStory = false;
+        this.notifyDislike = false;
         this.notifyComments = false;
+        this.notifyLikeFromNotFollowProfile =false;
+        this.notifyDislikeFromNotFollowProfile = false;
+        this.notifyCommentFromNotFollowProfile = false;
+        this.notifyMessageFromNotFollowProfile = false;
+        this.isCreate = "";
     }
 }

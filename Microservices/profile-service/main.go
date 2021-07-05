@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/go-redis/redis"
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -13,6 +15,7 @@ import (
 	"profileservice/handler"
 	"profileservice/model"
 	"profileservice/repository"
+	"profileservice/saga"
 	"profileservice/service"
 	"time"
 )
@@ -47,12 +50,14 @@ func initDB() *gorm.DB {
 		database.Migrator().DropTable(&model.User{})
 		database.Migrator().DropTable(&model.Agent{})
 		database.Migrator().DropTable(&model.AgentRegistrationRequest{})
+		database.Migrator().DropTable(&model.Notify{})
 
 		database.AutoMigrate(&model.AgentRegistrationRequest{})
 		database.AutoMigrate(&model.SystemUser{})
 		database.AutoMigrate(&model.Administrator{})
 		database.AutoMigrate(&model.User{})
 		database.AutoMigrate(&model.Agent{})
+		database.AutoMigrate(&model.Notify{})
 
 		systemUsers := [] model.SystemUser {
 			{
@@ -241,43 +246,51 @@ func initDB() *gorm.DB {
 func initRepo(database *gorm.DB) (*repository.SystemUsersRepository,
 								  *repository.AdministratorsRepository,
 								  *repository.UsersRepository,
-								  *repository.AgentsRepository) {
+								  *repository.AgentsRepository,
+								  *repository.NotifyRepository) {
 
 	return &repository.SystemUsersRepository{Database: database}, &repository.AdministratorsRepository{Database: database},
 																  &repository.UsersRepository{Database: database},
-																  &repository.AgentsRepository{Database: database}
+																  &repository.AgentsRepository{Database: database},
+																  &repository.NotifyRepository{Database: database}
 }
 
 
 
 func initServices(systemUsersRepo *repository.SystemUsersRepository, administratorsRepo *repository.AdministratorsRepository,
 																	 usersRepo *repository.UsersRepository,
-																	 agentsRepo *repository.AgentsRepository) (*service.SystemUsersService,
+																	 agentsRepo *repository.AgentsRepository,
+																	 notifyRepo *repository.NotifyRepository) (*service.SystemUsersService,
 																	                                           *service.AdministratorsService,
 																	                                           *service.UsersService,
-																	                                           *service.AgentsService){
+																	                                           *service.AgentsService,
+																	                                           *service.NotifyService){
 
 	return &service.SystemUsersService{Repo: systemUsersRepo}, &service.AdministratorsService{AdministratorRepo: administratorsRepo, SystemUserRepo: systemUsersRepo},
 	                                                           &service.UsersService{UsersRepo: usersRepo, SystemUserRepo: systemUsersRepo},
-	                                                           &service.AgentsService{SystemUserRepo: systemUsersRepo, AgentsRepo: agentsRepo}
+	                                                           &service.AgentsService{SystemUserRepo: systemUsersRepo, AgentsRepo: agentsRepo},
+	                                                           &service.NotifyService{NotifyRepository: notifyRepo}
 }
 
 
 
 func initHandler(SystemUsersService *service.SystemUsersService, administratorsService *service.AdministratorsService,
 															     usersService *service.UsersService,
-															     agentsService *service.AgentsService) (*handler.SystemUsersHandler,
+															     agentsService *service.AgentsService,
+															     notifyService *service.NotifyService) (*handler.SystemUsersHandler,
 															     										*handler.AdministratorsHandler,
 															     										*handler.UsersHandler,
-															     										*handler.AgentsHandler) {
+															     										*handler.AgentsHandler,
+															     										*handler.NotifyHandler) {
 	return &handler.SystemUsersHandler{Service: SystemUsersService}, &handler.AdministratorsHandler{Service: administratorsService},
-		&handler.UsersHandler{Service: usersService}, &handler.AgentsHandler{Service: agentsService}
+		&handler.UsersHandler{Service: usersService}, &handler.AgentsHandler{Service: agentsService},
+		&handler.NotifyHandler{NotifyService: notifyService}
 }
 
 
 
 func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHandler *handler.AdministratorsHandler,
-	usersHandler *handler.UsersHandler,agentsHandler *handler.AgentsHandler) {
+	usersHandler *handler.UsersHandler,agentsHandler *handler.AgentsHandler,notifyHandler *handler.NotifyHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/sysusers/create", SystemUsersHandler.Create).Methods("POST")
@@ -293,6 +306,7 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/users/create",  usersHandler.Create).Methods("POST")
 	router.HandleFunc("/users/getAll",  usersHandler.GetAll).Methods("GET")
 	router.HandleFunc("/users/getById/{id}",  usersHandler.GetById).Methods("GET")
+	router.HandleFunc("/users/getNotificationStatusesById/{id}",  usersHandler.GetNotificationStatusesById).Methods("GET")
 	router.HandleFunc("/getIds",  usersHandler.GetIds).Methods("GET")
 	router.HandleFunc("/users/changeWhetherIsPublic", usersHandler.ChangeWhetherIsPublic).Methods("POST")
 	router.HandleFunc("/users/changeAllowedTags", usersHandler.ChangeAllowedTags).Methods("POST")
@@ -308,6 +322,8 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	router.HandleFunc("/upload", usersHandler.UploadFile).Methods("POST")
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./profile_picture/"))))
+	router.HandleFunc("/notify/create", notifyHandler.Create).Methods("POST")
+	router.HandleFunc("/notify/getAll/{id}", notifyHandler.GetAllNotifyByUserId).Methods("GET")
 
 	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
 	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
@@ -316,11 +332,98 @@ func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHa
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), handlers.CORS(headers, methods, origins) (router)))
 }
 
+func RedisConnection (usersService *service.UsersService) {
+	// create client and ping redis
+	var err error
+	client := redis.NewClient(&redis.Options{Addr: "localhost:6379", Password: "", DB: 0})
+	if _, err = client.Ping().Result(); err != nil {
+		log.Fatalf("error creating redis client %s", err)
+	}
+	usersService.GetAllPublic()
+	// subscribe to the required channels
+	pubsub := client.Subscribe(saga.ProfileChannel, saga.ReplyChannel)
+	if _, err = pubsub.Receive(); err != nil {
+		log.Fatalf("error subscribing %s", err)
+	}
+	defer func() { _ = pubsub.Close() }()
+	ch := pubsub.Channel()
+
+	log.Println("starting the order service")
+	for {
+		select {
+		case msg := <-ch:
+			m := saga.Message{}
+			err := json.Unmarshal([]byte(msg.Payload), &m)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			fmt.Println(m.Ok)
+			fmt.Println(m.UserId)
+			fmt.Println("***************************************************")
+			switch msg.Channel {
+			case saga.ProfileChannel:
+
+				// Happy Flow
+				if m.Action == saga.ActionStart {
+					if m.SenderService == saga.ServiceFollower {
+						if m.Ok {
+							fmt.Print("UDJES OVDEEEEE")
+							user := m.UserId
+							u, _ := usersService.GetById(user)
+
+							u.IsCreate = "create"
+							err = usersService.Update(&u)
+							if err != nil {
+								return
+							}
+							log.Println("FINISHED")
+						}
+					} else {
+						fmt.Print("OVO JE DELETEEEE")
+						user := m.UserId
+						u, _ := usersService.GetById(user)
+						u.IsCreate = "delete"
+						err = usersService.Update(&u)
+						if err != nil {
+							return
+						}
+						log.Println("CANCEL")
+					}
+				}
+
+				if m.Action == saga.ActionRollback {
+					fmt.Print("STA SE DESI OVDEEE")
+					user := m.UserId
+					u, _ := usersService.GetById(user)
+					u.IsCreate = "delete"
+					err = usersService.Update(&u)
+					if err != nil {
+						return
+					}
+					uuuu, _ := usersService.GetById(user)
+					log.Println("CANCELLED %d", uuuu.IsCreate)
+
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
 func main() {
 	database := initDB()
-	sysusersRepo, administratorsRepo, usersRepo, agentsRepo := initRepo(database)
-	systemUsersService, administratorsService, usersService, agentsService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo)
-	systemUsersHandler, administratorsHandler, usersHandler, agentsHandler := initHandler(systemUsersService, administratorsService, usersService, agentsService)
-	handleFunc(systemUsersHandler, administratorsHandler, usersHandler, agentsHandler)
+	go saga.NewOrchestrator().Start()
+	sysusersRepo, administratorsRepo, usersRepo, agentsRepo, notifyRepo := initRepo(database)
+	systemUsersService, administratorsService, usersService, agentsService, notifyService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo,notifyRepo)
+	go RedisConnection(usersService)
+	systemUsersHandler, administratorsHandler, usersHandler, agentsHandler,notifyHandler := initHandler(systemUsersService, administratorsService, usersService, agentsService,notifyService)
+	handleFunc(systemUsersHandler, administratorsHandler, usersHandler, agentsHandler,notifyHandler)
+
+
 }
 

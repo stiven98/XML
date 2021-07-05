@@ -8,6 +8,13 @@ import { ConfigService } from './authorization/config.service';
   providedIn: 'root'
 })
 export class StoryService {
+  getPagedFeed(id: string, pageNum: number, neededRes: number) {
+    return this.http.get(this.config.get_story_page_feed, {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  }
 
   constructor(private http: HttpClient, private config:ConfigService) { }
 

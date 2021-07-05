@@ -41,10 +41,15 @@ type User struct {
 	IsBlocked bool `json:"isBlocked"`
 	IsVerified bool `json:"isVerified"`
 	AcceptMessagesFromNotFollowProfile bool `json:"acceptMessagesFromNotFollowProfiles"`
-	NotifyPosts bool `json:"notifyPosts"`
+	NotifyLike bool `json:"notifyLike"`
 	NotifyMessages bool `json:"notifyMessages"`
-	NotifyStory bool `json:"notifyStory" `
+	NotifyDislike bool `json:"notifyDislike" `
 	NotifyComments bool `json:"notifyComments"`
+	NotifyLikeFromNotFollowProfile bool `json:"notifyLikeFromNotFollowProfile""`
+	NotifyDislikeFromNotFollowProfile bool `json:"notifyDislikeFromNotFollowProfile""`
+	NotifyCommentFromNotFollowProfile bool `json:"notifyCommentFromNotFollowProfile""`
+	NotifyMessageFromNotFollowProfile bool `json:"notifyMessageFromNotFollowProfile""`
+	IsCreate string `json:"isCreate"`
 }
 type Administrator struct {
 	UserID   uuid.UUID `json:"id"`
@@ -54,7 +59,22 @@ type Administrator struct {
 type Agent struct {
 	UserID   uuid.UUID `json:"id"`
 	SystemUser SystemUser `json:"system_user" gorm:"foreignKey:UserID"`
-	WebsiteLink string `json:"websiteLink" gorm:"not null"`
+	IsPublic bool `json:"isPublic" gorm:"not null"`
+	PhoneNumber string `json:"phoneNumber" gorm:"not null"`
+	WebSite string `json:"webSite" gorm:"not null"`
+	Biography string `json:"biography"`
+	AllowedTags bool `json:"allowedTags"`
+	IsBlocked bool `json:"isBlocked"`
+	IsVerified bool `json:"isVerified"`
+	AcceptMessagesFromNotFollowProfile bool `json:"acceptMessagesFromNotFollowProfiles"`
+	NotifyLike bool `json:"notifyLike"`
+	NotifyMessages bool `json:"notifyMessages"`
+	NotifyDislike bool `json:"notifyDislike" `
+	NotifyComments bool `json:"notifyComments"`
+	NotifyLikeFromNotFollowProfile bool `json:"notifyLikeFromNotFollowProfile""`
+	NotifyDislikeFromNotFollowProfile bool `json:"notifyDislikeFromNotFollowProfile""`
+	NotifyCommentFromNotFollowProfile bool `json:"notifyCommentFromNotFollowProfile""`
+	NotifyMessageFromNotFollowProfile bool `json:"notifyMessageFromNotFollowProfile""`
 }
 
 

@@ -34,7 +34,7 @@ export class AgetnRegistrationRequest {
   TypeOfUser: string;
   DateOfBirth: string;
   PicturePath : string;
-  WebsiteLink: string;
+  WebSite: string;
   IsApproved: boolean;
   constructor() {
     
@@ -48,7 +48,7 @@ export class AgetnRegistrationRequest {
     this.TypeOfUser = "";
     this.DateOfBirth = "";
     this.PicturePath = "";
-    this.WebsiteLink = "";
+    this.WebSite = "";
     this.IsApproved = false;
   }
 }

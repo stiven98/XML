@@ -12,6 +12,7 @@ import (
 	"storyservice/model"
 	"storyservice/model/dto"
 	"storyservice/service"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -20,31 +21,59 @@ type StoriesHandler struct {
 }
 
 func (handler *StoriesHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var story model.Story
-	fmt.Println(json.NewDecoder(r.Body).Decode(&story))
-	err := json.NewDecoder(r.Body).Decode(&story)
-	story.ID = uuid.New()
-	story.TIMESTAMP = time.Now()
+	var storyDto dto.NewStory
+	err := json.NewDecoder(r.Body).Decode(&storyDto)
+	story := model.Story{
+		ID:        uuid.New(),
+		USERID:    storyDto.USERID,
+		TIMESTAMP: time.Now(),
+		ITEMS:     storyDto.ITEMS,
+		LOCATION:  storyDto.LOCATION,
+		HASHTAG:   storyDto.HASHTAG,
+		TYPE:      storyDto.TYPE,
+	}
+
 	err = handler.Service.Create(&story)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 	}
-	rest, err := http.Get("http://localhost:8088/users/getFollowers/" + story.USERID.String())
-	//rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
+	fmt.Println("\n\n\n\n\naaaaaaaaaaaaaaa\n\n\n\n")
+	fmt.Println(storyDto.CLOSEFRIENDS)
+	fmt.Println("\n\n\n\n\naaaaaaaaaaaaaaa\n\n\n\n")
+	if storyDto.CLOSEFRIENDS {
+		restCF, errCF := http.Get("http://localhost:8087/users/closeFriend/" +  story.USERID.String())
+		if errCF != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		var closeFriends []string
+		err = json.NewDecoder(restCF.Body).Decode(&closeFriends)
+		fmt.Println(closeFriends)
+		err = handler.Service.AddStoryToFeed(closeFriends, &story)
+		if err != nil {
+			fmt.Println(err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	} else {
+		rest, err := http.Get("http://localhost:8088/users/getFollowers/" + story.USERID.String())
+		//rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
 
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 
-	var dto dto.FollowersDto
-	err = json.NewDecoder(rest.Body).Decode(&dto)
-	fmt.Println(dto.KEYS)
-	err = handler.Service.AddStoryToFeed(dto.KEYS, &story)
-	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		var dto dto.FollowersDto
+		err = json.NewDecoder(rest.Body).Decode(&dto)
+		fmt.Println(dto.KEYS)
+		err = handler.Service.AddStoryToFeed(dto.KEYS, &story)
+		if err != nil {
+			fmt.Println(err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 	}
 
 	w.WriteHeader(http.StatusCreated)
@@ -122,4 +151,31 @@ func (handler *StoriesHandler) GetMyStories(w http.ResponseWriter, r *http.Reque
 	fmt.Println(vars["id"])
 	post :=handler.Service.GetMyStories(vars["id"])
 	renderJSON(w, &post)
+}
+
+func (handler *StoriesHandler) GetPagedFeed(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	id, _ := query["id"]
+	pageNumber, _ := query["pageNumber"]
+	neededResults, _ := query["neededResults"]
+	var stories []model.Story
+	neededResultsInt := 0
+	pageNumberInt := 0
+	if len(id) > 0 && len(pageNumber) > 0 && len(neededResults) > 0 {
+		 stories = handler.Service.GetFeed(id[0])
+		neededResultsInt, _ = strconv.Atoi(neededResults[0])
+		pageNumberInt, _ = strconv.Atoi(pageNumber[0])
+	}
+	var page model.Page
+	var neededStories []model.Story
+	firstIndex := (pageNumberInt - 1) * neededResultsInt
+	lastIndex := firstIndex + neededResultsInt
+	for i := firstIndex; i < lastIndex; i++{
+		if len(stories) > i {
+			neededStories = append(neededStories, stories[i])
+		}
+	}
+	page.Stories = neededStories
+	page.TotalCount = len(stories)
+	renderJSON(w, &page)
 }

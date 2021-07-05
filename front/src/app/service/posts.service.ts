@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { CommentReq, LikeReq, Post } from '../model/Post.model';
+import { CommentReq, FavPost, LikeReq, Post } from '../model/Post.model';
 import { ReportReq } from '../model/ReportReq';
 import { DeletePost } from '../model/DeletePost';
 import { ConfigService } from './authorization/config.service';
+import { Campaign } from '../model/Campaign';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +13,30 @@ import { ConfigService } from './authorization/config.service';
 export class PostsService {
   constructor(private http: HttpClient, private config:ConfigService) {}
 
+  changeCollection = (changeCollectionReq: FavPost) => {
+    return this.http
+      .post(this.config.edit_archived_post, changeCollectionReq)
+      .pipe((res) => res);
+  };
+
   uploadPosts = (formData: FormData) => {
     return this.http.post(this.config.upload_post_img, formData).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  };
+
+  getByUserId = (id: string) => {
+    return this.http.get(this.config.get_post_by_user_id + id).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  };
+
+  getCampaignsByUserId = (id: string) => {
+    return this.http.get(this.config.get_user_campaign + id).pipe(
       map((item) => {
         return item;
       })
@@ -25,6 +48,16 @@ export class PostsService {
       .post(this.config.create_post, post)
       .pipe((res) => res);
   };
+  createCampaign = (campaign: Campaign) => {
+    return this.http
+      .post(this.config.create_campaign, campaign)
+      .pipe((res) => res);
+  };
+  updateCampaign = (campaign: Campaign) => {
+    return this.http
+      .post(this.config.update_campaign, campaign)
+      .pipe((res) => res);
+  };
 
   getFeed = (id: string) => {
     return this.http.get(this.config.get_post_feed + id).pipe(
@@ -34,8 +67,29 @@ export class PostsService {
     );
   };
 
-  getPublicPosts = () => {
-    return this.http.get(this.config.get_post_public).pipe(
+  getByIds = (userid: string, postid: string) => {
+    return this.http
+      .get(this.config.get_post_by_id + userid + '/' + postid)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  };
+  getCampaignByIds = (userid: string, campaignid: string) => {
+    return this.http
+      .get(
+        this.config.get_campaign_by_id + userid + '/' + campaignid
+      )
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  };
+
+  getPublicPosts = (id = '00000000-00000000-00000000-00000000') => {
+    return this.http.get(this.config.get_post_public + id).pipe(
       map((item) => {
         return item;
       })
@@ -65,13 +119,25 @@ export class PostsService {
     );
   };
 
+  addFavourite = (favouriteReq: LikeReq) => {
+    return this.http
+      .post(this.config.save_favourite_post, favouriteReq)
+      .pipe((res) => res);
+  };
+
+  getFavourite = (id: string) => {
+    return this.http
+      .get(this.config.get_all_archived_post + id)
+      .pipe((res) => res);
+  };
+
   likePost = (likeReq: LikeReq) => {
     return this.http
       .post(this.config.like_post, likeReq)
       .pipe((res) => res);
   };
 
-  leaveComment = (commentReq : CommentReq) => {
+  leaveComment = (commentReq: CommentReq) => {
     return this.http
     .post(this.config.comment_post, commentReq)
     .pipe((res) => res);
@@ -88,10 +154,22 @@ export class PostsService {
       .pipe((res) => res);
   };
   deletePost(deletePost: DeletePost) {
-    return this.http.post(this.config.delete_post, deletePost).pipe(
-      map((item) => {
-        return item;
-      })
-    );
+    return this.http
+      .post(this.config.delete_post, deletePost)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  }
+
+  deleteCampaign(deletePost: DeletePost) {
+    return this.http
+      .post(this.config.delete_campaign, deletePost)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
   }
 }

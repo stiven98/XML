@@ -6,6 +6,7 @@ import (
 	"followers-microservice/model"
 	"followers-microservice/model/dto"
 	"followers-microservice/service"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
 )
@@ -21,12 +22,12 @@ func (h FollowersHandler) GetFollowers(writer http.ResponseWriter, request *http
 	// Check User exist in Profile service and return bad request if don't
 	fmt.Println(ID)
 
-	retVal := h.FollowersService.UserExists(ID)
+	//retVal := h.FollowersService.UserExists(ID)
 
-	if retVal == nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	//if retVal == nil {
+	//	writer.WriteHeader(http.StatusBadRequest)
+	//	return
+	//}
 
 	keys := h.FollowersService.GetFollowers(ID)
 
@@ -56,12 +57,12 @@ func (h FollowersHandler) GetFollowing(writer http.ResponseWriter, request *http
 	// Check User exist in Profile service and return bad request if don't
 	fmt.Println(ID)
 
-	retVal := h.FollowersService.UserExists(ID)
-
-	if retVal == nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	//retVal := h.FollowersService.UserExists(ID)
+	//
+	//if retVal == nil {
+	//	writer.WriteHeader(http.StatusBadRequest)
+	//	return
+	//}
 
 	keys := h.FollowersService.GetFollowing(ID)
 
@@ -90,14 +91,16 @@ func (h FollowersHandler) Follow(writer http.ResponseWriter, request *http.Reque
 	userID := tokens[int(len(tokens))-2]
 	targetID := tokens[int(len(tokens))-1]
 	retVal := h.FollowersService.UserExists(userID)
-
+	fmt.Println(retVal)
+	fmt.Println("posotji")
 	if retVal == nil {
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	retVal = h.FollowersService.UserExists(targetID)
-
+	fmt.Println(retVal)
+	fmt.Println("postoji")
 	if retVal == nil {
 		writer.WriteHeader(http.StatusBadRequest)
 		return
@@ -139,10 +142,7 @@ func (h FollowersHandler) Follow(writer http.ResponseWriter, request *http.Reque
 		}
 	}
 
-
-
 	writer.WriteHeader(http.StatusOK)
-
 
 }
 
@@ -168,9 +168,10 @@ func (h FollowersHandler) IsFollowing(writer http.ResponseWriter, request *http.
 }
 
 func (h FollowersHandler) AddNode(writer http.ResponseWriter, request *http.Request) {
-	tokens := strings.Split(request.URL.Path, "/")
-	ID := tokens[int(len(tokens))-1]
 
+	vars :=mux.Vars(request)
+	ID := vars["id"]
+	fmt.Println(ID)
 	if !IsValidUUID(ID) {
 		fmt.Println("ID is invalid!")
 		writer.WriteHeader(http.StatusBadRequest)
@@ -261,6 +262,7 @@ func (h FollowersHandler) Unfollow(writer http.ResponseWriter, request *http.Req
 
 	e := h.FollowersService.Unfollow(userID, targetID)
 	if e == nil {
+		_, _ = http.Post("http://localhost:8087/users/unsubscribe/" + userID + "/" + targetID, "application/json", nil)
 		writer.WriteHeader(http.StatusOK)
 		return
 	}
@@ -309,6 +311,24 @@ func (h FollowersHandler) AcceptRequest(writer http.ResponseWriter, request *htt
 	writer.WriteHeader(http.StatusOK)
 
 
+}
+
+func (h FollowersHandler) CheckFollowing(writer http.ResponseWriter, request *http.Request) {
+	tokens := strings.Split(request.URL.Path, "/")
+	userID := tokens[int(len(tokens))-2]
+	targetID := tokens[int(len(tokens))-1]
+	retVal:= h.FollowersService.CheckRelationship(userID, targetID)
+
+	followingDto := dto.CheckFollowingDTO{IsFollowing: retVal}
+	writer.WriteHeader(http.StatusOK)
+	writer.Header().Set("Content-Type", "application/json")
+	bytes, err := json.Marshal(followingDto)
+
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writer.Write(bytes)
 }
 
 

@@ -23,6 +23,11 @@ export class ConfigService {
   private admin_url_verifivation_request = environment.apiUrl_admin_service + '/verificationRequest'
   private story_url = environment.apiUrl_story_service + '/story'
 
+  private _notify_url = environment.apiUrl_profile_service + '/notify';
+  private _campaigns_url = environment.apiUrl_post_service + '/campaigns';
+
+  private _agents_url = environment.apiUrl_profile_service + '/agents';
+
   get refresh_token_url(): string {
     return this._refresh_token_url;
   }
@@ -137,7 +142,7 @@ export class ConfigService {
     return this._get_post_feed
   }
 
-  private _get_post_public = this._post_url + '/public'
+  private _get_post_public = this._post_url + '/public/'
   get get_post_public ():string{
     return this._get_post_public
   }
@@ -184,8 +189,30 @@ export class ConfigService {
     return this._delete_post
   }
   
+  private _edit_archived_post = this._post_url+ '/edit-archived'
+  get edit_archived_post ():string{
+    return this._edit_archived_post
+  }
   
+  private _get_post_by_user_id = this._post_url+ '/getByUserId/'
+  get get_post_by_user_id ():string{
+    return this._get_post_by_user_id
+  }
+
+  private _get_post_by_id = this._post_url+ '/getById/'
+  get get_post_by_id ():string{
+    return this._get_post_by_id
+  }
   
+  private _save_favourite_post = this._post_url+ '/save'
+  get save_favourite_post ():string{
+    return this._save_favourite_post
+  }
+  
+  private _get_all_archived_post = this._post_url+ '/all-archived/'
+  get get_all_archived_post ():string{
+    return this._get_all_archived_post
+  }
   
 
   //post end
@@ -232,6 +259,13 @@ export class ConfigService {
   get approve_follow_request ():string{
     return this._approve_follow_request
   }
+
+  private _check_following = this._follower_url + '/checkFollowing/'
+  get check_following ():string{
+    return this._check_following
+  }
+
+
   //follow end
 
 
@@ -267,6 +301,42 @@ export class ConfigService {
     return this._unblock;
   }
 
+  private _close_friend = this.managment_url + '/closeFriend/'
+  get close_friend ():string{
+    return this._close_friend;
+  }
+
+
+  private _add_close_friend = this.managment_url + '/addCloseFriend/'
+  get add_close_friend ():string{
+    return this._add_close_friend;
+  }
+
+  private _remove_close_friend = this.managment_url + '/removeCloseFriend/'
+  get remove_close_friend ():string{
+    return this._remove_close_friend;
+  }
+
+
+  private _subsribe = this.managment_url + '/subscribe/'
+  get subsribe ():string{
+    return this._subsribe;
+  }
+
+  private _unsubsribe = this.managment_url + '/unsubscribe/'
+  get unsubsribe ():string{
+    return this._unsubsribe;
+  }
+
+  private _is_subscribed = this.managment_url + '/isSubscribed/'
+  get is_subscribed ():string{
+    return this._is_subscribed;
+  }
+
+  private _get_all_subscriberd = this.managment_url + '/subscribers/'
+  get get_all_subscriberd ():string{
+    return this._get_all_subscriberd;
+  }
   //managment end
 
   //admin start
@@ -315,11 +385,82 @@ export class ConfigService {
         return this._get_story_feed
     }
 
+     
+    private _get_story_page_feed = this.story_url + '/paged-feed'
+    get get_story_page_feed():string{
+        return this._get_story_page_feed
+    }
+
   //story end
 
-  //post start
+  //notify start
+  private _get_notify_by_user = this._notify_url + '/getAll/'
+  get get_notify_by_user():string{
+      return this._get_notify_by_user
+  }
+
+  private _create_notify = this._notify_url + '/create'
+  get create_notify():string{
+      return this._create_notify
+  }
+  //notify end
+
+  //campaigns start
+
+  private _delete_campaign = this._campaigns_url + '/delete'
+  get delete_campaign():string{
+      return this._delete_campaign
+  }
 
 
-  //post end
+  private _get_campaign_by_id = this._campaigns_url + '/getById/'
+  get get_campaign_by_id():string{
+      return this._get_campaign_by_id
+  }
+
+
+  private _update_campaign = this._campaigns_url + '/updateCampaign'
+  get update_campaign():string{
+      return this._update_campaign
+  }
+
+  private _create_campaign = this._campaigns_url + '/createCampaign'
+  get create_campaign():string{
+      return this._create_campaign
+  }
+
+  private _get_user_campaign = this._campaigns_url + '/getUserCampaigns/'
+  get get_user_campaign():string{
+      return this._get_user_campaign
+  }
+
+  //end campaigns
+
+
+  //start agents
+  private _create_agents_request = this._agents_url + '/createRequest'
+  get create_agents_request():string{
+      return this._create_agents_request
+  }
+
+  private _create_agents = this._agents_url + '/create'
+  get create_agents():string{
+      return this._create_agents
+  }
+
+  private _decline_request_agents = this._agents_url + '/declineRequest'
+  get decline_request_agents():string{
+      return this._decline_request_agents
+  }
+
+  private _get_all_request_agents = this._agents_url + '/getAllRequests'
+  get get_all_request_agents():string{
+      return this._get_all_request_agents
+  }
+
+  //end agents
+
+
+
 }
 
