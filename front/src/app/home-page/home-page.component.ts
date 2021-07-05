@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Page } from '../model/Post.model';
 import { AuthService } from '../service/authorization/auth.service';
 import { StoryService } from '../service/story.service';
 import { UserService } from '../service/user.service';
@@ -18,6 +19,9 @@ export class HomePageComponent implements OnInit {
   public isFirst = true;
   public stories: any[] = [];
   public userData: Map<string, any> = new Map<string, any>();
+  public currentPage = 1;
+  public neededResults = 3;
+  public totalCount = 0;
 
   constructor(
     public authService: AuthService,
@@ -43,8 +47,10 @@ export class HomePageComponent implements OnInit {
   initData = () => {
     let id = localStorage.getItem('id');
       if (id) {
-        this.storyService.getFeed(id).subscribe(res => {
-          this.stories = res as any[];
+        this.storyService.getPagedFeed(id, this.currentPage, this.neededResults).subscribe(res => {
+          let page = res as Page;
+          this.stories = page.stories;
+          this.totalCount = page.total_count;
           if (this.stories) {
             for (let s of this.stories) {
               if (!this.userData.get(s.userid)) {
@@ -54,8 +60,30 @@ export class HomePageComponent implements OnInit {
               }
             }
           }
-        });
+        }, err => {this.currentPage = 1;});
       }
+  }
+
+  nextPageClick = () => {
+    if(this.currentPage < Math.ceil(this.totalCount / this.neededResults)){
+      this.currentPage = this.currentPage + 1;
+    } else {
+      this.currentPage = 1;
+    }
+    this.stories = [];
+    this.userData = new Map<string, any>();
+    this.initData();
+  }
+
+  prevPageClick = () => {
+    if(this.currentPage > 1){
+      this.currentPage = this.currentPage - 1;
+    } else{
+      this.currentPage = Math.ceil(this.totalCount / this.neededResults);
+    }
+    this.stories = [];
+    this.userData = new Map<string, any>();
+    this.initData();
   }
 
   getClass = () : string => {

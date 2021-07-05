@@ -22,7 +22,7 @@ func (service *StoriesService) AddStoryToFeed(keys []string, m *model.Story) err
 	return service.StoriesRepo.AddStoryToFeed(keys, m)
 }
 
-func (service *StoriesService) GetFeed(id string) interface{} {
+func (service *StoriesService) GetFeed(id string) []model.Story {
 	return  service.StoriesRepo.GetFeed(id)
 }
 

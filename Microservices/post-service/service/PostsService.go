@@ -15,6 +15,12 @@ func (service *PostsService) Create(post *model.Post) error {
 	service.PostsRepo.Create(post)
 	return nil
 }
+func (service *PostsService) CreateCampaign(campaign *model.Campaign) error {
+	return	service.PostsRepo.CreateCampaign(campaign)
+}
+func (service *PostsService) CreateTemporaryCampaign(campaign *model.Campaign) error {
+	return	service.PostsRepo.CreateTemporaryCampaign(campaign)
+}
 
 func (service *PostsService) GetByKey(key string) []model.Post {
 	return  service.PostsRepo.GetByKey(key)
@@ -27,11 +33,20 @@ func (service *PostsService) GetFeed(id string) []model.Post {
 func (service *PostsService) GetLiked(id string) []model.Post {
 	return  service.PostsRepo.GetLiked(id)
 }
+func (service *PostsService) GetCampaigns(id string) []model.Campaign {
+	return  service.PostsRepo.GetCampaigns(id)
+}
+func (service *PostsService) GetTemporaryCampaigns(id string) []model.Campaign {
+	return  service.PostsRepo.GetTemporaryCampaigns(id)
+}
 func (service *PostsService) GetDisliked(id string) []model.Post {
 	return  service.PostsRepo.GetDisliked(id)
 }
 func (service *PostsService) Delete(deletePost *dto.DeletePostDto) bool {
 	return  service.PostsRepo.Delete(deletePost)
+}
+func (service *PostsService) DeleteCampaign(deletePost *dto.DeletePostDto) bool {
+	return  service.PostsRepo.DeleteCampaign(deletePost)
 }
 func (service *PostsService) GetReported(ids []dto.UserId) ([]model.Post)  {
 	  return service.PostsRepo.GetReported(ids)
@@ -63,6 +78,9 @@ func (service *PostsService) LeaveComment(postId uuid.UUID, ownerId uuid.UUID, c
 
 func (service *PostsService) GetByIds(userid string, postid string) interface{} {
 	return service.PostsRepo.GetByIds(userid, postid)
+}
+func (service *PostsService) GetCampaignsByIds(userid string, campaignid string) model.Campaign {
+	return service.PostsRepo.GetCampaignsByIds(userid, campaignid)
 }
 
 func (service *PostsService) GetByUserId(userid string) interface{} {

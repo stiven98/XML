@@ -8,7 +8,15 @@ import { map } from 'rxjs/operators';
 export class ManagementService {
 
   constructor(private http: HttpClient) {
-   }
+  }
+
+  getCloseFriends(id: string) {
+    return this.http.get('http://localhost:8087/users/closeFriend/' + id).pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
 
    isBlocked = (blockedById: any, blockedId: any) => {
     return this.http.get('http://localhost:8087/users/isBlocked/' + blockedById + "/" + blockedId).pipe(
@@ -36,6 +44,22 @@ export class ManagementService {
 
   muteUser  = (mutedById: any, mutedId: any) =>{
     return this.http.post('http://localhost:8087/users/mute/' + mutedById + "/" + mutedId,"").pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
+
+  addToCloseFriends  = (userId: any, friendId: any) =>{
+    return this.http.post('http://localhost:8087/users/addCloseFriend/' + userId + "/" + friendId,"").pipe(
+      map((responseData) => {
+        return responseData;
+      })
+    );
+  }
+
+  removeFromCloseFriends  = (userId: any, friendId: any) =>{
+    return this.http.post('http://localhost:8087/users/removeCloseFriend/' + userId + "/" + friendId,"").pipe(
       map((responseData) => {
         return responseData;
       })

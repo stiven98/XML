@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"post_service/model"
 	"post_service/model/dto"
+	"time"
 )
 
 type PostsRepository struct {
@@ -35,6 +36,96 @@ func(repo *PostsRepository) Create(post *model.Post)  error {
 		}
 	}
 	return nil
+}
+func(repo *PostsRepository) CreateCampaign(campaign *model.Campaign)  error {
+	result, err :=  repo.Database.Get(campaign.USERID.String()+ "_campaign").Result()
+	var campaigns[] model.Campaign
+	if err != nil {
+		campaigns = append(campaigns, *campaign)
+		jsonPosts, _ := json.Marshal(campaigns)
+		newErr := repo.Database.Set(campaign.USERID.String() + "_campaign", jsonPosts, 0).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	} else{
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &campaigns)
+		campaigns = append(campaigns, *campaign)
+		jsonPosts, _ := json.Marshal(campaigns)
+		newErr := repo.Database.Set(campaign.USERID.String()+ "_campaign", jsonPosts, 0).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	}
+	return nil
+}
+
+func(repo *PostsRepository) CreateTemporaryCampaign(campaign *model.Campaign)  error {
+	result, err :=  repo.Database.Get(campaign.USERID.String()+ "_campaignTemp").Result()
+	var campaigns[] model.Campaign
+	if err != nil {
+		campaigns = append(campaigns, *campaign)
+		jsonPosts, _ := json.Marshal(campaigns)
+		newErr := repo.Database.Set(campaign.USERID.String() + "_campaignTemp", jsonPosts, 50 * time.Second).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	} else{
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &campaigns)
+		campaigns = append(campaigns, *campaign)
+		jsonPosts, _ := json.Marshal(campaigns)
+		newErr := repo.Database.Set(campaign.USERID.String()+ "_campaignTemp", jsonPosts, 50 * time.Second).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	}
+	return nil
+}
+func(repo *PostsRepository) GetCampaigns(id string) []model.Campaign {
+	fmt.Println("Id je " + id)
+	var tempCampaigns []model.Campaign
+	result, _ :=  repo.Database.Get(id+ "_campaignTemp").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &tempCampaigns)
+
+	var campaigns []model.Campaign
+	result1, _ :=  repo.Database.Get(id+ "_campaign").Result()
+	bytes1 := []byte(result1)
+	json.Unmarshal(bytes1, &campaigns)
+
+
+
+	for i:= range campaigns {
+		for j:= range tempCampaigns {
+			if campaigns[i].ID == tempCampaigns[j].ID {
+				fmt.Println("usao")
+				fmt.Println(campaigns[i].DESCRIPTION)
+				campaigns[i] = tempCampaigns[j]
+				fmt.Println(campaigns[i].DESCRIPTION)
+			}
+		}
+	}
+
+	return campaigns
+
+}
+
+
+func(repo *PostsRepository) GetTemporaryCampaigns(id string) []model.Campaign {
+	fmt.Println("Id je " + id)
+	var campaigns []model.Campaign
+	result, _ :=  repo.Database.Get(id+ "_campaignTemp").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &campaigns)
+	for i := range campaigns {
+		var userPosts []model.Campaign
+		result, _ := repo.Database.Get(campaigns[i].USERID.String() + "_campaignTemp").Result()
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &userPosts)
+	}
+	return campaigns
+
 }
 
 func(repo *PostsRepository) GetByKey(key string) []model.Post {
@@ -208,6 +299,8 @@ func(repo *PostsRepository) GetLiked(id string) []model.Post {
 
 }
 
+
+
 func(repo *PostsRepository) GetDisliked(id string) []model.Post {
 	fmt.Println("Id je " + id)
 	var posts []model.Post
@@ -259,6 +352,34 @@ func (repo *PostsRepository) Delete (deletePost *dto.DeletePostDto) bool {
 	}
 	return true
 }
+
+func (repo *PostsRepository) DeleteCampaign (deletePost *dto.DeletePostDto) bool {
+	var campaigns []model.Campaign
+	var newCampaigns []model.Campaign
+	result, err := repo.Database.Get(deletePost.OWNERID.String() + "_campaign").Result()
+	if err!=nil {
+		fmt.Println("error")
+		fmt.Println(err)
+		return false
+	}
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &campaigns)
+	for i := range campaigns {
+		if campaigns[i].ID != deletePost.POSTID {
+			newCampaigns = append(newCampaigns, campaigns[i])
+		}
+	}
+	err = repo.Database.Del(deletePost.OWNERID.String() + "_campaign").Err()
+	json, _ := json.Marshal(newCampaigns)
+	err = repo.Database.Set(deletePost.OWNERID.String() + "_campaign", json, 0).Err()
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
+}
+
+
 func(repo *PostsRepository) GetReported(ids []dto.UserId) ([]model.Post) {
 	var reportedPosts []model.Post
 	var userPosts []model.Post
@@ -341,6 +462,38 @@ func (repo *PostsRepository) GetByIds(userid string, postid string) interface{} 
 	}
 	return post
 }
+func (repo *PostsRepository) GetCampaignsByIds(userid string, campaignid string) model.Campaign {
+	var tempCampaigns []model.Campaign
+	var tempCampaign model.Campaign
+	result1, _ :=  repo.Database.Get(userid+ "_campaignTemp").Result()
+	bytes1 := []byte(result1)
+	json.Unmarshal(bytes1, &tempCampaigns)
+	for i := range tempCampaigns {
+		if tempCampaigns[i].ID.String() == campaignid {
+			tempCampaign = tempCampaigns[i]
+			break
+		}
+	}
+	var campaings []model.Campaign
+	var campaing model.Campaign
+	result, _ :=  repo.Database.Get(userid+ "_campaign").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &campaings)
+	for i := range campaings {
+		if campaings[i].ID.String() == campaignid {
+			campaing = campaings[i]
+			break
+		}
+	}
+	if campaing.ID == tempCampaign.ID {
+		campaing = tempCampaign
+	}
+
+	return campaing
+}
+
+
+
 
 func (repo *PostsRepository) GetByUserId(userid string) interface{} {
 	var posts []model.Post
