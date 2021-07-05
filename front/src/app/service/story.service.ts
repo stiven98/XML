@@ -7,6 +7,13 @@ import { Post } from '../model/Post.model';
   providedIn: 'root'
 })
 export class StoryService {
+  getPagedFeed(id: string, pageNum: number, neededRes: number) {
+    return this.http.get('http://localhost:8083/story/paged-feed', {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  }
 
   constructor(private http: HttpClient) { }
 

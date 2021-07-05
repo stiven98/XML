@@ -27,6 +27,7 @@ func handleFunc(storiesHandler *handler.StoriesHandler) {
 	router.HandleFunc("/story", storiesHandler.Create).Methods("POST")
 	router.HandleFunc("/upload", storiesHandler.UploadFile).Methods("POST")
 	router.HandleFunc("/story/feed/{id}", storiesHandler.GetFeed).Methods("GET")
+	router.HandleFunc("/story/paged-feed", storiesHandler.GetPagedFeed).Methods("GET")
 	router.HandleFunc("/story/my/{id}", storiesHandler.GetMyStories).Methods("GET")
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./user_stories/"))))

@@ -10,7 +10,8 @@
     <hr>
     <div class="gallery">
         <div class="gallery-item" tabindex="0" *ngFor="let post of postsToShow" style="width: 300px; height: 300px;">
-            <img src="{{'http://localhost:8086/images/'+post.items[0].path}}" class="gallery-image" alt="" />
+            <img *ngIf="isImage(post.items[0].path)" src="{{'http://localhost:8086/images/'+post.items[0].path}}" class="gallery-image" alt="" />
+            <video *ngIf="!isImage(post.items[0].path)" class="gallery-image active" src="{{'http://localhost:8086/images/'+post.items[0].path}}" controls></video>
             <div class="gallery-item-type">
                 <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
             </div>

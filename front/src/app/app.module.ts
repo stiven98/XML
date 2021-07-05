@@ -22,6 +22,7 @@ import { ReportedPostsComponent } from './reported-posts/reported-posts.componen
 import { AgentRequestsComponent } from './agent-requests/agent-requests.component';
 import { SinglePostComponent } from './single-post/single-post.component';
 import { SavedPostsComponent } from './saved-posts/saved-posts.component';
+import { CloseFriendsComponent } from './close-friends/close-friends.component';
 import { SingleCampaignComponent } from './single-campaign/single-campaign.component';
 
 const appRoutes: Routes = [
@@ -42,6 +43,7 @@ const appRoutes: Routes = [
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
   {path: 'favourites', component: SavedPostsComponent },
+  {path: 'close-friends', component: CloseFriendsComponent },
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -63,6 +65,7 @@ const appRoutes: Routes = [
     AgentRequestsComponent,
     SinglePostComponent,
     SavedPostsComponent,
+    CloseFriendsComponent,
     SingleCampaignComponent
   ],
   imports: [
