@@ -66,7 +66,7 @@ func(repo *PostsRepository) CreateTemporaryCampaign(campaign *model.Campaign)  e
 	if err != nil {
 		campaigns = append(campaigns, *campaign)
 		jsonPosts, _ := json.Marshal(campaigns)
-		newErr := repo.Database.Set(campaign.USERID.String() + "_campaignTemp", jsonPosts, 24 * time.Hour).Err()
+		newErr := repo.Database.Set(campaign.USERID.String() + "_campaignTemp", jsonPosts, 50 * time.Second).Err()
 		if newErr != nil {
 			fmt.Println(result)
 		}
@@ -75,7 +75,7 @@ func(repo *PostsRepository) CreateTemporaryCampaign(campaign *model.Campaign)  e
 		json.Unmarshal(bytes, &campaigns)
 		campaigns = append(campaigns, *campaign)
 		jsonPosts, _ := json.Marshal(campaigns)
-		newErr := repo.Database.Set(campaign.USERID.String()+ "_campaignTemp", jsonPosts, 24 * time.Hour).Err()
+		newErr := repo.Database.Set(campaign.USERID.String()+ "_campaignTemp", jsonPosts, 50 * time.Second).Err()
 		if newErr != nil {
 			fmt.Println(result)
 		}
@@ -84,16 +84,29 @@ func(repo *PostsRepository) CreateTemporaryCampaign(campaign *model.Campaign)  e
 }
 func(repo *PostsRepository) GetCampaigns(id string) []model.Campaign {
 	fmt.Println("Id je " + id)
-	var campaigns []model.Campaign
-	result, _ :=  repo.Database.Get(id+ "_campaign").Result()
+	var tempCampaigns []model.Campaign
+	result, _ :=  repo.Database.Get(id+ "_campaignTemp").Result()
 	bytes := []byte(result)
-	json.Unmarshal(bytes, &campaigns)
-	for i := range campaigns {
-		var userPosts []model.Campaign
-		result, _ := repo.Database.Get(campaigns[i].USERID.String() + "_campaign").Result()
-		bytes := []byte(result)
-		json.Unmarshal(bytes, &userPosts)
+	json.Unmarshal(bytes, &tempCampaigns)
+
+	var campaigns []model.Campaign
+	result1, _ :=  repo.Database.Get(id+ "_campaign").Result()
+	bytes1 := []byte(result1)
+	json.Unmarshal(bytes1, &campaigns)
+
+
+
+	for i:= range campaigns {
+		for j:= range tempCampaigns {
+			if campaigns[i].ID == tempCampaigns[j].ID {
+				fmt.Println("usao")
+				fmt.Println(campaigns[i].DESCRIPTION)
+				campaigns[i] = tempCampaigns[j]
+				fmt.Println(campaigns[i].DESCRIPTION)
+			}
+		}
 	}
+
 	return campaigns
 
 }
@@ -450,6 +463,17 @@ func (repo *PostsRepository) GetByIds(userid string, postid string) interface{} 
 	return post
 }
 func (repo *PostsRepository) GetCampaignsByIds(userid string, campaignid string) model.Campaign {
+	var tempCampaigns []model.Campaign
+	var tempCampaign model.Campaign
+	result1, _ :=  repo.Database.Get(userid+ "_campaignTemp").Result()
+	bytes1 := []byte(result1)
+	json.Unmarshal(bytes1, &tempCampaigns)
+	for i := range tempCampaigns {
+		if tempCampaigns[i].ID.String() == campaignid {
+			tempCampaign = tempCampaigns[i]
+			break
+		}
+	}
 	var campaings []model.Campaign
 	var campaing model.Campaign
 	result, _ :=  repo.Database.Get(userid+ "_campaign").Result()
@@ -461,6 +485,10 @@ func (repo *PostsRepository) GetCampaignsByIds(userid string, campaignid string)
 			break
 		}
 	}
+	if campaing.ID == tempCampaign.ID {
+		campaing = tempCampaign
+	}
+
 	return campaing
 }
 

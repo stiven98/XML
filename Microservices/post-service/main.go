@@ -41,7 +41,6 @@ func handleFunc(postsHandler *handler.PostsHandler) {
 	router.HandleFunc("/posts/liked/{id}", postsHandler.GetLiked).Methods("GET")
 	router.HandleFunc("/campaigns/getUserCampaigns/{id}", postsHandler.GetCampaigns).Methods("GET")
 	router.HandleFunc("/campaigns/getUserTemporaryCampaigns/{id}", postsHandler.GetTemporaryCampaigns).Methods("GET")
-
 	router.HandleFunc("/posts/disliked/{id}", postsHandler.GetDisliked).Methods("GET")
 	router.HandleFunc("/posts/reported", postsHandler.GetReported).Methods("GET")
 	router.HandleFunc("/posts/delete", postsHandler.DeletePost).Methods("POST")
