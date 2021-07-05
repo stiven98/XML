@@ -21,6 +21,11 @@ type Feed struct {
 	StoryId uuid.UUID `json:"storyid"`
 }
 
+type Highlight struct {
+	UserId uuid.UUID `json:"userid"`
+	StoryId uuid.UUID `json:"storyid"`
+}
+
 type Page struct {
 	Stories []Story `json:"stories"`
 	TotalCount int `json:"total_count"`

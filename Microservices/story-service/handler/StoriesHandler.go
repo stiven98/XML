@@ -179,3 +179,95 @@ func (handler *StoriesHandler) GetPagedFeed(w http.ResponseWriter, r *http.Reque
 	page.TotalCount = len(stories)
 	renderJSON(w, &page)
 }
+
+func (handler *StoriesHandler) GetMyPagedStories(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	id, _ := query["id"]
+	pageNumber, _ := query["pageNumber"]
+	neededResults, _ := query["neededResults"]
+	var stories []model.Story
+	neededResultsInt := 0
+	pageNumberInt := 0
+	if len(id) > 0 && len(pageNumber) > 0 && len(neededResults) > 0 {
+		stories = handler.Service.GetMyStories(id[0])
+		neededResultsInt, _ = strconv.Atoi(neededResults[0])
+		pageNumberInt, _ = strconv.Atoi(pageNumber[0])
+	}
+	var page model.Page
+	var neededStories []model.Story
+	firstIndex := (pageNumberInt - 1) * neededResultsInt
+	lastIndex := firstIndex + neededResultsInt
+	for i := firstIndex; i < lastIndex; i++{
+		if len(stories) > i {
+			neededStories = append(neededStories, stories[i])
+		}
+	}
+	page.Stories = neededStories
+	page.TotalCount = len(stories)
+	renderJSON(w, &page)
+}
+
+func (handler *StoriesHandler) AddToHighlights(writer http.ResponseWriter, request *http.Request) {
+	var highlightDto model.Highlight
+	err := json.NewDecoder(request.Body).Decode(&highlightDto)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.AddToHighlights(highlightDto)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	writer.WriteHeader(http.StatusCreated)
+	writer.Header().Set("Content-Type", "application/json")
+	return
+}
+
+func (handler *StoriesHandler) RemoveFromHighlights(writer http.ResponseWriter, request *http.Request) {
+	var highlightDto model.Highlight
+	err := json.NewDecoder(request.Body).Decode(&highlightDto)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.RemoveFromHighlights(highlightDto)
+	if err != nil {
+		fmt.Println(err)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
+	writer.Header().Set("Content-Type", "application/json")
+	return
+}
+
+func (handler *StoriesHandler) GetPagedHighlights(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	id, _ := query["id"]
+	pageNumber, _ := query["pageNumber"]
+	neededResults, _ := query["neededResults"]
+	var stories []model.Story
+	neededResultsInt := 0
+	pageNumberInt := 0
+	if len(id) > 0 && len(pageNumber) > 0 && len(neededResults) > 0 {
+		stories = handler.Service.GetHighlights(id[0])
+		neededResultsInt, _ = strconv.Atoi(neededResults[0])
+		pageNumberInt, _ = strconv.Atoi(pageNumber[0])
+	}
+	var page model.Page
+	var neededStories []model.Story
+	firstIndex := (pageNumberInt - 1) * neededResultsInt
+	lastIndex := firstIndex + neededResultsInt
+	for i := firstIndex; i < lastIndex; i++{
+		if len(stories) > i {
+			neededStories = append(neededStories, stories[i])
+		}
+	}
+	page.Stories = neededStories
+	page.TotalCount = len(stories)
+	renderJSON(w, &page)
+}

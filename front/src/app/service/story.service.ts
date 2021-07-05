@@ -7,6 +7,37 @@ import { Post } from '../model/Post.model';
   providedIn: 'root'
 })
 export class StoryService {
+  removeHighlight(id: string, storyid: string) {
+    return this.http
+      .post('http://localhost:8083/story/remove-highlight', {userid: id, storyid: storyid})
+      .pipe(map((item) => {
+        return item;
+      }));
+  };
+
+  addToHighlight(id: string, storyid: string) {
+    return this.http
+      .post('http://localhost:8083/story/highlight', {userid: id, storyid: storyid})
+      .pipe(map((item) => {
+        return item;
+      }));
+  };
+
+  getMyPagedHighlights(id: string, pageNum: number, neededRes: number) {
+    return this.http.get('http://localhost:8083/story/paged-highlights', {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  }
+  
+  getMyPagedStories(id: string, pageNum: number, neededRes: number) {
+    return this.http.get('http://localhost:8083/story/my-paged-stories', {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
+      map((item) => {
+        return item;
+      })
+    );
+  }
   getPagedFeed(id: string, pageNum: number, neededRes: number) {
     return this.http.get('http://localhost:8083/story/paged-feed', {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
       map((item) => {
