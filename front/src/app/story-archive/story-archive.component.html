@@ -1,0 +1,117 @@
+<section class="pt-5 pb-5" *ngIf="this.authService.isLoggedIn">
+    <div class="container">
+        <div class="row">
+            <h3>Sve priče</h3>
+            <div class="col-6"></div>
+            <div class="col-12">
+                <div id="carouselExampleIndicators2" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="getClass()">
+                            <div class="row">
+                                <div *ngFor="let story of stories" class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <ngb-carousel>
+                                            <ng-template ngbSlide *ngFor="let item of story.items">
+                                                <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
+                                                    <img class="img-fluid" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" />
+                                                </div>
+                                                <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
+                                                    <video class="active" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" controls></video>
+                                                </div>
+                                            </ng-template>
+                                        </ngb-carousel>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <a style="width: 70px; height: 70px; margin-top: 0px" href="/profile/{{story.userid}}">
+                                                        <img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userData.get(story.userid).system_user.picturePath}}" alt="User" />
+                                                    </a>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h4 class="card-title">
+                                                        {{ userData.get(story.userid).system_user.firstName + ' ' + userData.get(story.userid).system_user.lastName }}
+                                                    </h4>
+                                                </div>
+                                                <div class="col-3">
+                                                    <button (click)="addHighlightClick(story)" class="btn-close-friend-green" style="margin-top: 20px;">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 text-center" style="margin: auto">
+            <a class="btn btn-primary mb-3 mr-1" (click)="prevPageClick()" role="button">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="btn btn-primary mb-3" (click)="nextPageClick()" role="button">
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <h3>Istaknute priče</h3>
+            <div class="col-6"></div>
+            <div class="col-12">
+                <div id="carouselExampleIndicators2" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="getClass()">
+                            <div class="row">
+                                <div *ngFor="let story of storiesHigh" class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <ngb-carousel>
+                                            <ng-template ngbSlide *ngFor="let item of story.items">
+                                                <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
+                                                    <img class="img-fluid" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" />
+                                                </div>
+                                                <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
+                                                    <video class="active" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" controls></video>
+                                                </div>
+                                            </ng-template>
+                                        </ngb-carousel>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <a style="width: 70px; height: 70px; margin-top: 0px" href="/profile/{{story.userid}}">
+                                                        <img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userDataHigh.get(story.userid).system_user.picturePath}}" alt="User" />
+                                                    </a>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h4 class="card-title">
+                                                        {{ userDataHigh.get(story.userid).system_user.firstName + ' ' + userDataHigh.get(story.userid).system_user.lastName }}
+                                                    </h4>
+                                                </div>
+                                                <div class="col-3">
+                                                    <button (click)="removeHighlightClick(story)" class="btn-close-friend-red" style="margin-top: 20px;">-</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 text-center" style="margin: auto">
+            <a class="btn btn-primary mb-3 mr-1" (click)="prevPageClickHigh()" role="button">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="btn btn-primary mb-3" (click)="nextPageClickHigh()" role="button">
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>

@@ -6,6 +6,8 @@ import { UserService } from '../service/user.service';
 import { FollowService } from '../service/follow.service';
 import { ManagementService } from '../service/management.service';
 import { PostsService } from '../service/posts.service';
+import { Page } from '../model/Post.model';
+import { StoryService } from '../service/story.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -26,7 +28,11 @@ export class ProfilePageComponent implements OnInit {
   isMuted: boolean = false;
   showBlockMute: boolean = false;
   isSubscriber: boolean = false;
-
+  public stories: any[] = [];
+  public userData: Map<string, any> = new Map<string, any>();
+  public currentPage = 1;
+  public neededResults = 3;
+  public totalCount = 0;
   public posts: any[] = [];
   public campaigns: any[] = [];
   constructor(
@@ -37,7 +43,8 @@ export class ProfilePageComponent implements OnInit {
     private followService: FollowService,
     private managementService: ManagementService,
     private postsService: PostsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private storyService : StoryService
   ) {
     this.id = route.snapshot.params[`id`];
     this.myId = localStorage.getItem('id');
@@ -57,6 +64,39 @@ export class ProfilePageComponent implements OnInit {
       ? (this.showBlockMute = false)
       : (this.showBlockMute = true);
     this.initData();
+  }
+
+  nextPageClick = () => {
+    if(this.currentPage < Math.ceil(this.totalCount / this.neededResults)){
+      this.currentPage = this.currentPage + 1;
+    } else {
+      this.currentPage = 1;
+    }
+    this.stories = [];
+    this.userData = new Map<string, any>();
+    this.initData();
+  }
+
+  prevPageClick = () => {
+    if(this.currentPage > 1){
+      this.currentPage = this.currentPage - 1;
+    } else{
+      this.currentPage = Math.ceil(this.totalCount / this.neededResults);
+    }
+    this.stories = [];
+    this.userData = new Map<string, any>();
+    this.initData();
+  }
+
+  removeHighlightClick = (story : any) => {
+    this.storyService.removeHighlight(this.id, story.id).subscribe(res => {
+      this.stories = [];
+      this.userData = new Map<string, any>();
+      this.currentPage = 1;
+      alert("Uspešno ste uklonili priču iz istaknutih priča")
+      this.initData();
+    }, 
+      err => {alert("Priča je već uklonjena")});
   }
 
   initData = () => {
@@ -88,6 +128,23 @@ export class ProfilePageComponent implements OnInit {
             })
         }
       });
+
+      if (this.id) {
+        this.storyService.getMyPagedHighlights(this.id, this.currentPage, this.neededResults).subscribe((res : any) => {
+          let page = res as Page;
+          this.stories = page.stories;
+          this.totalCount = page.total_count;
+          if (this.stories) {
+            for (let s of this.stories) {
+              if (!this.userData.get(s.userid)) {
+                this.userService.getUsersById(s.userid).subscribe(res => {
+                  this.userData.set(s.userid, res);
+                });
+              }
+            }
+          }
+        }, (err : any) => {this.currentPage = 1;});
+      }
 
     this.followService.getFollowers(this.id).subscribe((response) => {
       this.followers = response;
@@ -189,4 +246,16 @@ export class ProfilePageComponent implements OnInit {
       .unSubscribe(this.myId, this.id)
       .subscribe((res: any) => (this.isSubscriber = !this.isSubscriber));
   };
+
+  isImage = (name: string): boolean => {
+    let imgFormats = ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'bmp'];
+    let flag = false;
+    for (let i = 0; i < imgFormats.length; i++) {
+      if (name.includes(imgFormats[i])) {
+        flag = true;
+        break;
+      }
+    }
+    return flag;
+  }
 }

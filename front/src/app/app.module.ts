@@ -24,6 +24,7 @@ import { SinglePostComponent } from './single-post/single-post.component';
 import { SavedPostsComponent } from './saved-posts/saved-posts.component';
 import { CloseFriendsComponent } from './close-friends/close-friends.component';
 import { SingleCampaignComponent } from './single-campaign/single-campaign.component';
+import { StoryArchiveComponent } from './story-archive/story-archive.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -44,6 +45,7 @@ const appRoutes: Routes = [
   {path: 'homePage/location/:location', component: HomePageComponent },
   {path: 'favourites', component: SavedPostsComponent },
   {path: 'close-friends', component: CloseFriendsComponent },
+  {path: 'archive', component: StoryArchiveComponent },
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -66,7 +68,8 @@ const appRoutes: Routes = [
     SinglePostComponent,
     SavedPostsComponent,
     CloseFriendsComponent,
-    SingleCampaignComponent
+    SingleCampaignComponent,
+    StoryArchiveComponent
   ],
   imports: [
     BrowserModule,
