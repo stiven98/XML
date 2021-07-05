@@ -14,9 +14,8 @@ import { PostsService } from '../service/posts.service';
 })
 export class ProfilePageComponent implements OnInit {
   id = '';
-  status = 'NO_STATUS';
+  public status = 'NO_STATUS';
   myId: string | null;
-
   followers: any | [];
   following: any | [];
   requests: any | undefined;
@@ -26,7 +25,7 @@ export class ProfilePageComponent implements OnInit {
   isMuted: boolean = false;
   showBlockMute: boolean = false;
   isSubscriber: boolean = false;
-
+  isAgent: boolean = false;
   public posts: any[] = [];
   public campaigns: any[] = [];
   constructor(
@@ -36,8 +35,7 @@ export class ProfilePageComponent implements OnInit {
     private router: Router,
     private followService: FollowService,
     private managementService: ManagementService,
-    private postsService: PostsService,
-    private cdr: ChangeDetectorRef
+    private postsService: PostsService
   ) {
     this.id = route.snapshot.params[`id`];
     this.myId = localStorage.getItem('id');
@@ -68,7 +66,10 @@ export class ProfilePageComponent implements OnInit {
       : (this.showBlockMute = true);
     this.userService
       .getUserById(this.route.snapshot.params[`id`])
-      .subscribe((response) => {
+      .subscribe((response: any) => {
+        if (response.system_user.type_of_user === 'agent') {
+          this.isAgent = true;
+        }
         this.user = response as RegularUser;
         console.log(this.user);
         console.log(this.isMyProfile);
@@ -77,15 +78,20 @@ export class ProfilePageComponent implements OnInit {
         } else if (this.user.isPublic) {
           this.isMyProfile = true;
         }
+        if (this.status === 'FOLLOW') {
+          this.isMyProfile = true;
+        }
 
         this.postsService.getByUserId(this.id).subscribe((res) => {
           this.posts = res as any[];
         });
 
-        if (this.authService.getRole() === 'ROLE_AGENT') {
-            this.postsService.getCampaignsByUserId(this.id).subscribe((result: any) => {
+        if (this.isAgent) {
+          this.postsService
+            .getCampaignsByUserId(this.id)
+            .subscribe((result: any) => {
               this.campaigns = result as any[];
-            })
+            });
         }
       });
 
@@ -147,10 +153,12 @@ export class ProfilePageComponent implements OnInit {
   imageClick = (post: any) => {
     this.router.navigate(['single-post/' + post.userid + '/' + post.id]);
   };
-  
-  openCampaign = (campaign: any) =>{
-    this.router.navigate(['single-campaign/' + campaign.userid + '/' + campaign.id])
-  }
+
+  openCampaign = (campaign: any) => {
+    this.router.navigate([
+      'single-campaign/' + campaign.userid + '/' + campaign.id,
+    ]);
+  };
 
   block = () => {
     this.managementService

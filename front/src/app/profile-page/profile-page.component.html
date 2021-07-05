@@ -8,7 +8,8 @@
             <h1 class="profile-user-name">{{user.system_user.username}}</h1>
 
             <i *ngIf="user.isVerified" class=" fa fa-check-circle fa-3x ml-4"> </i>
-
+            <i *ngIf="user.isVerified && status === 'FOLLOW'" class=" fa fa-map fa-3x ml-4"> </i>
+            
             <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
 
             <button *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn" aria-label="profile settings">
@@ -96,6 +97,7 @@
                     </ul>
                 </div>
             </div>
+            <div *ngIf = "isAgent">
             <div class="gallery-item" *ngFor='let campaign of campaigns' (click)="openCampaign(campaign)" tabindex="0" style="width: 300px; height: 300px;">
                 <img src="{{'http://localhost:8086/images/'+campaign.ads[0].path}}" class="gallery-image" alt="" />
                 <div *ngIf="campaign.type === 'album'" class="gallery-item-type">
@@ -111,6 +113,7 @@
                         </li>
                     </ul>
                 </div>
+            </div>
             </div>
         </div>
         <!-- End of gallery -->
