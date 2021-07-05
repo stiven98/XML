@@ -80,7 +80,7 @@
                     <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams" [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
-            <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 200px; margin-top: 15px;">
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 100px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams" [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
@@ -138,7 +138,7 @@
         </ul>
     </div>
 </nav>
-<div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px; margin-right: 515px;">
+<div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px; margin-right: 350px;">
     <div class="card mt-5 p-4">
         <p *ngIf="usernamesToShow.length == 0 && isUsersSearchSelected">Nema rezultata</p>
         <div class="btn-group mr-2" role="group" aria-label="First group">

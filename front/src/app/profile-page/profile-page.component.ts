@@ -150,6 +150,10 @@ export class ProfilePageComponent implements OnInit {
     });
   };
 
+  onAngageClick = () => {
+    this.router.navigate(['angageInfluencer/' + localStorage.getItem('id') + '/' + this.id])
+  }
+
   imageClick = (post: any) => {
     this.router.navigate(['single-post/' + post.userid + '/' + post.id]);
   };

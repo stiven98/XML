@@ -24,6 +24,7 @@ import { SinglePostComponent } from './single-post/single-post.component';
 import { SavedPostsComponent } from './saved-posts/saved-posts.component';
 import { CloseFriendsComponent } from './close-friends/close-friends.component';
 import { SingleCampaignComponent } from './single-campaign/single-campaign.component';
+import { AngageInfluencerComponent } from './angage-influencer/angage-influencer.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -43,6 +44,7 @@ const appRoutes: Routes = [
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
   {path: 'favourites', component: SavedPostsComponent },
+  {path: 'angageInfluencer/:agentid/:influencerid', component: AngageInfluencerComponent},
   {path: 'close-friends', component: CloseFriendsComponent },
   { path: '**', redirectTo: '/404'}
 ];
@@ -66,7 +68,8 @@ const appRoutes: Routes = [
     SinglePostComponent,
     SavedPostsComponent,
     CloseFriendsComponent,
-    SingleCampaignComponent
+    SingleCampaignComponent,
+    AngageInfluencerComponent
   ],
   imports: [
     BrowserModule,
