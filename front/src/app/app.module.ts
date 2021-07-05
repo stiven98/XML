@@ -37,7 +37,7 @@ const appRoutes: Routes = [
   {path: 'agentRequests', component: AgentRequestsComponent},
   {path: 'homePage/tag/:tag', component: HomePageComponent },
   {path: 'single-post/:userid/:postid', component: SinglePostComponent },
-  {path: 'reportedPosts', component:ReportedPostsComponent},
+  {path: 'reportedPosts', component: ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
   {path: 'favourites', component: SavedPostsComponent },
   { path: '**', redirectTo: '/404'}

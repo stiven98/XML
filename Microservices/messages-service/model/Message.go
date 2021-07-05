@@ -8,9 +8,11 @@ import (
 
 type Message struct {
 	ID uuid.UUID `json:"id"`
-	USERID uuid.UUID `json:"userid"`
-	TIMESTAMP time.Time `json:"timestamp"`
-	VALUE string `json:"value"`
+	Sender uuid.UUID `json:"sender"`
+	Receiver uuid.UUID `json:"receiver"`
+	Timestamp time.Time `json:"timestamp"`
+	Content string `json:"content"`
+	Type string `json:"type"`
 }
 
 

@@ -80,6 +80,7 @@ func initDB() *gorm.DB {
 				Gender:      model.MALE,
 				TypeOfUser: model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 7, 31),
+				PicturePath: "jovan.png",
 			}, {
 				ID:          uuid.MustParse("4579daae-1567-42d5-a25c-1a3818077c84"),
 				FirstName:   "Djordjije",
@@ -90,6 +91,7 @@ func initDB() *gorm.DB {
 				Gender: 	 model.MALE,
 				TypeOfUser: model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 9, 10),
+				PicturePath: "djordjije.jpg",
 			}, {
 				ID:          uuid.MustParse("5cb65bc8-6130-4436-a1f9-ad4778f112bc"),
 				FirstName:   "Aleksandar",
@@ -100,6 +102,7 @@ func initDB() *gorm.DB {
 				Gender:      model.MALE,
 				TypeOfUser: model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 10, 10),
+				PicturePath: "stiven.png",
 			}, {
 				ID:          uuid.MustParse("708b65de-fb77-4934-bfd0-d14161a74905"),
 				FirstName:   "Marko",
@@ -110,6 +113,7 @@ func initDB() *gorm.DB {
 				Gender:      model.MALE,
 				TypeOfUser: model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 1, 10),
+				PicturePath: "marko.png",
 			}, {
 				ID:          uuid.MustParse("0cf8a7ff-7bb5-48f0-a834-7b07eb306f90"),
 				FirstName:   "Janko",
@@ -120,6 +124,7 @@ func initDB() *gorm.DB {
 				Gender:      model.MALE,
 				TypeOfUser: model.USER,
 				DateOfBirth: time.Time{}.AddDate(1994, 10, 10),
+				PicturePath: "janko.png",
 			}, {
 				ID:          uuid.MustParse("be71d1da-0749-480f-a563-dcc35a14e542"),
 				FirstName:   "Dejan",
