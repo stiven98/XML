@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -35,6 +36,8 @@ func initDB() *mongo.Database{
 		fmt.Println(err)
 	}
 	database := client.Database("messages_service")
+
+
 	log.Println("Connected to database...")
 
 	return database
@@ -49,16 +52,24 @@ func initServices (messagesRepo *repository.MessagesRepository, conversationRepo
 }
 
 func initHandlers (messagesService *service.MessagesService, conversationsService *service.ConversationsService) (*handler.MessagesHandler, *handler.ConversationsHandler) {
-	return &handler.MessagesHandler{Service: messagesService}, &handler.ConversationsHandler{Service: conversationsService}
+	return &handler.MessagesHandler{MessageService: messagesService, ConversationService: conversationsService}, &handler.ConversationsHandler{Service: conversationsService}
 }
 func handleFunc(messagesHandler *handler.MessagesHandler, conversationsHandler *handler.ConversationsHandler) {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/messages/create", messagesHandler.Create).Methods("POST")
+	router.HandleFunc("/messages/add/{user1}/{user2}", messagesHandler.Add).Methods("POST")
 	router.HandleFunc("/messages/getAll",messagesHandler.GetAll).Methods("GET")
 	router.HandleFunc("/conversations/create", conversationsHandler.Create).Methods("POST")
 	router.HandleFunc("/conversations/getAll",conversationsHandler.GetAll).Methods("GET")
+	router.HandleFunc("/conversations/{user1}/{user2}", conversationsHandler.GetConversation).Methods("GET")
+	router.HandleFunc("/images/upload", messagesHandler.ImageUpload).Methods("POST")
+	router.Handle("/images/{rest}",
+		http.StripPrefix("/images/", http.FileServer(http.Dir("./messages_images/"))))
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8002"), router))
+	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
+	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([] string{"*"})
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8002"), handlers.CORS(headers, methods, origins) (router)))
 }
 func main() {
 	database := initDB()
@@ -66,5 +77,4 @@ func main() {
 	messagesService, conversationsService := initServices(messagesRepo, conversationsRepo)
 	messagesHandler, conversationsHandler := initHandlers(messagesService, conversationsService)
 	handleFunc(messagesHandler, conversationsHandler)
-	fmt.Println("aca", database)
 }

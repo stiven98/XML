@@ -17,3 +17,11 @@ func (service *ConversationsService) Create(conversation *model.Conversation) er
 func (service *ConversationsService) GetAll() []model.Conversation {
 	return  service.ConversationsRepo.GetAll()
 }
+
+func (service *ConversationsService) GetConversation(s string, s2 string) model.Conversation {
+	return service.ConversationsRepo.GetConversation(s, s2)
+}
+
+func (service *ConversationsService) Update(ret model.Conversation) {
+	service.ConversationsRepo.Update(ret)
+}

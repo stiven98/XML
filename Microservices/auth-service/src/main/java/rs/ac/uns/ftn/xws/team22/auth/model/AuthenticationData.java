@@ -37,7 +37,7 @@ public class AuthenticationData implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<Role>() {
-    };
+    };  
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
