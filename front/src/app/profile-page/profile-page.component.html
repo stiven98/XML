@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div *ngIf = "isAgent">
-            <div class="gallery-item" *ngFor='let campaign of campaigns' (click)="openCampaign(campaign)" tabindex="0" style="width: 300px; height: 300px;">
+            <div class="gallery-item" *ngFor='let campaign of campaigns' (click)="openCampaign(campaign)" tabindex="0" style="width: 300px; height: 300px; margin-bottom: 50px;">
                 <img src="{{'http://localhost:8086/images/'+campaign.ads[0].path}}" class="gallery-image" alt="" />
                 <div *ngIf="campaign.type === 'album'" class="gallery-item-type">
                     <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
@@ -115,6 +115,24 @@
                 </div>
             </div>
             </div>
+            <div *ngIf = "isInfluencer">
+                <div class="gallery-item" *ngFor='let campaign of influencerCampaigns' (click)="openCampaign(campaign)" tabindex="0" style="width: 300px; height: 300px; margin-bottom: 50px;">
+                    <img src="{{'http://localhost:8086/images/'+campaign.ads[0].path}}" class="gallery-image" alt="" />
+                    <div *ngIf="campaign.type === 'album'" class="gallery-item-type">
+                        <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
+                    </div>
+                    <div class="gallery-item-info">
+                        <ul>
+                            <li class="gallery-item-likes">
+                                <span class="visually-hidden">Likes:</span><i class="fa fa-heart" aria-hidden="true"></i> {{campaign.likes.length - campaign.dislikes.length}}
+                            </li>
+                            <li class="gallery-item-comments">
+                                <span class="visually-hidden">Comments:</span><i class="fa fa-comment" aria-hidden="true"></i> {{campaign.comments.length}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
         </div>
         <!-- End of gallery -->
 

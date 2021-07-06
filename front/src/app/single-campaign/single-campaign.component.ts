@@ -26,6 +26,7 @@ export class SingleCampaignComponent implements OnInit {
   public isMultiple: boolean = false;
   public startday: any;
   public endday: any;
+  public isInfluencer: boolean = false;
 
   constructor(
     public postsService: PostsService,
@@ -39,7 +40,15 @@ export class SingleCampaignComponent implements OnInit {
   ngOnInit(): void {
     this.campaignid = this.route.snapshot.params[`campaignid`];
     this.userid = this.route.snapshot.params[`userid`];
-    this.initData();
+    this.userService.getUserById(this.userid).subscribe((us: any) => {
+      console.log(us);
+      console.log('rezzzzzzz');
+      if (us.isVerified) {
+        this.isInfluencer = true;
+      }
+      console.log(this.isInfluencer);
+      this.initData();
+    });
   }
   initData = () => {
     if (localStorage.getItem('id') === this.userid) {
@@ -47,28 +56,57 @@ export class SingleCampaignComponent implements OnInit {
       this.allowDelete = true;
     }
     let id = localStorage.getItem('id');
-    this.postsService
-      .getCampaignByIds(this.userid, this.campaignid)
-      .subscribe((res) => {
-        this.campaign = res as any;
-        this.startday = this.campaign.startday.split('T')[0];
-        this.endday = this.campaign.endday.split('T')[0];
-        this.isMultiple = this.campaign.ismultiple;
-        this.userService.getUsersById(id).subscribe((response) => {
-          this.currentUser = response;
-        });
-        if (this.campaign) {
-          if (!this.userData.get(this.campaign.userid)) {
-            this.userService
-              .getUsersById(this.campaign.userid)
-              .subscribe((res) => {
-                this.userData.set(this.campaign.userid, res);
-                console.log(this.campaign);
-              });
+
+    if (!this.isInfluencer) {
+      console.log('usao u if');
+      this.postsService
+        .getCampaignByIds(this.userid, this.campaignid)
+        .subscribe((res) => {
+          this.campaign = res as any;
+          this.startday = this.campaign.startday.split('T')[0];
+          this.endday = this.campaign.endday.split('T')[0];
+          this.isMultiple = this.campaign.ismultiple;
+          this.userService.getUsersById(id).subscribe((response) => {
+            this.currentUser = response;
+          });
+
+          if (this.campaign) {
+            console.log('usao u zadnji if');
+            if (!this.userData.get(this.campaign.userid)) {
+              this.userService
+                .getUsersById(this.campaign.userid)
+                .subscribe((res) => {
+                  this.userData.set(this.campaign.userid, res);
+                  console.log(this.campaign);
+                });
+            }
           }
-          //  this.fetchCommentData();
-        }
-      });
+        });
+    } else {
+      this.postsService
+        .getCampaignByInfluencerIds(this.userid, this.campaignid)
+        .subscribe((result) => {
+          this.campaign = result as any;
+          this.startday = this.campaign.startday.split('T')[0];
+          this.endday = this.campaign.endday.split('T')[0];
+          this.isMultiple = this.campaign.ismultiple;
+          this.userService.getUsersById(id).subscribe((response) => {
+            this.currentUser = response;
+          });
+
+          if (this.campaign) {
+            console.log('usao u zadnji if');
+            if (!this.userData.get(this.campaign.userid)) {
+              this.userService
+                .getUsersById(this.campaign.userid)
+                .subscribe((res) => {
+                  this.userData.set(this.campaign.userid, res);
+                  console.log(this.campaign);
+                });
+            }
+          }
+        });
+    }
   };
 
   onDeleteClick = () => {
@@ -99,25 +137,13 @@ export class SingleCampaignComponent implements OnInit {
   }
 
   onUpdateClick = () => {
-    this.campaign.startday = this.startday +'T01:00:00+01:00';
-    this.campaign.endday = this.endday +'T01:00:00+01:00';
+    this.campaign.startday = this.startday + 'T01:00:00+01:00';
+    this.campaign.endday = this.endday + 'T01:00:00+01:00';
     this.postsService.updateCampaign(this.campaign).subscribe((res) => {
-      alert("Kampanja uspešno izmenjena!");
+      alert('Kampanja uspešno izmenjena!');
       this.router.navigate(['homePage']);
-    })
+    });
   };
-
-  // fetchCommentData = () => {
-  //   if (this.post) {
-  //       for (let c of this.post.comments) {
-  //         if (!this.userData.get(c.userid)) {
-  //           this.userService.getUsersById(c.userid).subscribe(res => {
-  //             this.userData.set(c.userid, res);
-  //           });
-  //         }
-  //       }
-  //   }
-  // }
 
   getCurrentUserImage = (): string => {
     return this.currentUser.system_user.picturePath;
@@ -133,24 +159,6 @@ export class SingleCampaignComponent implements OnInit {
     if (user) return user.system_user.username;
     else return '';
   };
-
-  // leaveComment = (post: any) => {
-  //   let id = localStorage.getItem('id');
-  //   if (id) {
-  //     var commentValue = this.commentData.get(post.id) as string;
-  //     this.postsService.leaveComment({ ownerid: post.userid, postid: post.id, userid: id, comment: commentValue }).subscribe(res => {
-  //       this.initData();
-  //     });
-  //   } else {
-  //     alert('Morate biti ulogovani da bi komentarisali objavu')
-  //   }
-  // }
-
-  // changeCommentText = (event: Event, id: string) => {
-  //   const e = event.target as HTMLInputElement;
-  //   let value = e.value;
-  //   this.commentData.set(id, value);
-  // }
 
   onUsernameClick = (event: Event, id: string) => {
     event.preventDefault();

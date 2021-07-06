@@ -25,6 +25,7 @@ import { SavedPostsComponent } from './saved-posts/saved-posts.component';
 import { CloseFriendsComponent } from './close-friends/close-friends.component';
 import { SingleCampaignComponent } from './single-campaign/single-campaign.component';
 import { AngageInfluencerComponent } from './angage-influencer/angage-influencer.component';
+import { AngageRequestsComponent } from './angage-requests/angage-requests.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -40,6 +41,7 @@ const appRoutes: Routes = [
   {path: 'agentRequests', component: AgentRequestsComponent},
   {path: 'homePage/tag/:tag', component: HomePageComponent },
   {path: 'single-post/:userid/:postid', component: SinglePostComponent },
+  {path: 'angageRequests', component:AngageRequestsComponent},
   {path: 'single-campaign/:userid/:campaignid', component: SingleCampaignComponent },
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
@@ -69,7 +71,8 @@ const appRoutes: Routes = [
     SavedPostsComponent,
     CloseFriendsComponent,
     SingleCampaignComponent,
-    AngageInfluencerComponent
+    AngageInfluencerComponent,
+    AngageRequestsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CampaignRequest } from '../model/CampaignRequest';
 import { AuthService } from '../service/authorization/auth.service';
 import { PostsService } from '../service/posts.service';
 import { UserService } from '../service/user.service';
@@ -15,6 +16,7 @@ export class AngageInfluencerComponent implements OnInit {
   public currentUser: any;
   public currentAgent: any;
   public influencerId: string = '';
+  public campaignRequest: CampaignRequest = new CampaignRequest();
   constructor(
     private route: ActivatedRoute,
     private postsService: PostsService,
@@ -56,4 +58,11 @@ export class AngageInfluencerComponent implements OnInit {
     }
     return flag;
   };
+
+  createCampaignRequest = (id:string) => {
+    this.campaignRequest.agentId = this.agentId;
+    this.campaignRequest.influencerId = this.influencerId;
+    this.campaignRequest.campaignId = id;
+    this.postsService.createCampaignRequest(this.campaignRequest).subscribe((res: any) =>{ res});
+  }
 }

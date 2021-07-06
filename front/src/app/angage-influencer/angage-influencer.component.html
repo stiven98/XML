@@ -1,7 +1,11 @@
 <section class="hero">
-    <h1 style="float: center;">Angažujte influensera</h1>
     <div class="container">
-        <div class="row" *ngFor="let campaign of campaigns">
+        <div class="d-flex justify-content-center">
+            <h2 class="text-dark font-weight-bold mt-3">
+                Angažujte influensera:
+            </h2>
+        </div>
+        <div class="row" *ngFor="let campaign of campaigns" style="margin-top: 20px;">
             <div class="col-lg-6 offset-lg-3">
                 <div class="cardbox shadow-lg bg-white">
                     <div class="cardbox-heading">
@@ -75,17 +79,14 @@
                             <a href=""><img width="50px" height="50px" style="margin-left: 20px;" class="rounded-circle"
                                     src="{{'http://localhost:8085/images/' + currentAgent.system_user.picturePath}}"
                                     alt="..." /></a>
-                            <p style="margin-top: 10px;">
+                            <p style="margin-top: 10px; margin-left: 5px; font-weight: bold;">
                                 {{currentAgent.system_user.firstName}} {{currentAgent.system_user.lastName}}
                             </p>
                         </span>
 
-                        <div class="row d-flex justify-content-center" style="margin-top: 30px;">
-                            <button class="btn btn-success mr-3 w-25">
-                                Prihvati
-                            </button>
-                            <button class="btn btn-danger ml-3 w-25">
-                                Odbij
+                        <div class="row d-flex justify-content-center" style="margin-top: 50px; margin-right: 30px;">
+                            <button class="btn btn-success mr-3 w-55" (click) = "createCampaignRequest(campaign.id)">
+                                Pošalji zahtev za angažman
                             </button>
                         </div>
                         <!--/. Search -->

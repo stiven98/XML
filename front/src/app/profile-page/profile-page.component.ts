@@ -26,8 +26,10 @@ export class ProfilePageComponent implements OnInit {
   showBlockMute: boolean = false;
   isSubscriber: boolean = false;
   isAgent: boolean = false;
+  public isInfluencer: boolean = false;
   public posts: any[] = [];
   public campaigns: any[] = [];
+  public influencerCampaigns: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -70,6 +72,10 @@ export class ProfilePageComponent implements OnInit {
         if (response.system_user.type_of_user === 'agent') {
           this.isAgent = true;
         }
+        if(response.isVerified) {
+          this.isInfluencer = true;
+        }
+
         this.user = response as RegularUser;
         console.log(this.user);
         console.log(this.isMyProfile);
@@ -93,6 +99,14 @@ export class ProfilePageComponent implements OnInit {
               this.campaigns = result as any[];
             });
         }
+        if (this.isInfluencer) {
+          this.postsService
+            .getCampaignsByInfluencerId(this.id)
+            .subscribe((result: any) => {
+              this.influencerCampaigns = result as any[];
+            });
+        }
+        
       });
 
     this.followService.getFollowers(this.id).subscribe((response) => {
@@ -151,8 +165,10 @@ export class ProfilePageComponent implements OnInit {
   };
 
   onAngageClick = () => {
-    this.router.navigate(['angageInfluencer/' + localStorage.getItem('id') + '/' + this.id])
-  }
+    this.router.navigate([
+      'angageInfluencer/' + localStorage.getItem('id') + '/' + this.id,
+    ]);
+  };
 
   imageClick = (post: any) => {
     this.router.navigate(['single-post/' + post.userid + '/' + post.id]);
