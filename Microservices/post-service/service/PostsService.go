@@ -18,6 +18,14 @@ func (service *PostsService) Create(post *model.Post) error {
 func (service *PostsService) CreateCampaign(campaign *model.Campaign) error {
 	return	service.PostsRepo.CreateCampaign(campaign)
 }
+
+func (service *PostsService) CreateCampaignInf(campaign *model.Campaign) error {
+	return	service.PostsRepo.CreateCampaignForInfluencer(campaign)
+}
+
+func (service *PostsService) CreateCampaignRequest(campaignReq *dto.CampaignRequestDto) error {
+	return	service.PostsRepo.CreateCampaignRequest(campaignReq)
+}
 func (service *PostsService) CreateTemporaryCampaign(campaign *model.Campaign) error {
 	return	service.PostsRepo.CreateTemporaryCampaign(campaign)
 }
@@ -36,6 +44,12 @@ func (service *PostsService) GetLiked(id string) []model.Post {
 func (service *PostsService) GetCampaigns(id string) []model.Campaign {
 	return  service.PostsRepo.GetCampaigns(id)
 }
+func (service *PostsService) GetInfluencerCampaigns(id string) []model.Campaign {
+	return  service.PostsRepo.GetCampaignsInf(id)
+}
+func (service *PostsService) GetCampaignReqs(id string) []dto.CampaignRequestDto {
+	return  service.PostsRepo.GetCampaignReqs(id)
+}
 func (service *PostsService) GetTemporaryCampaigns(id string) []model.Campaign {
 	return  service.PostsRepo.GetTemporaryCampaigns(id)
 }
@@ -47,6 +61,9 @@ func (service *PostsService) Delete(deletePost *dto.DeletePostDto) bool {
 }
 func (service *PostsService) DeleteCampaign(deletePost *dto.DeletePostDto) bool {
 	return  service.PostsRepo.DeleteCampaign(deletePost)
+}
+func (service *PostsService) DeleteCampaignReq(deleteReq *dto.DeleteCampaignReq) bool {
+	return  service.PostsRepo.DeleteCampaignReq(deleteReq)
 }
 func (service *PostsService) GetReported(ids []dto.UserId) ([]model.Post)  {
 	  return service.PostsRepo.GetReported(ids)
@@ -81,6 +98,9 @@ func (service *PostsService) GetByIds(userid string, postid string) interface{} 
 }
 func (service *PostsService) GetCampaignsByIds(userid string, campaignid string) model.Campaign {
 	return service.PostsRepo.GetCampaignsByIds(userid, campaignid)
+}
+func (service *PostsService) GetCampaignsByInfluencerIds(userid string, campaignid string) model.Campaign {
+	return service.PostsRepo.GetCampaignsByInfluencerIds(userid, campaignid)
 }
 
 func (service *PostsService) GetByUserId(userid string) interface{} {

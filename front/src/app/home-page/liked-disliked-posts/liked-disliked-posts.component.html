@@ -27,10 +27,10 @@
                         <ngb-carousel>
                             <ng-template ngbSlide *ngFor="let item of post.items">
                                 <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
-                                    <img class="img-fluid" src="{{'http://localhost:8086/images/'+item.path}}" />
+                                    <img class="img-fluid" style="width: auto; height: 40vh;" src="{{'http://localhost:8086/images/'+item.path}}" />
                                 </div>
                                 <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
-                                    <video class="active" src="{{'http://localhost:8086/images/'+item.path}}" controls></video>
+                                    <video class="active" style="width: auto; height: 40vh;" src="{{'http://localhost:8086/images/'+item.path}}" controls></video>
                                 </div>
                             </ng-template>
                         </ngb-carousel>
