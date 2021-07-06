@@ -80,9 +80,68 @@
 
 <main *ngIf="isMyProfile">
     <div class="container">
+        <div class="row">
+            <h3 style="margin-left: 20px;">Istaknute priče</h3>
+            <div class="col-6"></div>
+            <div class="col-12">
+                <div id="carouselExampleIndicators2" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="getClass()">
+                            <div class="row">
+                                <div *ngFor="let story of stories" class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <ngb-carousel>
+                                            <ng-template ngbSlide *ngFor="let item of story.items">
+                                                <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
+                                                    <img class="img-fluid" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" />
+                                                </div>
+                                                <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
+                                                    <video class="active" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" controls></video>
+                                                </div>
+                                            </ng-template>
+                                        </ngb-carousel>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <a style="width: 70px; height: 70px; margin-top: 0px" href="/profile/{{story.userid}}">
+                                                        <img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userData.get(story.userid).system_user.picturePath}}" alt="User" />
+                                                    </a>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h4 class="card-title">
+                                                        {{ userData.get(story.userid).system_user.firstName + ' ' + userData.get(story.userid).system_user.lastName }}
+                                                    </h4>
+                                                </div>
+                                                <div class="col-3">
+                                                    <button *ngIf="!showBlockMute" (click)="removeHighlightClick(story)" class="btn-close-friend-red" style="margin-top: 20px;">-</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 text-center" style="margin: auto">
+            <a class="btn btn-primary mb-3 mr-1" (click)="prevPageClick()" role="button">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="btn btn-primary mb-3" (click)="nextPageClick()" role="button">
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="container">
+        <h3>Objave</h3>
         <div class="gallery">
             <div class="gallery-item" *ngFor='let post of posts' (click)="imageClick(post)" tabindex="0" style="width: 300px; height: 300px;">
-                <img src="{{'http://localhost:8086/images/'+post.items[0].path}}" class="gallery-image" alt="" />
+                <img *ngIf="isImage(post.items[0].path)" src="{{'http://localhost:8086/images/'+post.items[0].path}}" class="gallery-image" alt="" />
+                <video *ngIf="!isImage(post.items[0].path)" class="gallery-item" style="width: auto; max-width: 300px; height: 300px;" src="{{'http://localhost:8086/images/'+post.items[0].path}}" controls></video>
                 <div *ngIf="post.type === 'album'" class="gallery-item-type">
                     <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
                 </div>

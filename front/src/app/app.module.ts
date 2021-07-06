@@ -26,6 +26,7 @@ import { CloseFriendsComponent } from './close-friends/close-friends.component';
 import { SingleCampaignComponent } from './single-campaign/single-campaign.component';
 import { AngageInfluencerComponent } from './angage-influencer/angage-influencer.component';
 import { AngageRequestsComponent } from './angage-requests/angage-requests.component';
+import { StoryArchiveComponent } from './story-archive/story-archive.component';
 
 const appRoutes: Routes = [
   {path: 'registration', component: RegisterComponent },
@@ -48,6 +49,7 @@ const appRoutes: Routes = [
   {path: 'favourites', component: SavedPostsComponent },
   {path: 'angageInfluencer/:agentid/:influencerid', component: AngageInfluencerComponent},
   {path: 'close-friends', component: CloseFriendsComponent },
+  {path: 'archive', component: StoryArchiveComponent },
   { path: '**', redirectTo: '/404'}
 ];
 
@@ -72,7 +74,8 @@ const appRoutes: Routes = [
     CloseFriendsComponent,
     SingleCampaignComponent,
     AngageInfluencerComponent,
-    AngageRequestsComponent
+    AngageRequestsComponent,
+    StoryArchiveComponent
   ],
   imports: [
     BrowserModule,
