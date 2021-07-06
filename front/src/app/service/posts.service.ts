@@ -5,6 +5,9 @@ import { CommentReq, FavPost, LikeReq, Post } from '../model/Post.model';
 import { ReportReq } from '../model/ReportReq';
 import { DeletePost } from '../model/DeletePost';
 import { Campaign } from '../model/Campaign';
+import { CampaignRequest } from '../model/CampaignRequest';
+import { DeleteReq } from '../model/DeleteReq';
+import { AddInfluencer } from '../model/AddInfluencer';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +29,16 @@ export class PostsService {
     );
   };
 
+  createCampaignRequest = (campaignRequest: CampaignRequest) => {
+    return this.http
+      .post('http://localhost:8086/campaigns/createRequest', campaignRequest)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  };
+
   getByUserId = (id: string) => {
     return this.http.get('http://localhost:8086/posts/getByUserId/' + id).pipe(
       map((item) => {
@@ -35,11 +48,33 @@ export class PostsService {
   };
 
   getCampaignsByUserId = (id: string) => {
-    return this.http.get('http://localhost:8086/campaigns/getUserCampaigns/' + id).pipe(
-      map((item) => {
-        return item;
-      })
-    );
+    return this.http
+      .get('http://localhost:8086/campaigns/getUserCampaigns/' + id)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  };
+
+  getCampaignsByInfluencerId = (id: string) => {
+    return this.http
+      .get('http://localhost:8086/campaigns/getInfluencerCampaigns/' + id)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  };
+
+  getAngageRequests = (id: string) => {
+    return this.http
+      .get('http://localhost:8086/campaigns/getUserCampaignReqs/' + id)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
   };
 
   createPost = (post: Post) => {
@@ -55,6 +90,11 @@ export class PostsService {
   updateCampaign = (campaign: Campaign) => {
     return this.http
       .post('http://localhost:8086/campaigns/updateCampaign', campaign)
+      .pipe((res) => res);
+  };
+  addInfluencer = (addInfluencer: AddInfluencer) => {
+    return this.http
+      .post('http://localhost:8086/campaigns/addInfluencer', addInfluencer)
       .pipe((res) => res);
   };
 
@@ -79,6 +119,20 @@ export class PostsService {
     return this.http
       .get(
         'http://localhost:8086/campaigns/getById/' + userid + '/' + campaignid
+      )
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  };
+  getCampaignByInfluencerIds = (userid: string, campaignid: string) => {
+    return this.http
+      .get(
+        'http://localhost:8086/campaigns/getByInfluencerId/' +
+          userid +
+          '/' +
+          campaignid
       )
       .pipe(
         map((item) => {
@@ -165,6 +219,15 @@ export class PostsService {
   deleteCampaign(deletePost: DeletePost) {
     return this.http
       .post('http://localhost:8086/campaigns/delete', deletePost)
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  }
+  deleteCampaignReq(deleteReq: DeleteReq) {
+    return this.http
+      .post('http://localhost:8086/campaigns/deleteReq', deleteReq)
       .pipe(
         map((item) => {
           return item;

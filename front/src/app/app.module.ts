@@ -24,6 +24,8 @@ import { SinglePostComponent } from './single-post/single-post.component';
 import { SavedPostsComponent } from './saved-posts/saved-posts.component';
 import { CloseFriendsComponent } from './close-friends/close-friends.component';
 import { SingleCampaignComponent } from './single-campaign/single-campaign.component';
+import { AngageInfluencerComponent } from './angage-influencer/angage-influencer.component';
+import { AngageRequestsComponent } from './angage-requests/angage-requests.component';
 import { StoryArchiveComponent } from './story-archive/story-archive.component';
 
 const appRoutes: Routes = [
@@ -40,10 +42,12 @@ const appRoutes: Routes = [
   {path: 'agentRequests', component: AgentRequestsComponent},
   {path: 'homePage/tag/:tag', component: HomePageComponent },
   {path: 'single-post/:userid/:postid', component: SinglePostComponent },
+  {path: 'angageRequests', component:AngageRequestsComponent},
   {path: 'single-campaign/:userid/:campaignid', component: SingleCampaignComponent },
   {path: 'reportedPosts', component:ReportedPostsComponent},
   {path: 'homePage/location/:location', component: HomePageComponent },
   {path: 'favourites', component: SavedPostsComponent },
+  {path: 'angageInfluencer/:agentid/:influencerid', component: AngageInfluencerComponent},
   {path: 'close-friends', component: CloseFriendsComponent },
   {path: 'archive', component: StoryArchiveComponent },
   { path: '**', redirectTo: '/404'}
@@ -69,6 +73,8 @@ const appRoutes: Routes = [
     SavedPostsComponent,
     CloseFriendsComponent,
     SingleCampaignComponent,
+    AngageInfluencerComponent,
+    AngageRequestsComponent,
     StoryArchiveComponent
   ],
   imports: [

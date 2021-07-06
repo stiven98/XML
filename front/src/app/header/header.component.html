@@ -14,14 +14,12 @@
             <li *ngIf="this.authService.isLoggedIn && !this.authService.getRole().includes('ADMIN')" class="nav-item">
                 <a class="nav-link" href="/directMessages">
                     <i class="fa fa-envelope-o">
-                        <span class="badge badge-primary">11</span>
                     </i> Poruke
                 </a>
             </li>
             <li *ngIf="this.authService.isLoggedIn && !this.authService.getRole().includes('ADMIN')" class="nav-item">
                 <a class="nav-link" href="/notifications">
                     <i class="fa fa-globe">
-                        <span class="badge badge-primary">11</span>
                     </i> Obaveštenja
                 </a>
             </li>
@@ -37,6 +35,13 @@
                     <i class="fa fa-plus-square">
                         <span class="badge badge-primary"></span>
                     </i> Dodaj pricu
+                </a>
+            </li>
+            <li style="cursor: pointer;" class="nav-item" *ngIf="this.authService.isLoggedIn && this.isInfluencer">
+                <a class="nav-link" (click)="onRequestsClick()">
+                    <i class="fa fa-briefcase">
+                        <span class="badge badge-primary"></span>
+                    </i> Zahtevi za angažman
                 </a>
             </li>
             <li class="nav-item" *ngIf="this.authService.isLoggedIn && this.authService.getRole().includes('AGENT')">
@@ -80,7 +85,7 @@
                     <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams" [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
             </li>
-            <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 200px; margin-top: 15px;">
+            <li *ngIf="this.authService.isLoggedIn" class="nav-item" style="margin-left: 100px; margin-top: 15px;">
                 <div class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" style="width: 400px;" [(ngModel)]="searchParams" [readonly]="this.isInputDisalbed" (focus)="onFocus()" (input)="onKeyDown()" type="text" placeholder="Pretraga" aria-label="Search">
                 </div>
@@ -139,7 +144,7 @@
         </ul>
     </div>
 </nav>
-<div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px; margin-right: 515px;">
+<div *ngIf="isSearchResultVisible" class="container d-flex justify-content-center" style="margin-top: -30px; margin-right: 350px;">
     <div class="card mt-5 p-4">
         <p *ngIf="usernamesToShow.length == 0 && isUsersSearchSelected">Nema rezultata</p>
         <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -152,7 +157,7 @@
                 <a (click)="onLinkClick(username)" style="color: black; cursor: pointer; margin-top:10px" class="mb-1">{{username}}</a>
             </div>
             <div class="price pt-3 pl-3">
-                <img *ngIf="isUsersSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/aca.png">
+                <img *ngIf="isUsersSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/user.png">
                 <img *ngIf="isTagsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/hashtag.png">
                 <img *ngIf="isLocationsSearchSelected" img class="mb-2" style="width: 40px; height: 40px;" src="../../assets/images/location.jpg">
             </div>

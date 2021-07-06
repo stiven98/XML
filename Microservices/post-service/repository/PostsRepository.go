@@ -59,6 +59,64 @@ func(repo *PostsRepository) CreateCampaign(campaign *model.Campaign)  error {
 	}
 	return nil
 }
+func(repo *PostsRepository) CreateCampaignForInfluencer(campaign *model.Campaign)  error {
+	result, err :=  repo.Database.Get(campaign.USERID.String()+ "_campaignInf").Result()
+	var campaigns[] model.Campaign
+	if err != nil {
+		campaigns = append(campaigns, *campaign)
+		jsonPosts, _ := json.Marshal(campaigns)
+		newErr := repo.Database.Set(campaign.USERID.String() + "_campaignInf", jsonPosts, 0).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	} else{
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &campaigns)
+		campaigns = append(campaigns, *campaign)
+		jsonPosts, _ := json.Marshal(campaigns)
+		newErr := repo.Database.Set(campaign.USERID.String()+ "_campaignInf", jsonPosts, 0).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	}
+	return nil
+}
+
+func(repo *PostsRepository) GetCampaignsInf(id string) []model.Campaign {
+
+	var campaigns []model.Campaign
+	result1, _ :=  repo.Database.Get(id+ "_campaignInf").Result()
+	bytes1 := []byte(result1)
+	json.Unmarshal(bytes1, &campaigns)
+
+
+	return campaigns
+
+}
+
+
+func(repo *PostsRepository) CreateCampaignRequest(campaignReq *dto.CampaignRequestDto)  error {
+	result, err :=  repo.Database.Get(campaignReq.INFLUENCERID.String()+ "_campaignReq").Result()
+	var campaignReqs[] dto.CampaignRequestDto
+	if err != nil {
+		campaignReqs = append(campaignReqs, *campaignReq)
+		jsonPosts, _ := json.Marshal(campaignReqs)
+		newErr := repo.Database.Set(campaignReq.INFLUENCERID.String() + "_campaignReq", jsonPosts, 0).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	} else{
+		bytes := []byte(result)
+		json.Unmarshal(bytes, &campaignReqs)
+		campaignReqs = append(campaignReqs, *campaignReq)
+		jsonPosts, _ := json.Marshal(campaignReqs)
+		newErr := repo.Database.Set(campaignReq.INFLUENCERID.String()+ "_campaignReq", jsonPosts, 0).Err()
+		if newErr != nil {
+			fmt.Println(result)
+		}
+	}
+	return nil
+}
 
 func(repo *PostsRepository) CreateTemporaryCampaign(campaign *model.Campaign)  error {
 	result, err :=  repo.Database.Get(campaign.USERID.String()+ "_campaignTemp").Result()
@@ -111,6 +169,15 @@ func(repo *PostsRepository) GetCampaigns(id string) []model.Campaign {
 
 }
 
+func(repo *PostsRepository) GetCampaignReqs(id string) []dto.CampaignRequestDto {
+	var campaignReqs []dto.CampaignRequestDto
+	result, _ :=  repo.Database.Get(id+ "_campaignReq").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &campaignReqs)
+
+	return campaignReqs
+
+}
 
 func(repo *PostsRepository) GetTemporaryCampaigns(id string) []model.Campaign {
 	fmt.Println("Id je " + id)
@@ -379,6 +446,32 @@ func (repo *PostsRepository) DeleteCampaign (deletePost *dto.DeletePostDto) bool
 	return true
 }
 
+func (repo *PostsRepository) DeleteCampaignReq (deleteReq *dto.DeleteCampaignReq) bool {
+	var campaignReqs []dto.CampaignRequestDto
+	var newReqs []dto.CampaignRequestDto
+	result, err := repo.Database.Get(deleteReq.OWNERID.String() + "_campaignReq").Result()
+	if err!=nil {
+		fmt.Println("error")
+		fmt.Println(err)
+		return false
+	}
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &campaignReqs)
+	for i := range campaignReqs {
+		if campaignReqs[i].ID != deleteReq.CAMPAIGNREQID {
+			newReqs = append(newReqs, campaignReqs[i])
+		}
+	}
+	err = repo.Database.Del(deleteReq.OWNERID.String() + "_campaignReq").Err()
+	json, _ := json.Marshal(newReqs)
+	err = repo.Database.Set(deleteReq.OWNERID.String() + "_campaignReq", json, 0).Err()
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
+}
+
 
 func(repo *PostsRepository) GetReported(ids []dto.UserId) ([]model.Post) {
 	var reportedPosts []model.Post
@@ -491,6 +584,23 @@ func (repo *PostsRepository) GetCampaignsByIds(userid string, campaignid string)
 
 	return campaing
 }
+func (repo *PostsRepository) GetCampaignsByInfluencerIds(userid string, campaignid string) model.Campaign {
+	var campaings []model.Campaign
+	var campaing model.Campaign
+	result, _ :=  repo.Database.Get(userid+ "_campaignInf").Result()
+	bytes := []byte(result)
+	json.Unmarshal(bytes, &campaings)
+	for i := range campaings {
+		if campaings[i].ID.String() == campaignid {
+			campaing = campaings[i]
+			break
+		}
+	}
+
+
+	return campaing
+}
+
 
 
 

@@ -8,24 +8,25 @@
             <h1 class="profile-user-name">{{user.system_user.username}}</h1>
 
             <i *ngIf="user.isVerified" class=" fa fa-check-circle fa-3x ml-4"> </i>
-
+            
             <a *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-edit-btn" href="/editProfile">Izmenite profil</a>
 
             <button *ngIf="this.authService.getUsername() === user.system_user.username" class="btn profile-settings-btn" aria-label="profile settings">
         <i class="fa fa-cog" aria-hidden="true"></i>
       </button>
-            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Follow</a>
-            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Unfollow</a>
-            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Cancel request</a>
+            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'NO_FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onFollow()">Zaprati</a>
+            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'FOLLOW'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Otprati</a>
+            <a *ngIf="this.authService.getUsername() !== user.system_user.username && this.status === 'REQUEST'" class="btn profile-edit-btn mb-3" (click)="this.onUnfollow()">Otkaži zahtev</a>
         </div>
 
         <div class="profile-stats" style="margin-left: -40px;">
-            <a class="btn profile-edit-btn" *ngIf="showBlockMute && !isBlockedUsesr" (click)="block()">block</a>
-            <a class="btn profile-edit-btn" *ngIf="showBlockMute && !isMuted && !isBlockedUsesr" (click)="mute()">mute</a>
-            <a class="btn profile-edit-btn" *ngIf="showBlockMute && isBlockedUsesr" (click)="unBlock()">unBlock</a>
-            <a class="btn profile-edit-btn" *ngIf="showBlockMute && isMuted && !isBlockedUsesr" (click)="unMute()">unMute</a>
-            <a class="btn profile-edit-btn" *ngIf="showBlockMute && !isSubscriber && !isBlockedUsesr && this.status === 'FOLLOW'" (click)="subscribe()">subscribe</a>
-            <a class="btn profile-edit-btn" *ngIf="showBlockMute && isSubscriber && !isBlockedUsesr && this.status === 'FOLLOW'" (click)="unSubscribe()">unSubscribe</a>
+            <a class="btn profile-edit-btn" *ngIf="showBlockMute && !isBlockedUsesr" (click)="block()">Blokiraj</a>
+            <a class="btn profile-edit-btn" *ngIf="showBlockMute && !isMuted && !isBlockedUsesr" (click)="mute()">Mutiraj</a>
+            <a class="btn profile-edit-btn" *ngIf="showBlockMute && isBlockedUsesr" (click)="unBlock()">Odblokiraj</a>
+            <a class="btn profile-edit-btn" *ngIf="showBlockMute && isMuted && !isBlockedUsesr" (click)="unMute()">Odmutiraj</a>
+            <a class="btn profile-edit-btn" *ngIf="showBlockMute && !isSubscriber && !isBlockedUsesr && this.status === 'FOLLOW'" (click)="subscribe()">Pretplati se</a>
+            <a class="btn profile-edit-btn" *ngIf="user.isVerified && status === 'FOLLOW' && this.authService.getRole() === 'ROLE_AGENT'" (click) = "onAngageClick()">Angažuj</a>
+            <a class="btn profile-edit-btn" *ngIf="showBlockMute && isSubscriber && !isBlockedUsesr && this.status === 'FOLLOW'" (click)="unSubscribe()">Prekini pretplatu</a>
             <ul>
                 <li><span class="profile-stat-count"></span> objave</li>
                 <li><a class="text-dark" href="#" data-toggle="modal" data-target="#follow"><span
@@ -155,7 +156,8 @@
                     </ul>
                 </div>
             </div>
-            <div class="gallery-item" *ngFor='let campaign of campaigns' (click)="openCampaign(campaign)" tabindex="0" style="width: 300px; height: 300px;">
+            <div *ngIf = "isAgent">
+            <div class="gallery-item" *ngFor='let campaign of campaigns' (click)="openCampaign(campaign)" tabindex="0" style="width: 300px; height: 300px; margin-bottom: 50px;">
                 <img src="{{'http://localhost:8086/images/'+campaign.ads[0].path}}" class="gallery-image" alt="" />
                 <div *ngIf="campaign.type === 'album'" class="gallery-item-type">
                     <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
@@ -171,6 +173,25 @@
                     </ul>
                 </div>
             </div>
+            </div>
+            <div *ngIf = "isInfluencer">
+                <div class="gallery-item" *ngFor='let campaign of influencerCampaigns' (click)="openCampaign(campaign)" tabindex="0" style="width: 300px; height: 300px; margin-bottom: 50px;">
+                    <img src="{{'http://localhost:8086/images/'+campaign.ads[0].path}}" class="gallery-image" alt="" />
+                    <div *ngIf="campaign.type === 'album'" class="gallery-item-type">
+                        <span class="visually-hidden">Gallery</span><i class="fa fa-clone" aria-hidden="true"></i>
+                    </div>
+                    <div class="gallery-item-info">
+                        <ul>
+                            <li class="gallery-item-likes">
+                                <span class="visually-hidden">Likes:</span><i class="fa fa-heart" aria-hidden="true"></i> {{campaign.likes.length - campaign.dislikes.length}}
+                            </li>
+                            <li class="gallery-item-comments">
+                                <span class="visually-hidden">Comments:</span><i class="fa fa-comment" aria-hidden="true"></i> {{campaign.comments.length}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
         </div>
         <!-- End of gallery -->
 

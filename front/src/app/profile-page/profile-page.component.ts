@@ -16,9 +16,8 @@ import { StoryService } from '../service/story.service';
 })
 export class ProfilePageComponent implements OnInit {
   id = '';
-  status = 'NO_STATUS';
+  public status = 'NO_STATUS';
   myId: string | null;
-
   followers: any | [];
   following: any | [];
   requests: any | undefined;
@@ -28,6 +27,8 @@ export class ProfilePageComponent implements OnInit {
   isMuted: boolean = false;
   showBlockMute: boolean = false;
   isSubscriber: boolean = false;
+  isAgent: boolean = false;
+  public isInfluencer: boolean = false;
   public stories: any[] = [];
   public userData: Map<string, any> = new Map<string, any>();
   public currentPage = 1;
@@ -35,6 +36,7 @@ export class ProfilePageComponent implements OnInit {
   public totalCount = 0;
   public posts: any[] = [];
   public campaigns: any[] = [];
+  public influencerCampaigns: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -108,7 +110,14 @@ export class ProfilePageComponent implements OnInit {
       : (this.showBlockMute = true);
     this.userService
       .getUserById(this.route.snapshot.params[`id`])
-      .subscribe((response) => {
+      .subscribe((response: any) => {
+        if (response.system_user.type_of_user === 'agent') {
+          this.isAgent = true;
+        }
+        if(response.isVerified) {
+          this.isInfluencer = true;
+        }
+
         this.user = response as RegularUser;
         console.log(this.user);
         console.log(this.isMyProfile);
@@ -117,16 +126,29 @@ export class ProfilePageComponent implements OnInit {
         } else if (this.user.isPublic) {
           this.isMyProfile = true;
         }
+        if (this.status === 'FOLLOW') {
+          this.isMyProfile = true;
+        }
 
         this.postsService.getByUserId(this.id).subscribe((res) => {
           this.posts = res as any[];
         });
 
-        if (this.authService.getRole() === 'ROLE_AGENT') {
-            this.postsService.getCampaignsByUserId(this.id).subscribe((result: any) => {
+        if (this.isAgent) {
+          this.postsService
+            .getCampaignsByUserId(this.id)
+            .subscribe((result: any) => {
               this.campaigns = result as any[];
-            })
+            });
         }
+        if (this.isInfluencer) {
+          this.postsService
+            .getCampaignsByInfluencerId(this.id)
+            .subscribe((result: any) => {
+              this.influencerCampaigns = result as any[];
+            });
+        }
+        
       });
 
       if (this.id) {
@@ -201,13 +223,21 @@ export class ProfilePageComponent implements OnInit {
     });
   };
 
+  onAngageClick = () => {
+    this.router.navigate([
+      'angageInfluencer/' + localStorage.getItem('id') + '/' + this.id,
+    ]);
+  };
+
   imageClick = (post: any) => {
     this.router.navigate(['single-post/' + post.userid + '/' + post.id]);
   };
-  
-  openCampaign = (campaign: any) =>{
-    this.router.navigate(['single-campaign/' + campaign.userid + '/' + campaign.id])
-  }
+
+  openCampaign = (campaign: any) => {
+    this.router.navigate([
+      'single-campaign/' + campaign.userid + '/' + campaign.id,
+    ]);
+  };
 
   block = () => {
     this.managementService
