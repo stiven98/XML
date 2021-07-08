@@ -2,20 +2,21 @@ version: "3.8"
 services:
 
   gateway:
-    image: nginx:1.19.8-alpine
+    image: gateway
+    container_name: gateway
+    build:
+      context: ./Microservices/gateway
+      dockerfile: Dockerfile
     expose: 
       - '80'
     ports: 
       - '80:80'
     networks:
       - backend
-    volumes:
-      - ./Microservices/Gateway/nginx.conf:/etc/nginx/nginx.conf
-      - ./Microservices/Gateway/api_gateway.conf:/etc/nginx/api_gateway.conf
 
   db:
     image: postgres
-    container_name: postgres
+    container_name: db
     environment:
       POSTGRES_PASSWORD: root
     ports:
@@ -122,6 +123,7 @@ services:
       NEO4J_AUTH: neo4j/root
 
   profile-service:
+    container_name: profile-service
     image: profile-service
     build:
       context: ./Microservices/profile-service
@@ -137,6 +139,7 @@ services:
       - '8085:8085'
 
   profile-management-service:
+    container_name: profile-management-service
     image: profile-management-service
     build:
       context: ./Microservices/profile-management-service
@@ -151,6 +154,7 @@ services:
       - '8087:8087'
 
   messages-service:
+    container_name: messages-service
     image: messages-service
     build:
       context: ./Microservices/messages-service
@@ -165,6 +169,7 @@ services:
       - '8002:8002'
 
   story-service:
+    container_name: story-service
     image: story-service
     build:
       context: ./Microservices/story-service
@@ -181,6 +186,7 @@ services:
       - ./Microservices/story-service/user_stories/:/app/story-service/user_stories/
 
   post-service:
+    container_name: post-service
     image: post-service
     build:
       context: ./Microservices/post-service
@@ -195,6 +201,7 @@ services:
       - '8086:8086'
 
   admin-service:
+    container_name: admin-service
     image: admin-service
     build:
       context: ./Microservices/admin-service
@@ -209,6 +216,7 @@ services:
       - '8089:8089'
 
   auth-service:
+    container_name: auth-service
     image: auth-service
     build:
       context: ./Microservices/auth-service
@@ -221,6 +229,7 @@ services:
       - '8080:8080'
 
   followers-microservice:
+    container_name: followers-microservice
     image: followers-microservice
     build:
       context: ./Microservices/followers-microservice
@@ -236,6 +245,7 @@ services:
       - '8088:8088'
 
   front:
+    container_name: front
     image: front
     build:
       context: ./front
