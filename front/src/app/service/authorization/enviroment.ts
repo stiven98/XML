@@ -1,13 +1,13 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://gateway',
-    apiUrl_admin_service : 'http://gateway',
-    apiUrl_auth_service : 'http://gateway',
-    apiUrl_follower_service : 'http://gateway',
-    apiUrl_post_service : 'http://gateway',
-    apiUrl_story_service : 'http://gateway',
-    apiUrl_profile_service : 'http://gateway',
-    apiUrl_managment_service : 'http://gateway',
+    apiUrl: 'http://localhost',
+    apiUrl_admin_service : 'http://localhost',
+    apiUrl_auth_service : 'http://localhost',
+    apiUrl_follower_service : 'http://localhost',
+    apiUrl_post_service : 'http://localhost',
+    apiUrl_story_service : 'http://localhost',
+    apiUrl_profile_service : 'http://localhost',
+    apiUrl_managment_service : 'http://localhost',
   };
   
   
