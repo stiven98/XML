@@ -129,7 +129,7 @@ export class UserService {
   }
 
   getAllUsers = () => {
-    return this.http.get('http://profile-service:8085/users/getAll').pipe(map(item => {
+    return this.http.get('http://localhost:8085/users/getAll').pipe(map(item => {
       return item;
     }));
   }

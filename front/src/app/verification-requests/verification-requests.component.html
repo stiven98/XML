@@ -7,7 +7,7 @@
     <div *ngFor="let item of verificationRequests">
         <div class="row border border-dark rounded" *ngIf="item.status == 'submitted'">
             <div class="col-6">
-                <img src="{{'http://admin-service:8089/images/'+ item.document_path}}" class="img-fluid" alt="Card">
+                <img src="{{'http://localhost:8089/images/'+ item.document_path}}" class="img-fluid" alt="Card">
             </div>
 
             <div class="col-6  mt-3 mb-3">

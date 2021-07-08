@@ -32,7 +32,7 @@ export class PostsService {
 
   createCampaignRequest = (campaignRequest: CampaignRequest) => {
     return this.http
-      .post('http://post-service:8086/campaigns/createRequest', campaignRequest)
+      .post('http://localhost:8086/campaigns/createRequest', campaignRequest)
       .pipe(
         map((item) => {
           return item;
@@ -50,7 +50,7 @@ export class PostsService {
 
   getCampaignsByUserId = (id: string) => {
     return this.http
-      .get('http://post-service:8086/campaigns/getUserCampaigns/' + id)
+      .get('http://localhost:8086/campaigns/getUserCampaigns/' + id)
       .pipe(
         map((item) => {
           return item;
@@ -60,7 +60,7 @@ export class PostsService {
 
   getCampaignsByInfluencerId = (id: string) => {
     return this.http
-      .get('http://post-service:8086/campaigns/getInfluencerCampaigns/' + id)
+      .get('http://localhost:8086/campaigns/getInfluencerCampaigns/' + id)
       .pipe(
         map((item) => {
           return item;
@@ -70,7 +70,7 @@ export class PostsService {
 
   getAngageRequests = (id: string) => {
     return this.http
-      .get('http://post-service:8086/campaigns/getUserCampaignReqs/' + id)
+      .get('http://localhost:8086/campaigns/getUserCampaignReqs/' + id)
       .pipe(
         map((item) => {
           return item;
@@ -95,7 +95,7 @@ export class PostsService {
   };
   addInfluencer = (addInfluencer: AddInfluencer) => {
     return this.http
-      .post('http://post-service:8086/campaigns/addInfluencer', addInfluencer)
+      .post('http://localhost:8086/campaigns/addInfluencer', addInfluencer)
       .pipe((res) => res);
   };
 
@@ -130,7 +130,7 @@ export class PostsService {
   getCampaignByInfluencerIds = (userid: string, campaignid: string) => {
     return this.http
       .get(
-        'http://post-service:8086/campaigns/getByInfluencerId/' +
+        'http://localhost:8086/campaigns/getByInfluencerId/' +
           userid +
           '/' +
           campaignid
@@ -228,7 +228,7 @@ export class PostsService {
   }
   deleteCampaignReq(deleteReq: DeleteReq) {
     return this.http
-      .post('http://post-service:8086/campaigns/deleteReq', deleteReq)
+      .post('http://localhost:8086/campaigns/deleteReq', deleteReq)
       .pipe(
         map((item) => {
           return item;

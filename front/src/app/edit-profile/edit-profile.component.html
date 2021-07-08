@@ -14,7 +14,7 @@
                         </div>
                         <div class="user-profile">
                             <div class="user-avatar">
-                                <img *ngIf="changeProfilePictureFlag" class="img-fluid" src="{{'http://profile-service:8085/images/'+edit.system_user.picturePath}}" alt="">
+                                <img *ngIf="changeProfilePictureFlag" class="img-fluid" src="{{'http://localhost:8085/images/'+edit.system_user.picturePath}}" alt="">
                             </div>
 
                             <button *ngIf="changeProfilePictureFlag" (click)="changePictureFlag()" class="btn btn-outline-primary"> Izmeni fotografiju </button>

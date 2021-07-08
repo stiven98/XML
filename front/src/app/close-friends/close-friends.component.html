@@ -10,7 +10,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div (click)="imageClick(follower.id)" class="col-3">
-                                <img class="card-img-top" src="{{'http://profile-service:8085/images/' + follower.system_user.picturePath}}" style="width: 64px; height: 64px; margin: 10px;" alt="Card image cap">
+                                <img class="card-img-top" src="{{'http://localhost:8085/images/' + follower.system_user.picturePath}}" style="width: 64px; height: 64px; margin: 10px;" alt="Card image cap">
                             </div>
                             <div (click)="imageClick(follower.id)" class="col-6">
                                 <div class="row">
@@ -37,7 +37,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div (click)="imageClick(friend.id)" class="col-3">
-                                <img class="card-img-top" src="{{'http://profile-service:8085/images/' + friend.system_user.picturePath}}" style="width: 64px; height: 64px; margin: 10px;" alt="Card image cap">
+                                <img class="card-img-top" src="{{'http://localhost:8085/images/' + friend.system_user.picturePath}}" style="width: 64px; height: 64px; margin: 10px;" alt="Card image cap">
                             </div>
                             <div (click)="imageClick(friend.id)" class="col-6">
                                 <div class="row">
