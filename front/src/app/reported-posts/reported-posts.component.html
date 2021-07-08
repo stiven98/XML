@@ -10,7 +10,7 @@
                         </div>
                         <div class="media m-0">
                             <div class="d-flex mr-3">
-                                <a href=""><img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userData.get(post.userid).system_user.picturePath}}" alt="User" /></a>
+                                <a href=""><img class="img-fluid rounded-circle" src="{{'http://profile-service:8085/images/' + userData.get(post.userid).system_user.picturePath}}" alt="User" /></a>
                             </div>
 
                             <div class="media-body">
@@ -27,10 +27,10 @@
                         <ngb-carousel>
                             <ng-template ngbSlide *ngFor="let item of post.items">
                                 <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
-                                    <img class="img-fluid" src="{{'http://localhost:8086/images/'+item.path}}" />
+                                    <img class="img-fluid" src="{{'http://post-service:8086/images/'+item.path}}" />
                                 </div>
                                 <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
-                                    <video class="active" src="{{'http://localhost:8086/images/'+item.path}}" controls></video>
+                                    <video class="active" src="{{'http://post-service:8086/images/'+item.path}}" controls></video>
                                 </div>
                             </ng-template>
                         </ngb-carousel>
@@ -55,22 +55,22 @@
                             </li>
                         </ul>
                         <ul>
-                        <li>
-                            <a><i class="fa fa-thumbs-down"></i><span style="margin-left: -10px;">{{post.dislikes.length}}</span></a>
-                        </li>
+                            <li>
+                                <a><i class="fa fa-thumbs-down"></i><span style="margin-left: -10px;">{{post.dislikes.length}}</span></a>
+                            </li>
                         </ul>
                     </div>
                     <!--/ cardbox-base -->
                     <div class="row">
-                        <div class = "col-md-6">
-                            <button style="width: 200px; height:50px; margin-left: 50px;" class="btn btn-outline-success" (click) = "onDelete(post.id, post.userid)">Obriši objavu</button>
+                        <div class="col-md-6">
+                            <button style="width: 200px; height:50px; margin-left: 50px;" class="btn btn-outline-success" (click)="onDelete(post.id, post.userid)">Obriši objavu</button>
                         </div>
-                        <div class = "col-md-6">
-                            <button style="width: 200px; height:50px;" class ="btn btn-outline-danger" (click)= "onBlock(post.userid, post.id)">Blokiraj korisnika</button>
+                        <div class="col-md-6">
+                            <button style="width: 200px; height:50px;" class="btn btn-outline-danger" (click)="onBlock(post.userid, post.id)">Blokiraj korisnika</button>
                             <!--<button><i class="fa fa-camera"></i></button> -->
                         </div>
                     </div>
-                        <!--/. Search -->
+                    <!--/. Search -->
                     <!--/ cardbox-like -->
                 </div>
                 <!--/ cardbox -->

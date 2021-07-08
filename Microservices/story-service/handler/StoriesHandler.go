@@ -3,8 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 	"io"
 	"net/http"
 	"os"
@@ -15,7 +13,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
+
 type StoriesHandler struct {
 	Service *service.StoriesService
 }
@@ -42,7 +44,7 @@ func (handler *StoriesHandler) Create(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(storyDto.CLOSEFRIENDS)
 	fmt.Println("\n\n\n\n\naaaaaaaaaaaaaaa\n\n\n\n")
 	if storyDto.CLOSEFRIENDS {
-		restCF, errCF := http.Get("http://localhost:8087/users/closeFriend/" +  story.USERID.String())
+		restCF, errCF := http.Get("http://profile-management-service:8087/users/closeFriend/" + story.USERID.String())
 		if errCF != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -57,7 +59,7 @@ func (handler *StoriesHandler) Create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		rest, err := http.Get("http://localhost:8088/users/getFollowers/" + story.USERID.String())
+		rest, err := http.Get("http://followers-microservice:8088/users/getFollowers/" + story.USERID.String())
 		//rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
 
 		if err != nil {
@@ -80,17 +82,16 @@ func (handler *StoriesHandler) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-
-func (handler *StoriesHandler) GetByKey(w http.ResponseWriter, r *http.Request){
+func (handler *StoriesHandler) GetByKey(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["key"])
-	story:=handler.Service.GetByKey(vars["key"])
+	story := handler.Service.GetByKey(vars["key"])
 
 	renderJSON(w, &story)
 }
 
 func (handler *StoriesHandler) UploadFile(writer http.ResponseWriter, request *http.Request) {
-	var storyItems[] model.StoryItem
+	var storyItems []model.StoryItem
 	// Maximum upload of 10 MB files
 	request.ParseMultipartForm(32 << 20) // 32MB is the default used by FormFile
 	fhs := request.MultipartForm.File["files"]
@@ -109,10 +110,10 @@ func (handler *StoriesHandler) UploadFile(writer http.ResponseWriter, request *h
 		fileName := strings.Split(fh.Filename, ".")
 		var filePath string
 		var resourceName string
-		if(len(fileName) >= 2){
-			resourceName = uuid.NewString() +  "." + fileName[1]
+		if len(fileName) >= 2 {
+			resourceName = uuid.NewString() + "." + fileName[1]
 			filePath = filepath.Join("user_stories", resourceName)
-		}else{
+		} else {
 			filePath = filepath.Join("user_stories", fh.Filename)
 		}
 		dst, err := os.Create(filePath)
@@ -142,14 +143,14 @@ func (handler *StoriesHandler) UploadFile(writer http.ResponseWriter, request *h
 func (handler *StoriesHandler) GetFeed(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetFeed(vars["id"])
+	post := handler.Service.GetFeed(vars["id"])
 	renderJSON(w, &post)
 }
 
 func (handler *StoriesHandler) GetMyStories(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetMyStories(vars["id"])
+	post := handler.Service.GetMyStories(vars["id"])
 	renderJSON(w, &post)
 }
 
@@ -162,7 +163,7 @@ func (handler *StoriesHandler) GetPagedFeed(w http.ResponseWriter, r *http.Reque
 	neededResultsInt := 0
 	pageNumberInt := 0
 	if len(id) > 0 && len(pageNumber) > 0 && len(neededResults) > 0 {
-		 stories = handler.Service.GetFeed(id[0])
+		stories = handler.Service.GetFeed(id[0])
 		neededResultsInt, _ = strconv.Atoi(neededResults[0])
 		pageNumberInt, _ = strconv.Atoi(pageNumber[0])
 	}
@@ -170,7 +171,7 @@ func (handler *StoriesHandler) GetPagedFeed(w http.ResponseWriter, r *http.Reque
 	var neededStories []model.Story
 	firstIndex := (pageNumberInt - 1) * neededResultsInt
 	lastIndex := firstIndex + neededResultsInt
-	for i := firstIndex; i < lastIndex; i++{
+	for i := firstIndex; i < lastIndex; i++ {
 		if len(stories) > i {
 			neededStories = append(neededStories, stories[i])
 		}
@@ -197,7 +198,7 @@ func (handler *StoriesHandler) GetMyPagedStories(w http.ResponseWriter, r *http.
 	var neededStories []model.Story
 	firstIndex := (pageNumberInt - 1) * neededResultsInt
 	lastIndex := firstIndex + neededResultsInt
-	for i := firstIndex; i < lastIndex; i++{
+	for i := firstIndex; i < lastIndex; i++ {
 		if len(stories) > i {
 			neededStories = append(neededStories, stories[i])
 		}
@@ -262,7 +263,7 @@ func (handler *StoriesHandler) GetPagedHighlights(w http.ResponseWriter, r *http
 	var neededStories []model.Story
 	firstIndex := (pageNumberInt - 1) * neededResultsInt
 	lastIndex := firstIndex + neededResultsInt
-	for i := firstIndex; i < lastIndex; i++{
+	for i := firstIndex; i < lastIndex; i++ {
 		if len(stories) > i {
 			neededStories = append(neededStories, stories[i])
 		}

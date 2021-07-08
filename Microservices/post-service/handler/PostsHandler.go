@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 	"io"
 	"net/http"
 	"os"
@@ -15,12 +13,14 @@ import (
 	"post_service/service"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
 
 type PostsHandler struct {
 	Service *service.PostsService
 }
-
 
 func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var post model.Post
@@ -40,7 +40,7 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 	}
-	rest, err := http.Get("http://localhost:8088/users/getFollowers/" + post.USERID.String())
+	rest, err := http.Get("http://followers-microservice:8088/users/getFollowers/" + post.USERID.String())
 	//rest, err := http.Get("https://mocki.io/v1/84324533-ee57-4eb2-8042-3f5845dcc41b")
 
 	if err != nil {
@@ -57,17 +57,17 @@ func (handler *PostsHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	respSubs, errSubs  := http.Get("http://localhost:8087/users/subscribers/" + post.USERID.String())
+	respSubs, errSubs := http.Get("http://profile-management-service:8087/users/subscribers/" + post.USERID.String())
 
 	if errSubs == nil {
-		var subsIds [] string
+		var subsIds []string
 		err = json.NewDecoder(respSubs.Body).Decode(&subsIds)
 		if err == nil {
 			for i := range subsIds {
 				notReq := dto.NotificationRequestDto{USERID: post.USERID.String(), NOTIFYID: post.ID.String(), NOTIFYUSERID: subsIds[i], TYPEOFNOTIFY: "post"}
 				payloadBuf := new(bytes.Buffer)
 				json.NewEncoder(payloadBuf).Encode(notReq)
-				_, _ = http.Post("http://localhost:8085/notify/create", "application/json", payloadBuf)
+				_, _ = http.Post("http://profile-service:8085/notify/create", "application/json", payloadBuf)
 			}
 		}
 	}
@@ -101,7 +101,6 @@ func (handler *PostsHandler) CreateCampaign(w http.ResponseWriter, r *http.Reque
 	w.Header().Set("Content-Type", "application/json")
 }
 
-
 func (handler *PostsHandler) CreateCampaignRequest(w http.ResponseWriter, r *http.Request) {
 	var campaignReq dto.CampaignRequestDto
 	fmt.Println(json.NewDecoder(r.Body).Decode(&campaignReq))
@@ -119,9 +118,6 @@ func (handler *PostsHandler) CreateCampaignRequest(w http.ResponseWriter, r *htt
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }
-
-
-
 
 func (handler *PostsHandler) UpdateCampaign(w http.ResponseWriter, r *http.Request) {
 	var campaign model.Campaign
@@ -214,12 +210,8 @@ func (handler *PostsHandler) AddInfluencer(w http.ResponseWriter, r *http.Reques
 	w.Header().Set("Content-Type", "application/json")
 }
 
-
-
-
-
 func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Request) {
-	var postItems[] model.PostItem
+	var postItems []model.PostItem
 	// Maximum upload of 10 MB files
 	r.ParseMultipartForm(32 << 20) // 32MB is the default used by FormFile
 	fhs := r.MultipartForm.File["files"]
@@ -238,10 +230,10 @@ func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Requ
 		fileName := strings.Split(fh.Filename, ".")
 		var filePath string
 		var resourceName string
-		if(len(fileName) >= 2){
-			resourceName = uuid.NewString() +  "." + fileName[1]
+		if len(fileName) >= 2 {
+			resourceName = uuid.NewString() + "." + fileName[1]
 			filePath = filepath.Join("user_posts", resourceName)
-		}else{
+		} else {
 			filePath = filepath.Join("user_posts", fh.Filename)
 		}
 		dst, err := os.Create(filePath)
@@ -268,14 +260,14 @@ func (postsHandler *PostsHandler) UploadFile(w http.ResponseWriter, r *http.Requ
 	renderJSON(w, &postItems)
 }
 
-func (handler *PostsHandler) GetByKey(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetByKey(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["key"])
-	posts :=handler.Service.GetByKey(vars["key"])
+	posts := handler.Service.GetByKey(vars["key"])
 	renderJSON(w, &posts)
 }
 
-func (handler *PostsHandler) LikePost(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) LikePost(w http.ResponseWriter, r *http.Request) {
 	var likeReq dto.LikeDto
 	err := json.NewDecoder(r.Body).Decode(&likeReq)
 	if err != nil {
@@ -290,7 +282,7 @@ func (handler *PostsHandler) LikePost(w http.ResponseWriter, r *http.Request){
 	w.WriteHeader(http.StatusOK)
 }
 
-func (handler *PostsHandler) DislikePost(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) DislikePost(w http.ResponseWriter, r *http.Request) {
 	var dislikeReq dto.LikeDto
 	err := json.NewDecoder(r.Body).Decode(&dislikeReq)
 	if err != nil {
@@ -304,7 +296,7 @@ func (handler *PostsHandler) DislikePost(w http.ResponseWriter, r *http.Request)
 	}
 	w.WriteHeader(http.StatusOK)
 }
-func (handler *PostsHandler) ReportPost(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) ReportPost(w http.ResponseWriter, r *http.Request) {
 	var reportReq dto.ReportDto
 	err := json.NewDecoder(r.Body).Decode(&reportReq)
 	if err != nil {
@@ -321,43 +313,42 @@ func (handler *PostsHandler) ReportPost(w http.ResponseWriter, r *http.Request){
 	w.WriteHeader(http.StatusOK)
 }
 
-
-func (handler *PostsHandler) GetLiked(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetLiked(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetLiked(vars["id"])
+	post := handler.Service.GetLiked(vars["id"])
 	renderJSON(w, &post)
 }
 
-func (handler *PostsHandler) GetCampaigns(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetCampaigns(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetCampaigns(vars["id"])
+	post := handler.Service.GetCampaigns(vars["id"])
 	renderJSON(w, &post)
 }
-func (handler *PostsHandler) GetInfluencerCampaigns(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetInfluencerCampaigns(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetInfluencerCampaigns(vars["id"])
+	post := handler.Service.GetInfluencerCampaigns(vars["id"])
 	renderJSON(w, &post)
 }
-func (handler *PostsHandler) GetCampaignReqs(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetCampaignReqs(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetCampaignReqs(vars["id"])
+	post := handler.Service.GetCampaignReqs(vars["id"])
 	renderJSON(w, &post)
 }
 
-func (handler *PostsHandler) GetTemporaryCampaigns(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetTemporaryCampaigns(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetTemporaryCampaigns(vars["id"])
+	post := handler.Service.GetTemporaryCampaigns(vars["id"])
 	renderJSON(w, &post)
 }
-func (handler *PostsHandler) GetDisliked(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetDisliked(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
-	post :=handler.Service.GetDisliked(vars["id"])
+	post := handler.Service.GetDisliked(vars["id"])
 	renderJSON(w, &post)
 }
 
@@ -375,7 +366,6 @@ func (handler *PostsHandler) DeletePost(w http.ResponseWriter, r *http.Request) 
 	renderJSON(w, &ret)
 }
 
-
 func (handler *PostsHandler) DeleteCampaign(w http.ResponseWriter, r *http.Request) {
 
 	var deletePost dto.DeletePostDto
@@ -390,21 +380,14 @@ func (handler *PostsHandler) DeleteCampaign(w http.ResponseWriter, r *http.Reque
 	renderJSON(w, &ret)
 }
 
-
-
-
-
-
-
-func (handler *PostsHandler) GetReported(w http.ResponseWriter, r *http.Request){
-	rest, err := http.Get("http://localhost:8085/getIds")
+func (handler *PostsHandler) GetReported(w http.ResponseWriter, r *http.Request) {
+	rest, err := http.Get("http://profile-service:8085/getIds")
 
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 
 	var ids []dto.UserId
 	err = json.NewDecoder(rest.Body).Decode(&ids)
@@ -420,9 +403,7 @@ func (handler *PostsHandler) GetReported(w http.ResponseWriter, r *http.Request)
 
 }
 
-
-
-func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
 	var posts []model.Post
@@ -432,8 +413,8 @@ func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
 
 	// Filtrira postove mutovanih korisnika
 
-	respMut, _  := http.Get("http://localhost:8087/users/muted/" + vars["id"])
-	var mutedIds [] string
+	respMut, _ := http.Get("http://profile-management-service:8087/users/muted/" + vars["id"])
+	var mutedIds []string
 	errJson := json.NewDecoder(respMut.Body).Decode(&mutedIds)
 	if errJson == nil {
 		for i := range posts {
@@ -453,9 +434,9 @@ func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
 
 	// Filtrira postove mutovanih korisnika
 
-	respBlock, _  := http.Get("http://localhost:8087/users/blocked/" + vars["id"])
+	respBlock, _ := http.Get("http://profile-management-service:8087/users/blocked/" + vars["id"])
 
-	var blockedIds [] string
+	var blockedIds []string
 	errJson2 := json.NewDecoder(respBlock.Body).Decode(&blockedIds)
 	if errJson2 == nil {
 		for i := range firstFilter {
@@ -476,9 +457,9 @@ func (handler *PostsHandler) GetFeed(w http.ResponseWriter, r *http.Request){
 	renderJSON(w, &finalFilter)
 }
 
-func (handler *PostsHandler) GetPublic(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetPublic(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	rest, err := http.Get("http://localhost:8085/users/public-ids")
+	rest, err := http.Get("http://profile-service:8085/users/public-ids")
 	var finalFilter []model.Post
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -497,9 +478,9 @@ func (handler *PostsHandler) GetPublic(w http.ResponseWriter, r *http.Request){
 		renderJSON(w, &posts)
 		return
 	}
-	respBlock, _  := http.Get("http://localhost:8087/users/blocked/" + vars["id"])
+	respBlock, _ := http.Get("http://profile-management-service:8087/users/blocked/" + vars["id"])
 
-	var blockedIds [] string
+	var blockedIds []string
 	errJson2 := json.NewDecoder(respBlock.Body).Decode(&blockedIds)
 	if errJson2 == nil {
 		for i := range posts {
@@ -520,9 +501,9 @@ func (handler *PostsHandler) GetPublic(w http.ResponseWriter, r *http.Request){
 	return
 }
 
-func (handler *PostsHandler) GetAllTagsPublic(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetAllTagsPublic(w http.ResponseWriter, r *http.Request) {
 	//public users ids
-	rest, err := http.Get("http://localhost:8085/users/public-ids")
+	rest, err := http.Get("http://profile-service:8085/users/public-ids")
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -547,13 +528,13 @@ func (handler *PostsHandler) GetAllTagsPublic(w http.ResponseWriter, r *http.Req
 	renderJSON(w, &tags)
 }
 
-func (handler *PostsHandler) GetAllTagsSignedIn(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetAllTagsSignedIn(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
 
 	//public users ids
-	rest, err := http.Get("http://localhost:8085/users/public-ids")
+	rest, err := http.Get("http://profile-service:8085/users/public-ids")
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -568,8 +549,7 @@ func (handler *PostsHandler) GetAllTagsSignedIn(w http.ResponseWriter, r *http.R
 	}
 	fmt.Println(dtoIds.KEYS)
 
-
-	restFollowers, _ := http.Get("http://localhost:8088/users/getFollowers/" + vars["id"])
+	restFollowers, _ := http.Get("http://followers-microservice:8088/users/getFollowers/" + vars["id"])
 	var dtoFollowers dto.FollowersDto
 	err = json.NewDecoder(restFollowers.Body).Decode(&dtoFollowers)
 	fmt.Println(dtoFollowers.KEYS)
@@ -590,9 +570,9 @@ func (handler *PostsHandler) GetAllTagsSignedIn(w http.ResponseWriter, r *http.R
 	renderJSON(w, &tags)
 }
 
-func (handler *PostsHandler) GetAllLocationsPublic(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetAllLocationsPublic(w http.ResponseWriter, r *http.Request) {
 	//public users ids
-	rest, err := http.Get("http://localhost:8085/users/public-ids")
+	rest, err := http.Get("http://profile-service:8085/users/public-ids")
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -617,13 +597,13 @@ func (handler *PostsHandler) GetAllLocationsPublic(w http.ResponseWriter, r *htt
 	renderJSON(w, &locations)
 }
 
-func (handler *PostsHandler) GetAllLocationsSignedIn(w http.ResponseWriter, r *http.Request){
+func (handler *PostsHandler) GetAllLocationsSignedIn(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	fmt.Println(vars["id"])
 
 	//public users ids
-	rest, err := http.Get("http://localhost:8085/users/public-ids")
+	rest, err := http.Get("http://profile-service:8085/users/public-ids")
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -638,8 +618,7 @@ func (handler *PostsHandler) GetAllLocationsSignedIn(w http.ResponseWriter, r *h
 	}
 	fmt.Println(dtoIds.KEYS)
 
-
-	restFollowers, _ := http.Get("http://localhost:8088/users/getFollowers/" + vars["id"])
+	restFollowers, _ := http.Get("http://followers-microservice:8088/users/getFollowers/" + vars["id"])
 	var dtoFollowers dto.FollowersDto
 	err = json.NewDecoder(restFollowers.Body).Decode(&dtoFollowers)
 	fmt.Println(dtoFollowers.KEYS)
@@ -688,8 +667,8 @@ func (handler *PostsHandler) GetByIds(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars["userid"])
 	fmt.Println(vars["postid"])
-	post :=handler.Service.GetByIds(vars["userid"], vars["postid"])
-	if post == nil{
+	post := handler.Service.GetByIds(vars["userid"], vars["postid"])
+	if post == nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -699,7 +678,7 @@ func (handler *PostsHandler) GetCampaignsByIds(w http.ResponseWriter, r *http.Re
 	vars := mux.Vars(r)
 	fmt.Println(vars["userid"])
 	fmt.Println(vars["campaignid"])
-	campaigns :=handler.Service.GetCampaignsByIds(vars["userid"], vars["campaignid"])
+	campaigns := handler.Service.GetCampaignsByIds(vars["userid"], vars["campaignid"])
 	if len(campaigns.ADS) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -710,7 +689,7 @@ func (handler *PostsHandler) GetCampaignsByInfluencerIds(w http.ResponseWriter, 
 	vars := mux.Vars(r)
 	fmt.Println(vars["userid"])
 	fmt.Println(vars["campaignid"])
-	campaigns :=handler.Service.GetCampaignsByInfluencerIds(vars["userid"], vars["campaignid"])
+	campaigns := handler.Service.GetCampaignsByInfluencerIds(vars["userid"], vars["campaignid"])
 	if len(campaigns.ADS) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -720,8 +699,8 @@ func (handler *PostsHandler) GetCampaignsByInfluencerIds(w http.ResponseWriter, 
 
 func (handler *PostsHandler) GetByUserId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	posts :=handler.Service.GetByUserId(vars["userid"])
-	if posts == nil{
+	posts := handler.Service.GetByUserId(vars["userid"])
+	if posts == nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

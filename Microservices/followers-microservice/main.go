@@ -8,16 +8,18 @@ import (
 	"followers-microservice/repository"
 	"followers-microservice/saga"
 	"followers-microservice/service"
+	"os"
+
 	"github.com/go-redis/redis"
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"os"
 
-	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
 func initDB() *neo4j.Driver {
@@ -26,7 +28,7 @@ func initDB() *neo4j.Driver {
 	if len(hostName) != 0 {
 		host = hostName
 	}
-	dbUri := "neo4j://"+ host +":7687"
+	dbUri := "neo4j://" + host + ":7687"
 	var driver neo4j.Driver
 	for 1 == 1 {
 		d, err := neo4j.NewDriver(dbUri, neo4j.BasicAuth("neo4j", "root", ""))
@@ -52,31 +54,30 @@ func initDB() *neo4j.Driver {
 	return &driver
 }
 
-func insertUsers(tx neo4j.Transaction) (interface{},  error) {
+func insertUsers(tx neo4j.Transaction) (interface{}, error) {
 	tx.Run("MATCH ()-[r]->() DELETE r", map[string]interface{}{})
 	tx.Run("MATCH (u) REMOVE u:User", map[string]interface{}{})
 
-	users := [] model.User {
+	users := []model.User{
 		{
 			ID: uuid.MustParse("965208b9-287b-4da5-b772-73df5e74ebbc"),
-		},{
+		}, {
 			ID: uuid.MustParse("4579daae-1567-42d5-a25c-1a3818077c84"),
-		},{
+		}, {
 			ID: uuid.MustParse("5cb65bc8-6130-4436-a1f9-ad4778f112bc"),
-		},{
+		}, {
 			ID: uuid.MustParse("708b65de-fb77-4934-bfd0-d14161a74905"),
-		},{
+		}, {
 			ID: uuid.MustParse("0cf8a7ff-7bb5-48f0-a834-7b07eb306f90"),
-		},{
+		}, {
 			ID: uuid.MustParse("be71d1da-0749-480f-a563-dcc35a14e542"),
-		},{
+		}, {
 			ID: uuid.MustParse("d3ea863d-350e-44f2-bd6e-809aa7100476"),
 		},
-
 	}
 
 	for i := range users {
-		_ , err := tx.Run("CREATE (u:User {id: $id}) return u.id", map[string]interface{}{
+		_, err := tx.Run("CREATE (u:User {id: $id}) return u.id", map[string]interface{}{
 			"id": users[i].ID.String(), //string(users[i].ID)
 		})
 		if err != nil {
@@ -86,18 +87,18 @@ func insertUsers(tx neo4j.Transaction) (interface{},  error) {
 	}
 
 	_, err := tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
-		"idB" : "965208b9-287b-4da5-b772-73df5e74ebbc",
-		"idA" : "4579daae-1567-42d5-a25c-1a3818077c84",
+		"idB": "965208b9-287b-4da5-b772-73df5e74ebbc",
+		"idA": "4579daae-1567-42d5-a25c-1a3818077c84",
 	})
 
 	_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
-		"idB" : "4579daae-1567-42d5-a25c-1a3818077c84",
-		"idA" : "965208b9-287b-4da5-b772-73df5e74ebbc",
+		"idB": "4579daae-1567-42d5-a25c-1a3818077c84",
+		"idA": "965208b9-287b-4da5-b772-73df5e74ebbc",
 	})
 
 	_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
-		"idB" : "5cb65bc8-6130-4436-a1f9-ad4778f112bc",
-		"idA" : "965208b9-287b-4da5-b772-73df5e74ebbc",
+		"idB": "5cb65bc8-6130-4436-a1f9-ad4778f112bc",
+		"idA": "965208b9-287b-4da5-b772-73df5e74ebbc",
 	})
 
 	//_, err = tx.Run("MATCH  (a:User),  (b:User)WHERE a.id = $idA AND b.id = $idB CREATE (a)-[r:FOLLOWING]->(b) RETURN type(r)", map[string]interface{}{
@@ -110,15 +111,12 @@ func insertUsers(tx neo4j.Transaction) (interface{},  error) {
 	//	"idB" : "ef99cdf2-c3f5-11eb-8529-0242ac130003",
 	//})
 
-
-
 	if err != nil {
 		return nil, err
 	}
 
-	return  nil, nil
+	return nil, nil
 }
-
 
 func initRepo(driver *neo4j.Driver) *repository.FollowersRepository {
 	return &repository.FollowersRepository{Driver: driver}
@@ -128,11 +126,11 @@ func initService(followersRepository *repository.FollowersRepository) *service.F
 	return &service.FollowersService{FollowersRepository: followersRepository}
 }
 
-func initHandler(followersService *service.FollowersService) *handler.FollowersHandler  {
+func initHandler(followersService *service.FollowersService) *handler.FollowersHandler {
 	return &handler.FollowersHandler{FollowersService: followersService}
 }
 
-func handlerFunc(followersHandler *handler.FollowersHandler)  {
+func handlerFunc(followersHandler *handler.FollowersHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/users/addNode/{id}", followersHandler.AddNode).Methods("POST")
@@ -144,19 +142,23 @@ func handlerFunc(followersHandler *handler.FollowersHandler)  {
 	router.HandleFunc("/users/follow/{idUser}/{idTarget}", followersHandler.Follow).Methods("POST")
 	router.HandleFunc("/users/isFollowing/{idUser}/{idTarget}", followersHandler.IsFollowing).Methods("GET")
 	router.HandleFunc("/users/checkFollowing/{idUser}/{idTarget}", followersHandler.CheckFollowing).Methods("GET")
-	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
-	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
-	origins := handlers.AllowedOrigins([] string{"*"})
+	headers := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
+	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([]string{"*"})
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8088"), handlers.CORS(headers, methods, origins) (router)))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8088"), handlers.CORS(headers, methods, origins)(router)))
 
 }
 
-
 func RedisConnection(followersService *service.FollowersService) {
 	// create client and ping redis
+	hostName := os.Getenv("SAGA_HOST_NAME")
+	host := "localhost:6379"
+	if len(hostName) != 0 {
+		host = hostName + "6389"
+	}
 	var err error
-	client := redis.NewClient(&redis.Options{Addr: "localhost:6379", Password: "", DB: 0})
+	client := redis.NewClient(&redis.Options{Addr: host, Password: "", DB: 0})
 	if _, err = client.Ping().Result(); err != nil {
 		log.Fatalf("error creating redis client %s", err)
 	}
@@ -192,7 +194,7 @@ func RedisConnection(followersService *service.FollowersService) {
 					m.Ok = true
 					ret := followersService.UserExists(userId)
 
-					if ret != nil{
+					if ret != nil {
 						m.Ok = false
 					}
 
@@ -206,7 +208,7 @@ func RedisConnection(followersService *service.FollowersService) {
 						followersService.AddNode(userId)
 						sendToReplyChannel(client, &m, saga.ActionDone, saga.ServiceProfile, saga.ServiceFollower)
 					}
-					if !m.Ok{
+					if !m.Ok {
 						log.Println("Ovo nije okej")
 						sendToReplyChannel(client, &m, saga.ActionError, saga.ServiceProfile, saga.ServiceFollower)
 					}
@@ -232,8 +234,6 @@ func sendToReplyChannel(client *redis.Client, m *saga.Message, action string, se
 	log.Printf("done message published to channel :%s", saga.ReplyChannel)
 }
 
-
-
 func main() {
 	driver := initDB()
 	followersRepository := initRepo(driver)
@@ -249,27 +249,25 @@ func main() {
 // getFollowing
 // isFollowing/{idUser}/{idTarget}
 
-
 // ** Nemojte ovo ispod jos brisati moze posluziti za kasnije zbog baze! **
 
-	// Neo4j 4.0, defaults to no TLS therefore use bolt:// or neo4j://
-	// Neo4j 3.5, defaults to self-signed certificates, TLS on, therefore use bolt+ssc:// or neo4j+ssc://
-	//dbUri := "neo4j://localhost:7687"
-	//driver, err := neo4j.NewDriver(dbUri, neo4j.BasicAuth("neo4j", "root", ""))
-	//if err != nil {
-	//	fmt.Println("Greska")
-	//	panic(err)
-	//}
-	//// Handle driver lifetime based on your application lifetime requirements  driver's lifetime is usually
-	//// bound by the application lifetime, which usually implies one driver instance per application
-	//defer driver.Close()
-	//err = insertItem(driver)
-	//if err != nil {
-	//	fmt.Println("Greska")
-	//	panic(err)
-	//}
-	////fmt.Printf("%v\n", item)
-
+// Neo4j 4.0, defaults to no TLS therefore use bolt:// or neo4j://
+// Neo4j 3.5, defaults to self-signed certificates, TLS on, therefore use bolt+ssc:// or neo4j+ssc://
+//dbUri := "neo4j://localhost:7687"
+//driver, err := neo4j.NewDriver(dbUri, neo4j.BasicAuth("neo4j", "root", ""))
+//if err != nil {
+//	fmt.Println("Greska")
+//	panic(err)
+//}
+//// Handle driver lifetime based on your application lifetime requirements  driver's lifetime is usually
+//// bound by the application lifetime, which usually implies one driver instance per application
+//defer driver.Close()
+//err = insertItem(driver)
+//if err != nil {
+//	fmt.Println("Greska")
+//	panic(err)
+//}
+////fmt.Printf("%v\n", item)
 
 //func insertItem(driver neo4j.Driver) error {
 //	// Sessions are short-lived, cheap to create and NOT thread safe. Typically create one or more sessions
@@ -318,5 +316,3 @@ func main() {
 //	//}, nil
 //	return nil, nil
 //}
-
-

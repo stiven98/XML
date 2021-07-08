@@ -10,7 +10,7 @@
                         </div>
                         <div class="media m-0">
                             <div class="d-flex mr-3">
-                                <a href=""><img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userData.get(post.userid).system_user.picturePath}}" alt="User" /></a>
+                                <a href=""><img class="img-fluid rounded-circle" src="{{'http://profile-service:8085/images/' + userData.get(post.userid).system_user.picturePath}}" alt="User" /></a>
                             </div>
 
                             <div class="media-body">
@@ -27,10 +27,10 @@
                         <ngb-carousel>
                             <ng-template ngbSlide *ngFor="let item of post.items">
                                 <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
-                                    <img class="img-fluid" style="width: auto; height: 40vh;" src="{{'http://localhost:8086/images/'+item.path}}" />
+                                    <img class="img-fluid" style="width: auto; height: 40vh;" src="{{'http://post-service:8086/images/'+item.path}}" />
                                 </div>
                                 <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
-                                    <video class="active" style="width: auto; height: 40vh;" src="{{'http://localhost:8086/images/'+item.path}}" controls></video>
+                                    <video class="active" style="width: auto; height: 40vh;" src="{{'http://post-service:8086/images/'+item.path}}" controls></video>
                                 </div>
                             </ng-template>
                         </ngb-carousel>

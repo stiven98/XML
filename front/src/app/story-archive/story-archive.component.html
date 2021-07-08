@@ -13,10 +13,10 @@
                                         <ngb-carousel>
                                             <ng-template ngbSlide *ngFor="let item of story.items">
                                                 <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
-                                                    <img class="img-fluid" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" />
+                                                    <img class="img-fluid" style="width: auto; height: 240px;" src="{{'http://story-service:8083/images/'+item.path}}" />
                                                 </div>
                                                 <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
-                                                    <video class="active" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" controls></video>
+                                                    <video class="active" style="width: auto; height: 240px;" src="{{'http://story-service:8083/images/'+item.path}}" controls></video>
                                                 </div>
                                             </ng-template>
                                         </ngb-carousel>
@@ -24,7 +24,7 @@
                                             <div class="row">
                                                 <div class="col-3">
                                                     <a style="width: 70px; height: 70px; margin-top: 0px" href="/profile/{{story.userid}}">
-                                                        <img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userData.get(story.userid).system_user.picturePath}}" alt="User" />
+                                                        <img class="img-fluid rounded-circle" src="{{'http://profile-service:8085/images/' + userData.get(story.userid).system_user.picturePath}}" alt="User" />
                                                     </a>
                                                 </div>
                                                 <div class="col-6">
@@ -71,10 +71,10 @@
                                         <ngb-carousel>
                                             <ng-template ngbSlide *ngFor="let item of story.items">
                                                 <div *ngIf="isImage(item.path)" class="picsum-img-wrapper">
-                                                    <img class="img-fluid" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" />
+                                                    <img class="img-fluid" style="width: auto; height: 240px;" src="{{'http://story-service:8083/images/'+item.path}}" />
                                                 </div>
                                                 <div *ngIf="!isImage(item.path)" class="picsum-img-wrapper">
-                                                    <video class="active" style="width: auto; height: 240px;" src="{{'http://localhost:8083/images/'+item.path}}" controls></video>
+                                                    <video class="active" style="width: auto; height: 240px;" src="{{'http://story-service:8083/images/'+item.path}}" controls></video>
                                                 </div>
                                             </ng-template>
                                         </ngb-carousel>
@@ -82,7 +82,7 @@
                                             <div class="row">
                                                 <div class="col-3">
                                                     <a style="width: 70px; height: 70px; margin-top: 0px" href="/profile/{{story.userid}}">
-                                                        <img class="img-fluid rounded-circle" src="{{'http://localhost:8085/images/' + userDataHigh.get(story.userid).system_user.picturePath}}" alt="User" />
+                                                        <img class="img-fluid rounded-circle" src="{{'http://profile-service:8085/images/' + userDataHigh.get(story.userid).system_user.picturePath}}" alt="User" />
                                                     </a>
                                                 </div>
                                                 <div class="col-6">

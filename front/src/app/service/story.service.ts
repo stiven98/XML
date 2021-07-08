@@ -10,7 +10,7 @@ import { ConfigService } from './authorization/config.service';
 export class StoryService {
   removeHighlight(id: string, storyid: string) {
     return this.http
-      .post('http://localhost:8083/story/remove-highlight', {userid: id, storyid: storyid})
+      .post('http://story-service:8083/story/remove-highlight', {userid: id, storyid: storyid})
       .pipe(map((item) => {
         return item;
       }));
@@ -18,14 +18,14 @@ export class StoryService {
 
   addToHighlight(id: string, storyid: string) {
     return this.http
-      .post('http://localhost:8083/story/highlight', {userid: id, storyid: storyid})
+      .post('http://story-service:8083/story/highlight', {userid: id, storyid: storyid})
       .pipe(map((item) => {
         return item;
       }));
   };
 
   getMyPagedHighlights(id: string, pageNum: number, neededRes: number) {
-    return this.http.get('http://localhost:8083/story/paged-highlights', {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
+    return this.http.get('http://story-service:8083/story/paged-highlights', {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
       map((item) => {
         return item;
       })
@@ -33,7 +33,7 @@ export class StoryService {
   }
   
   getMyPagedStories(id: string, pageNum: number, neededRes: number) {
-    return this.http.get('http://localhost:8083/story/my-paged-stories', {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
+    return this.http.get('http://story-service:8083/story/my-paged-stories', {params : {id : id, pageNumber : pageNum.toString(), neededResults : neededRes.toString()}}).pipe(
       map((item) => {
         return item;
       })

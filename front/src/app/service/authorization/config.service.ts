@@ -82,7 +82,7 @@ export class ConfigService {
     return this._update_user_verification;
   }
 
-  private _upload_user_photo = environment.apiUrl_profile_service + '/upload'
+  private _upload_user_photo = 'http://profile-service:8085' + '/upload'
   get upload_user_photo (): string {
     return this._upload_user_photo;
   }
@@ -127,7 +127,7 @@ export class ConfigService {
     return this._get_post_signed_in_location
   }
 
-  private _upload_post_img = environment.apiUrl_post_service + '/upload'
+  private _upload_post_img = 'http://post-service:8086' + '/upload'
   get upload_post_img ():string{
     return this._upload_post_img;
   }
@@ -349,7 +349,7 @@ export class ConfigService {
     get verify ():string{
       return this._verify;
     }
-    private _images = environment.apiUrl_admin_service + '/images/';
+    private _images = 'http://admin-service:8089' + '/images/';
 
     get images ():string{
       return this._images
@@ -369,7 +369,7 @@ export class ConfigService {
   //admin end
 
   //story start
-    private _upload_story_picture = environment.apiUrl_story_service + '/upload'
+    private _upload_story_picture = 'http://story-service:8083' + '/upload'
     get upload_story_picture():string{
         return this._upload_story_picture
     }

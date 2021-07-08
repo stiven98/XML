@@ -3,12 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-redis/redis"
-	"github.com/google/uuid"
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"os"
@@ -18,7 +12,15 @@ import (
 	"profileservice/saga"
 	"profileservice/service"
 	"time"
+
+	"github.com/go-redis/redis"
+	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
+
 func initDB() *gorm.DB {
 	hostName := os.Getenv("HOST_NAME")
 	host := "localhost"
@@ -59,7 +61,7 @@ func initDB() *gorm.DB {
 		database.AutoMigrate(&model.Agent{})
 		database.AutoMigrate(&model.Notify{})
 
-		systemUsers := [] model.SystemUser {
+		systemUsers := []model.SystemUser{
 			{
 				ID:          uuid.MustParse("69b0597e-4a63-49e5-ae40-5b159ada82b9"),
 				FirstName:   "Aca",
@@ -68,7 +70,7 @@ func initDB() *gorm.DB {
 				Email:       "aca@gmail.com",
 				Password:    "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 				Gender:      model.MALE,
-				TypeOfUser: model.ADMIN,
+				TypeOfUser:  model.ADMIN,
 				DateOfBirth: time.Time{}.AddDate(1998, 10, 1),
 			}, {
 				ID:          uuid.MustParse("965208b9-287b-4da5-b772-73df5e74ebbc"),
@@ -78,7 +80,7 @@ func initDB() *gorm.DB {
 				Email:       "jovan@gmail.com",
 				Password:    "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 				Gender:      model.MALE,
-				TypeOfUser: model.USER,
+				TypeOfUser:  model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 7, 31),
 				PicturePath: "jovan.png",
 			}, {
@@ -88,8 +90,8 @@ func initDB() *gorm.DB {
 				Username:    "djordjije",
 				Email:       "djordjije@gmail.com",
 				Password:    "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
-				Gender: 	 model.MALE,
-				TypeOfUser: model.USER,
+				Gender:      model.MALE,
+				TypeOfUser:  model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 9, 10),
 				PicturePath: "djordjije.jpg",
 			}, {
@@ -100,7 +102,7 @@ func initDB() *gorm.DB {
 				Email:       "aleksandar@gmail.com",
 				Password:    "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 				Gender:      model.MALE,
-				TypeOfUser: model.USER,
+				TypeOfUser:  model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 10, 10),
 				PicturePath: "stiven.png",
 			}, {
@@ -111,7 +113,7 @@ func initDB() *gorm.DB {
 				Email:       "marko@gmail.com",
 				Password:    "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 				Gender:      model.MALE,
-				TypeOfUser: model.USER,
+				TypeOfUser:  model.USER,
 				DateOfBirth: time.Time{}.AddDate(1998, 1, 10),
 				PicturePath: "marko.png",
 			}, {
@@ -122,7 +124,7 @@ func initDB() *gorm.DB {
 				Email:       "janko@gmail.com",
 				Password:    "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 				Gender:      model.MALE,
-				TypeOfUser: model.USER,
+				TypeOfUser:  model.USER,
 				DateOfBirth: time.Time{}.AddDate(1994, 10, 10),
 				PicturePath: "janko.png",
 			}, {
@@ -133,9 +135,9 @@ func initDB() *gorm.DB {
 				Email:       "dejan@gmail.com",
 				Password:    "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 				Gender:      model.MALE,
-				TypeOfUser: model.USER,
+				TypeOfUser:  model.USER,
 				DateOfBirth: time.Time{}.AddDate(1991, 10, 10),
-			},{
+			}, {
 				ID:          uuid.MustParse("d3ea863d-350e-44f2-bd6e-809aa7100476"),
 				FirstName:   "Milica",
 				LastName:    "Milicevic",
@@ -143,20 +145,19 @@ func initDB() *gorm.DB {
 				Email:       "milica@gmail.com",
 				Password:    "$2y$10$szTo3OrMpAUX0kIvWHh0seRntNn/GG6zBWIRnK.DJ7y.zItJRLYO2",
 				Gender:      model.MALE,
-				TypeOfUser: model.USER,
+				TypeOfUser:  model.USER,
 				DateOfBirth: time.Time{}.AddDate(1992, 12, 10),
 			},
-
 		}
 
-		administrators := [] model.Administrator {
+		administrators := []model.Administrator{
 			{
-				UserID: systemUsers[0].ID,
+				UserID:     systemUsers[0].ID,
 				SystemUser: systemUsers[0],
 			},
 		}
 
-		users := [] model.User {
+		users := []model.User{
 			{
 				UserID:      systemUsers[1].ID,
 				SystemUser:  systemUsers[1],
@@ -166,7 +167,7 @@ func initDB() *gorm.DB {
 				Biography:   "Nema je!",
 				AllowedTags: true,
 				IsBlocked:   false,
-				IsVerified: false,
+				IsVerified:  false,
 			},
 			{
 				UserID:      systemUsers[2].ID,
@@ -177,7 +178,7 @@ func initDB() *gorm.DB {
 				Biography:   "Zanimljiv decak!",
 				AllowedTags: true,
 				IsBlocked:   false,
-				IsVerified: false,
+				IsVerified:  false,
 			}, {
 				UserID:      systemUsers[3].ID,
 				SystemUser:  systemUsers[3],
@@ -187,8 +188,8 @@ func initDB() *gorm.DB {
 				Biography:   "Berem jagode!",
 				AllowedTags: true,
 				IsBlocked:   false,
-				IsVerified: false,
-			},{
+				IsVerified:  false,
+			}, {
 				UserID:      systemUsers[4].ID,
 				SystemUser:  systemUsers[4],
 				IsPublic:    false,
@@ -197,8 +198,8 @@ func initDB() *gorm.DB {
 				Biography:   "!",
 				AllowedTags: true,
 				IsBlocked:   false,
-				IsVerified: false,
-			},{
+				IsVerified:  false,
+			}, {
 				UserID:      systemUsers[5].ID,
 				SystemUser:  systemUsers[5],
 				IsPublic:    false,
@@ -207,8 +208,8 @@ func initDB() *gorm.DB {
 				Biography:   "Berem jagode!",
 				AllowedTags: true,
 				IsBlocked:   false,
-				IsVerified: false,
-			},{
+				IsVerified:  false,
+			}, {
 				UserID:      systemUsers[6].ID,
 				SystemUser:  systemUsers[6],
 				IsPublic:    false,
@@ -217,8 +218,8 @@ func initDB() *gorm.DB {
 				Biography:   "",
 				AllowedTags: true,
 				IsBlocked:   false,
-				IsVerified: false,
-			},{
+				IsVerified:  false,
+			}, {
 				UserID:      systemUsers[7].ID,
 				SystemUser:  systemUsers[7],
 				IsPublic:    true,
@@ -227,7 +228,7 @@ func initDB() *gorm.DB {
 				Biography:   "",
 				AllowedTags: true,
 				IsBlocked:   false,
-				IsVerified: false,
+				IsVerified:  false,
 			},
 		}
 
@@ -249,98 +250,96 @@ func initDB() *gorm.DB {
 }
 
 func initRepo(database *gorm.DB) (*repository.SystemUsersRepository,
-								  *repository.AdministratorsRepository,
-								  *repository.UsersRepository,
-								  *repository.AgentsRepository,
-								  *repository.NotifyRepository) {
+	*repository.AdministratorsRepository,
+	*repository.UsersRepository,
+	*repository.AgentsRepository,
+	*repository.NotifyRepository) {
 
 	return &repository.SystemUsersRepository{Database: database}, &repository.AdministratorsRepository{Database: database},
-																  &repository.UsersRepository{Database: database},
-																  &repository.AgentsRepository{Database: database},
-																  &repository.NotifyRepository{Database: database}
+		&repository.UsersRepository{Database: database},
+		&repository.AgentsRepository{Database: database},
+		&repository.NotifyRepository{Database: database}
 }
-
-
 
 func initServices(systemUsersRepo *repository.SystemUsersRepository, administratorsRepo *repository.AdministratorsRepository,
-																	 usersRepo *repository.UsersRepository,
-																	 agentsRepo *repository.AgentsRepository,
-																	 notifyRepo *repository.NotifyRepository) (*service.SystemUsersService,
-																	                                           *service.AdministratorsService,
-																	                                           *service.UsersService,
-																	                                           *service.AgentsService,
-																	                                           *service.NotifyService){
+	usersRepo *repository.UsersRepository,
+	agentsRepo *repository.AgentsRepository,
+	notifyRepo *repository.NotifyRepository) (*service.SystemUsersService,
+	*service.AdministratorsService,
+	*service.UsersService,
+	*service.AgentsService,
+	*service.NotifyService) {
 
 	return &service.SystemUsersService{Repo: systemUsersRepo}, &service.AdministratorsService{AdministratorRepo: administratorsRepo, SystemUserRepo: systemUsersRepo},
-	                                                           &service.UsersService{UsersRepo: usersRepo, SystemUserRepo: systemUsersRepo},
-	                                                           &service.AgentsService{SystemUserRepo: systemUsersRepo, AgentsRepo: agentsRepo},
-	                                                           &service.NotifyService{NotifyRepository: notifyRepo}
+		&service.UsersService{UsersRepo: usersRepo, SystemUserRepo: systemUsersRepo},
+		&service.AgentsService{SystemUserRepo: systemUsersRepo, AgentsRepo: agentsRepo},
+		&service.NotifyService{NotifyRepository: notifyRepo}
 }
 
-
-
 func initHandler(SystemUsersService *service.SystemUsersService, administratorsService *service.AdministratorsService,
-															     usersService *service.UsersService,
-															     agentsService *service.AgentsService,
-															     notifyService *service.NotifyService) (*handler.SystemUsersHandler,
-															     										*handler.AdministratorsHandler,
-															     										*handler.UsersHandler,
-															     										*handler.AgentsHandler,
-															     										*handler.NotifyHandler) {
+	usersService *service.UsersService,
+	agentsService *service.AgentsService,
+	notifyService *service.NotifyService) (*handler.SystemUsersHandler,
+	*handler.AdministratorsHandler,
+	*handler.UsersHandler,
+	*handler.AgentsHandler,
+	*handler.NotifyHandler) {
 	return &handler.SystemUsersHandler{Service: SystemUsersService}, &handler.AdministratorsHandler{Service: administratorsService},
 		&handler.UsersHandler{Service: usersService}, &handler.AgentsHandler{Service: agentsService},
 		&handler.NotifyHandler{NotifyService: notifyService}
 }
 
-
-
 func handleFunc(SystemUsersHandler *handler.SystemUsersHandler, administratorsHandler *handler.AdministratorsHandler,
-	usersHandler *handler.UsersHandler,agentsHandler *handler.AgentsHandler,notifyHandler *handler.NotifyHandler) {
+	usersHandler *handler.UsersHandler, agentsHandler *handler.AgentsHandler, notifyHandler *handler.NotifyHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/sysusers/create", SystemUsersHandler.Create).Methods("POST")
 	router.HandleFunc("/sysusers/update", SystemUsersHandler.Update).Methods("PUT")
-	router.HandleFunc("/sysusers/getAll",SystemUsersHandler.GetAll).Methods("GET")
-	router.HandleFunc("/sysusers/getAllUsernames",SystemUsersHandler.GetAllUsernames).Methods("GET")
-	router.HandleFunc("/sysusers/getUserId/{username}",SystemUsersHandler.GetUserId).Methods("GET")
-	router.HandleFunc("/sysusers/getById/{id}",  SystemUsersHandler.GetById).Methods("GET")
-	router.HandleFunc("/administrators/update",  administratorsHandler.Update).Methods("PUT")
-	router.HandleFunc("/administrators/create",  administratorsHandler.Create).Methods("POST")
-	router.HandleFunc("/administrators/getAll",  administratorsHandler.GetAll).Methods("GET")
-	router.HandleFunc("/users/update",  usersHandler.Update).Methods("PUT")
-	router.HandleFunc("/users/create",  usersHandler.Create).Methods("POST")
-	router.HandleFunc("/users/getAll",  usersHandler.GetAll).Methods("GET")
-	router.HandleFunc("/users/getById/{id}",  usersHandler.GetById).Methods("GET")
-	router.HandleFunc("/users/getNotificationStatusesById/{id}",  usersHandler.GetNotificationStatusesById).Methods("GET")
-	router.HandleFunc("/getIds",  usersHandler.GetIds).Methods("GET")
+	router.HandleFunc("/sysusers/getAll", SystemUsersHandler.GetAll).Methods("GET")
+	router.HandleFunc("/sysusers/getAllUsernames", SystemUsersHandler.GetAllUsernames).Methods("GET")
+	router.HandleFunc("/sysusers/getUserId/{username}", SystemUsersHandler.GetUserId).Methods("GET")
+	router.HandleFunc("/sysusers/getById/{id}", SystemUsersHandler.GetById).Methods("GET")
+	router.HandleFunc("/administrators/update", administratorsHandler.Update).Methods("PUT")
+	router.HandleFunc("/administrators/create", administratorsHandler.Create).Methods("POST")
+	router.HandleFunc("/administrators/getAll", administratorsHandler.GetAll).Methods("GET")
+	router.HandleFunc("/users/update", usersHandler.Update).Methods("PUT")
+	router.HandleFunc("/users/create", usersHandler.Create).Methods("POST")
+	router.HandleFunc("/users/getAll", usersHandler.GetAll).Methods("GET")
+	router.HandleFunc("/users/getById/{id}", usersHandler.GetById).Methods("GET")
+	router.HandleFunc("/users/getNotificationStatusesById/{id}", usersHandler.GetNotificationStatusesById).Methods("GET")
+	router.HandleFunc("/getIds", usersHandler.GetIds).Methods("GET")
 	router.HandleFunc("/users/changeWhetherIsPublic", usersHandler.ChangeWhetherIsPublic).Methods("POST")
 	router.HandleFunc("/users/changeAllowedTags", usersHandler.ChangeAllowedTags).Methods("POST")
 	router.HandleFunc("/users/updateVerification/{id}", SystemUsersHandler.UpdateVerification).Methods("PUT")
-	router.HandleFunc("/agents/update",  agentsHandler.Update).Methods("PUT")
-	router.HandleFunc("/agents/create",  agentsHandler.Create).Methods("POST")
-	router.HandleFunc("/agents/createRequest",  agentsHandler.CerateRegistrationRequest).Methods("POST")
-	router.HandleFunc("/agents/declineRequest",  agentsHandler.DeclineRegistrationRequest).Methods("POST")
-	router.HandleFunc("/agents/getAll",  agentsHandler.GetAll).Methods("GET")
-	router.HandleFunc("/agents/getAllRequests",  agentsHandler.GetAllRequests).Methods("GET")
+	router.HandleFunc("/agents/update", agentsHandler.Update).Methods("PUT")
+	router.HandleFunc("/agents/create", agentsHandler.Create).Methods("POST")
+	router.HandleFunc("/agents/createRequest", agentsHandler.CerateRegistrationRequest).Methods("POST")
+	router.HandleFunc("/agents/declineRequest", agentsHandler.DeclineRegistrationRequest).Methods("POST")
+	router.HandleFunc("/agents/getAll", agentsHandler.GetAll).Methods("GET")
+	router.HandleFunc("/agents/getAllRequests", agentsHandler.GetAllRequests).Methods("GET")
 	router.HandleFunc("/users/isPublic/{id}", usersHandler.IsPublic).Methods("GET")
-	router.HandleFunc("/users/public-ids",  usersHandler.GetPublicUsersIds).Methods("GET")
+	router.HandleFunc("/users/public-ids", usersHandler.GetPublicUsersIds).Methods("GET")
 	router.HandleFunc("/upload", usersHandler.UploadFile).Methods("POST")
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./profile_picture/"))))
 	router.HandleFunc("/notify/create", notifyHandler.Create).Methods("POST")
 	router.HandleFunc("/notify/getAll/{id}", notifyHandler.GetAllNotifyByUserId).Methods("GET")
 
-	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})
-	methods := handlers.AllowedMethods([] string{"GET", "POST", "PUT"})
-	origins := handlers.AllowedOrigins([] string{"*"})
+	headers := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
+	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([]string{"*"})
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), handlers.CORS(headers, methods, origins) (router)))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", "8085"), handlers.CORS(headers, methods, origins)(router)))
 }
 
-func RedisConnection (usersService *service.UsersService) {
-	// create client and ping redis
+func RedisConnection(usersService *service.UsersService) {
+	hostName := os.Getenv("SAGA_HOST_NAME")
+	host := "localhost:6379"
+	if len(hostName) != 0 {
+		host = hostName + "6389"
+	}
 	var err error
-	client := redis.NewClient(&redis.Options{Addr: "localhost:6379", Password: "", DB: 0})
+	client := redis.NewClient(&redis.Options{Addr: host, Password: "", DB: 0})
 	if _, err = client.Ping().Result(); err != nil {
 		log.Fatalf("error creating redis client %s", err)
 	}
@@ -415,20 +414,13 @@ func RedisConnection (usersService *service.UsersService) {
 	}
 }
 
-
-
-
-
-
 func main() {
 	database := initDB()
 	go saga.NewOrchestrator().Start()
 	sysusersRepo, administratorsRepo, usersRepo, agentsRepo, notifyRepo := initRepo(database)
-	systemUsersService, administratorsService, usersService, agentsService, notifyService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo,notifyRepo)
+	systemUsersService, administratorsService, usersService, agentsService, notifyService := initServices(sysusersRepo, administratorsRepo, usersRepo, agentsRepo, notifyRepo)
 	go RedisConnection(usersService)
-	systemUsersHandler, administratorsHandler, usersHandler, agentsHandler,notifyHandler := initHandler(systemUsersService, administratorsService, usersService, agentsService,notifyService)
-	handleFunc(systemUsersHandler, administratorsHandler, usersHandler, agentsHandler,notifyHandler)
-
+	systemUsersHandler, administratorsHandler, usersHandler, agentsHandler, notifyHandler := initHandler(systemUsersService, administratorsService, usersService, agentsService, notifyService)
+	handleFunc(systemUsersHandler, administratorsHandler, usersHandler, agentsHandler, notifyHandler)
 
 }
-

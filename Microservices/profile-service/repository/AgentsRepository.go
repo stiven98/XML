@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"gorm.io/gorm"
 	"net/http"
 	"profileservice/model"
 	"profileservice/model/Dto"
+
+	"gorm.io/gorm"
 )
 
 type AgentsRepository struct {
@@ -22,7 +23,7 @@ func (repo *AgentsRepository) UpdateRequest(request *model.AgentRegistrationRequ
 	result := repo.Database.Model(model.AgentRegistrationRequest{}).Where("id = ?", request.ID).Updates(request)
 	return result.Error
 }
-func(repo *AgentsRepository) GetAll() []model.Agent{
+func (repo *AgentsRepository) GetAll() []model.Agent {
 	var agents []model.Agent
 	repo.Database.Preload("SystemUser").Find(&agents)
 	return agents
@@ -41,8 +42,8 @@ func (repo *AgentsRepository) Create(agent *model.User) error {
 	json.NewEncoder(payloadBuf).Encode(dto)
 	payloadBuf1 := new(bytes.Buffer)
 	json.NewEncoder(payloadBuf1).Encode(dto.ID)
-	_, err := http.Post("http://localhost:8080/api/createUser","application/json", payloadBuf)
-	_, err1 := http.Post("http://localhost:8088/users/addNode/" + dto.ID.String(),"application/json", payloadBuf1)
+	_, err := http.Post("http://auth-service:8080/api/createUser", "application/json", payloadBuf)
+	_, err1 := http.Post("http://followers-microservice:8088/users/addNode/"+dto.ID.String(), "application/json", payloadBuf1)
 
 	if err != nil {
 		fmt.Println(err)
@@ -56,13 +57,12 @@ func (repo *AgentsRepository) Create(agent *model.User) error {
 	return nil
 }
 
-
 func (repo *AgentsRepository) CreateRegistrationRequest(request *model.AgentRegistrationRequest) error {
 	result := repo.Database.Create(request)
 	fmt.Println(result.RowsAffected)
 	return nil
 }
-func(repo *AgentsRepository) GetAllRequests() []model.AgentRegistrationRequest{
+func (repo *AgentsRepository) GetAllRequests() []model.AgentRegistrationRequest {
 	var requests []model.AgentRegistrationRequest
 	repo.Database.Find(&requests)
 	return requests

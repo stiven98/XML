@@ -2,18 +2,19 @@ package handler
 
 import (
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 	"net/http"
 	"profile-management-service/model"
 	"profile-management-service/service"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
 
 type BlockedUsersHandler struct {
-	BlockedUsersService *service.BlockedUsersService
+	BlockedUsersService  *service.BlockedUsersService
 	SubscriberAccService *service.SubscribeAccService
-	MutedUsersService *service.MutedUsersService
-	CloseFriendService *service.CloseFriendsService
+	MutedUsersService    *service.MutedUsersService
+	CloseFriendService   *service.CloseFriendsService
 }
 
 func (h BlockedUsersHandler) GetAllBlockedBy(writer http.ResponseWriter, request *http.Request) {
@@ -27,7 +28,7 @@ func (h BlockedUsersHandler) GetAllBlockedBy(writer http.ResponseWriter, request
 	}
 
 	writer.WriteHeader(http.StatusOK)
-	renderJSON(writer,&blocked)
+	renderJSON(writer, &blocked)
 }
 
 func (h BlockedUsersHandler) BlockUserByUser(writer http.ResponseWriter, request *http.Request) {
@@ -57,14 +58,12 @@ func (h BlockedUsersHandler) BlockUserByUser(writer http.ResponseWriter, request
 	closeFriend := model.CloseFriends{UserID: uuid.MustParse(blockedByID), FriendID: uuid.MustParse(blockedID)}
 	_ = h.CloseFriendService.RemoveCloseFriend(&closeFriend)
 
-	_, _ = http.Post("http://localhost:8088/users/unfollow/" + blockedByID + "/" + blockedID, "application/json", nil)
+	_, _ = http.Post("http://followers-microservice:8088/users/unfollow/"+blockedByID+"/"+blockedID, "application/json", nil)
 
 	writer.WriteHeader(http.StatusCreated)
 	writer.Header().Set("Content-Type", "application/json")
 
 }
-
-
 
 func (h BlockedUsersHandler) IsBlocked(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
@@ -81,7 +80,7 @@ func (h BlockedUsersHandler) IsBlocked(writer http.ResponseWriter, request *http
 		writer.WriteHeader(http.StatusBadRequest)
 	}
 
-	renderJSON(writer,isBlocked)
+	renderJSON(writer, isBlocked)
 }
 
 func (h BlockedUsersHandler) UnBlockUserByUser(writer http.ResponseWriter, request *http.Request) {
@@ -105,5 +104,3 @@ func (h BlockedUsersHandler) UnBlockUserByUser(writer http.ResponseWriter, reque
 	writer.Header().Set("Content-Type", "application/json")
 
 }
-
-
