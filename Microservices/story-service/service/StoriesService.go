@@ -26,6 +26,18 @@ func (service *StoriesService) GetFeed(id string) []model.Story {
 	return  service.StoriesRepo.GetFeed(id)
 }
 
-func (service *StoriesService) GetMyStories(id string) interface{} {
+func (service *StoriesService) GetMyStories(id string) [] model.Story {
 	return  service.StoriesRepo.GetMyStories(id)
+}
+
+func (service *StoriesService) AddToHighlights(highlight model.Highlight) error {
+	return service.StoriesRepo.AddToHighlights(highlight)
+}
+
+func (service *StoriesService) RemoveFromHighlights(highlight model.Highlight) error {
+	return service.StoriesRepo.RemoveFromHighlights(highlight)
+}
+
+func (service *StoriesService) GetHighlights(id string) []model.Story {
+	return  service.StoriesRepo.GetHighlights(id)
 }

@@ -127,4 +127,10 @@ export class UserService {
         return item;
     }));
   }
+
+  getAllUsers = () => {
+    return this.http.get('http://localhost:8085/users/getAll').pipe(map(item => {
+      return item;
+    }));
+  }
 }

@@ -38,7 +38,7 @@ export class HeaderComponent implements OnInit {
   public currentFile: string = '';
   public ads: Ad[] = [];
   public closefriends: boolean = false;
-  
+
   searchParams: any;
   userId: any;
   usernames: string[] = [];
@@ -55,6 +55,8 @@ export class HeaderComponent implements OnInit {
   isTagsSearchSelected: boolean = false;
   isLocationsSearchSelected: boolean = false;
   isInputDisalbed: boolean = true;
+  public isInfluencer: boolean = false;
+
   constructor(
     public authService: AuthService,
     public usersService: UserService,
@@ -67,6 +69,11 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.usersService.getAllUsernames().subscribe((response) => {
       this.usernames = response as string[];
+      this.usersService
+        .getUserById(localStorage.getItem('id') as string)
+        .subscribe((res: any) => {
+          this.isInfluencer = res.isVerified;
+        });
       if (this.authService.isLoggedIn) {
         this.usersService
           .getSingedInLocations(localStorage.getItem('id') as string)
@@ -170,7 +177,9 @@ export class HeaderComponent implements OnInit {
       this.modalService.dismissAll();
     });
   }
-
+  onRequestsClick = () => {
+    this.router.navigate(['angageRequests']);
+  };
   resetAllInputs = () => {
     this.description = '';
     this.males = false;
@@ -196,13 +205,13 @@ export class HeaderComponent implements OnInit {
       console.log(this.files[i]);
       formData.append('files', this.files[i]);
     }
-    console.log(formData)
-    let post : NewPostDto = new NewPostDto();
+    console.log(formData);
+    let post: NewPostDto = new NewPostDto();
     post.Description = this.description;
     post.Location = this.location;
     post.Hashtag = this.hashtag;
     post.Closefriends = this.closefriends;
-    this.storyService.uploadStory(formData).subscribe(items => {
+    this.storyService.uploadStory(formData).subscribe((items) => {
       console.log(items);
       // TO-DO
       let id = localStorage.getItem('id');

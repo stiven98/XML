@@ -7,6 +7,7 @@ import Header from "./Header";
 import MyProducts from "./MyProducts";
 import ProductPage from "./ProductPage";
 import MyOrders from "./MyOrders";
+import Campaign from "./Campaign";
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
                     <Route path={'/login'} exact={true} component={Login} />
                     <Route path={'/forbidden'} exact={true} component={Forbidden} />
                     <Route path={'/registration'} exact={true} component={Registration} />
+                    <Route path={'/campaign'} exact={true} component={Campaign} />
                     <Route path={'/product/:id'} exact={true} component={ProductPage} />
                 </div>
             </BrowserRouter>

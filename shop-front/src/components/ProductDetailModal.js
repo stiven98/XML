@@ -174,9 +174,7 @@ class ProductDetailModal extends React.Component {
                 </Modal.Footer>
             </Modal>
         );
-
     }
-
 }
 
 export default ProductDetailModal;

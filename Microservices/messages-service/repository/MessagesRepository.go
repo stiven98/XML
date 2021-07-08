@@ -19,7 +19,7 @@ func (repo *MessagesRepository) Create(message *model.Message) error {
 	fmt.Println(result)
 	return nil
 }
-func(repo *MessagesRepository) GetAll() []model.Message{
+func(repo *MessagesRepository) GetAll() []model.Message {
 	var messages []model.Message
 	collection := repo.Database.Collection("messages")
 	ctx := context.TODO()

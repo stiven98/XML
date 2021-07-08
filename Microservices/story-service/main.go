@@ -28,7 +28,11 @@ func handleFunc(storiesHandler *handler.StoriesHandler) {
 	router.HandleFunc("/upload", storiesHandler.UploadFile).Methods("POST")
 	router.HandleFunc("/story/feed/{id}", storiesHandler.GetFeed).Methods("GET")
 	router.HandleFunc("/story/paged-feed", storiesHandler.GetPagedFeed).Methods("GET")
+	router.HandleFunc("/story/my-paged-stories", storiesHandler.GetMyPagedStories).Methods("GET")
 	router.HandleFunc("/story/my/{id}", storiesHandler.GetMyStories).Methods("GET")
+	router.HandleFunc("/story/highlight", storiesHandler.AddToHighlights).Methods("POST")
+	router.HandleFunc("/story/remove-highlight", storiesHandler.RemoveFromHighlights).Methods("POST")
+	router.HandleFunc("/story/paged-highlights", storiesHandler.GetPagedHighlights).Methods("GET")
 	router.Handle("/images/{rest}",
 		http.StripPrefix("/images/", http.FileServer(http.Dir("./user_stories/"))))
 	headers := handlers.AllowedHeaders([] string{"Content-Type", "Authorization"})

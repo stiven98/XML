@@ -5,10 +5,10 @@ import (
 )
 
 type Conversation struct {
-	ID uuid.UUID `json:"id"`
-	FIRSTUSER uuid.UUID `json:"firstuser"`
-	SECONDUSER uuid.UUID `json:"seconduser"`
-	MESSAGES []Message `json:"messages"`
+	ID uuid.UUID               `json:"id"`
+	FirstUser uuid.UUID        `json:"firstUser"`
+	SecondUser uuid.UUID       `json:"secondUser"`
+	Messages []Message 			`json:"messages"`
 }
 
 func (conversation *Conversation) BeforeCreate() error {
