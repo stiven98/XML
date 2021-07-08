@@ -50,9 +50,9 @@ services:
       - backend
     restart: unless-stopped
 
-  db-admin:
+  db-agent:
     image : mongo
-    container_name: db-admin
+    container_name: db-agent
     environment:
     - PUID=1000
     - PGID=1000
