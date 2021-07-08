@@ -155,7 +155,7 @@ func RedisConnection(followersService *service.FollowersService) {
 	hostName := os.Getenv("SAGA_HOST_NAME")
 	host := "localhost:6379"
 	if len(hostName) != 0 {
-		host = hostName + "6389"
+		host = hostName + ":6379"
 	}
 	var err error
 	client := redis.NewClient(&redis.Options{Addr: host, Password: "", DB: 0})
