@@ -26,7 +26,7 @@ func initDB() *gorm.DB {
 	user := "postgres"
 	password := "root"
 	dbname := "shop_db"
-	dbport := "5432"
+	dbport := "5437"
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", host, user, password, dbname, dbport)
 	var database *gorm.DB
 	log.Println("Connecting to database...")

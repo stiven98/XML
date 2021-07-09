@@ -25,6 +25,19 @@ services:
       - backend 
     volumes:
       - ./db_init_scripts/profile:/docker-entrypoint-initdb.d/
+      
+      
+  db-shop:
+    image: postgres
+    container_name: db-shop
+    environment:
+      POSTGRES_PASSWORD: root
+    ports:
+      - '5437:5432'
+    networks:
+      - backend 
+    volumes:
+      - ./db_init_scripts/agent:/docker-entrypoint-initdb.d/
 
   db-profile-management:
     image: postgres

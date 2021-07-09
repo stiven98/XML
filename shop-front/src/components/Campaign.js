@@ -1,6 +1,6 @@
 import React from "react";
 import {CampaignModel} from "../model/CampaignModel";
-
+import axios from "axios";
 import AdModel from "../model/AdModel"
 import NistagramApi from "../api/NistagramApi";
 import { withRouter } from "react-router-dom";
@@ -96,7 +96,10 @@ class Campaign extends React.Component {
 
     submit = async (event) => {
         event.preventDefault();
-        await this.setState({campaign: {...this.state.campaign, userId: '5a32bd98-5b3f-4a63-ae49-d232743068b0'}});
+
+        await axios.get('http://localhost:8085/sysusers/getUserId/' + localStorage.getItem('username')).then(response => {
+            this.setState({campaign: {...this.state.campaign, userId: response.data}});
+        });
 
         await this.setState({
             campaign: {
